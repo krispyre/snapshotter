@@ -18,7 +18,6 @@ public class SimpleController : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("owo");
         controller = GetComponent<CharacterController>();
 
     }
@@ -65,7 +64,7 @@ public class SimpleController : MonoBehaviour
             yVel -= gravity * Time.deltaTime;
         }
         // tickdown bufer
-        if (jumpBuf > 0) { jumpBuf -= Time.deltaTime; }
+        if (jumpBuf > 0) { jumpBuf -= Time.deltaTime; } else jumpBuf = 0;
     }
 
     private void MoveAndSlide()
