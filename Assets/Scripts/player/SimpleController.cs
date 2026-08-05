@@ -81,7 +81,7 @@ public class SimpleController : MonoBehaviour
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
-        if (jumpHeld && jumpBuf <= 0)
+        if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
