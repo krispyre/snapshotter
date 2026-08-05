@@ -3,97 +3,49 @@
     "name": "PlayerControl",
     "maps": [
         {
-            "name": "Jump",
-            "id": "9ba246fc-5060-4814-87c1-1c2979ba57f3",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "4942b95d-22d6-4507-8e01-2da6bd51dac6",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "2c60da0a-9fc7-4b4e-a7ba-bc468294cbae",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Left",
-            "id": "c734f5f3-be55-4111-8a49-791d03bb4742",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "44cf731c-c347-4e85-8050-cc52704c629a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "b8fabb32-ecd2-4d2f-a2b3-23181ebe0edd",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Right",
-            "id": "e2f30ce7-fffe-46b4-a350-3ac2173ba265",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "ebf645ea-7713-4b86-98d7-e8fa98e8cd1a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "6027ecc1-011a-4934-bb2f-34b4f272b8db",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Up",
+            "name": "Player",
             "id": "cd8edfbd-7d44-4827-8f8f-8deccbf23c23",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "DirX",
+                    "type": "Value",
+                    "id": "f9854e94-8e92-4af3-8d25-ba8cebbdb768",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DirY",
+                    "type": "Value",
+                    "id": "082e9564-dfe4-42a2-a3e8-18509f330f73",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ShootToggle",
                     "type": "Button",
-                    "id": "b77cfca0-a292-4ec3-9a36-1d6165c4a2be",
+                    "id": "666095bf-68f5-42af-a56c-bacb8efa90c4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Hold",
+                    "type": "Button",
+                    "id": "19b43588-5fdc-4251-99d9-2607ac211472",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "7276afd0-ed8e-47a4-8005-715046752257",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -102,97 +54,101 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "9677cbc0-b212-4719-b2ae-ec41932c5627",
-                    "path": "<Keyboard>/w",
+                    "name": "1D Axis",
+                    "id": "2c3e2e68-25c7-4bdc-96c2-fda03806574b",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
+                    "action": "DirX",
+                    "isComposite": true,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Down",
-            "id": "95cc4018-5d5a-40ae-97a8-bdc86b806b59",
-            "actions": [
+                },
                 {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "517a0a85-75e5-49c8-acb7-1dd2fddd8325",
-                    "expectedControlType": "",
-                    "processors": "",
+                    "name": "negative",
+                    "id": "25db1a94-d578-4d18-a1b8-b28df7271ce6",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                    "processors": "",
+                    "groups": ";Default",
+                    "action": "DirX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "2c39218c-d5ac-4bae-95dd-89fa0906a32e",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default",
+                    "action": "DirX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
                 {
                     "name": "",
-                    "id": "66216999-f208-49a6-9793-4b671a05b7b6",
+                    "id": "ee5c99f9-53d5-4e30-9288-fb0b9d8f0e50",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default",
+                    "action": "ShootToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efb73192-f475-4820-947a-808928c36ecf",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default",
+                    "action": "Hold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "3a45d62b-886c-4e1f-9025-83530394fe28",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DirY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "0844d530-008b-411f-a67f-8c1792814903",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "DirY",
                     "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "ShootToggle",
-            "id": "498d9a44-b11f-4566-8a09-b94ce75e37c6",
-            "actions": [
+                    "isPartOfComposite": true
+                },
                 {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "59b4421f-3f4a-46f7-b647-f5a8ddabb8e5",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "1de732b4-f6de-44ce-9d3f-21d08a37991b",
-                    "path": "<Mouse>/leftButton",
+                    "name": "positive",
+                    "id": "a9b667ad-ff79-46b5-b1d4-1eaf3bd8ce76",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "DirY",
                     "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "HoldWire",
-            "id": "58b25b7c-4e6c-4b7f-867b-ceccc6c74ed0",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "27f20ed3-084b-4954-a8df-4f37e62e2ee0",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                    "isPartOfComposite": true
+                },
                 {
                     "name": "",
-                    "id": "ea141d32-a506-4883-aa6f-d78d54d05b91",
-                    "path": "<Mouse>/rightButton",
+                    "id": "f49dfb4b-e9bc-4da2-8089-8924b121298a",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "New action",
+                    "groups": ";Default",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
