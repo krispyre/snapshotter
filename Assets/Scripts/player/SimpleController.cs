@@ -4,15 +4,15 @@ using System.ComponentModel;
 
 public class SimpleController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.0f;
-    [SerializeField] private float jumpHeight = .4f;
+    [SerializeField] private float moveSpeed = 1.2f;
+    [SerializeField] private float jumpHeight = .5f;
     [SerializeField] private float jumpBufferTime = 0.1f;
-    [SerializeField] private float coyoteTime = 0.5f;
-    [SerializeField] private float apexGravityMult = 0.9f;
-    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float apexGravityMult = 0.4f;
+    [SerializeField] private float apexThreshold = 0.4f; // start reducing gravity when yVel within [0~this].
 
-    public float jumpGravity = 7f;
-    public float fallGravity = 10f;
+    public float jumpGravity = 30F;
+    public float fallGravity = 20f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
@@ -59,7 +59,7 @@ public class SimpleController : MonoBehaviour
         }
 
         // put this back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(4f * jumpGravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -77,11 +77,12 @@ public class SimpleController : MonoBehaviour
 
     private void JumpCheck()
     {
+        bool jumpPressed = jumpAction.WasPressedThisFrame();
         bool jumpHeld = jumpAction.IsPressed();
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
-        if (jumpHeld && jumpBuf <= 0)
+        if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
