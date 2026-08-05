@@ -128,10 +128,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 78692845}
-  - component: {fileID: 78692844}
   - component: {fileID: 78692843}
   - component: {fileID: 78692846}
   - component: {fileID: 78692847}
+  - component: {fileID: 78692844}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -180,10 +180,10 @@ MonoBehaviour:
   jumpHeight: 0.4
   jumpBufferTime: 0.1
   coyoteTime: 0.5
-  apexGravityMult: 0.35
+  apexGravityMult: 0.9
   apexThreshold: 0.5
-  jumpGravity: 7
-  fallGravity: 10
+  jumpGravity: 50
+  fallGravity: 20
   jumpBuf: 0
   coyoteTimer: 0
   playerInput: {fileID: 0}
