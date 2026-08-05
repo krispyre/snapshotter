@@ -4,68 +4,99 @@ using System.ComponentModel;
 
 public class SimpleController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.0f;
-    [SerializeField] private float jumpHeight = .4f;
+    [SerializeField] private float moveSpeed = 1.2f;
+    [SerializeField] private float jumpHeight = .5f;
     [SerializeField] private float jumpBufferTime = 0.1f;
-    [SerializeField] private float coyoteTime = 0.5f;
-    public float jumpGravity = 7f;
-    public float fallGravity = 10f;
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float apexGravityMult = 0.4f;
+    [SerializeField] private float apexThreshold = 0.4f; // start reducing gravity when yVel within [0~this].
+
+    public float jumpGravity = 30F;
+    public float fallGravity = 20f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
     [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
-    private Vector2 inputVector = Vector2.zero;
     private CharacterController controller;
-    [SerializeField] private PlayerControl inputActions;
+    [SerializeField] private PlayerInput playerInput;
 
-    private void OnEnable()
-    {
-        inputActions.Enable();
-    }
+    private InputAction dirXAction;
+    private InputAction dirYAction;
+    private InputAction jumpAction;
 
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        inputActions = new PlayerControl();
+        playerInput = GetComponent<PlayerInput>();
+        CacheActions();
+    }
+
+    private void OnEnable()
+    {
+        CacheActions();
+    }
+
+    private void CacheActions()
+    {
+        if (playerInput != null && playerInput.actions != null)
+        {
+            dirXAction = playerInput.actions.FindAction("DirX");
+            dirYAction = playerInput.actions.FindAction("DirY");
+            jumpAction = playerInput.actions.FindAction("Jump");
+
+        }
     }
 
     void Update()
     {
+        if (dirXAction == null || dirYAction == null)
+        {
+            CacheActions();
+            if (dirXAction == null || dirYAction == null) return;
+        }
+
         // put this back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
 
-        float dirX = inputActions.Player.DirX.ReadValue<float>();
-        float dirY = inputActions.Player.DirY.ReadValue<float>();
-        bool jump = inputActions.Player.Jump.WasPressedThisFrame();
+        float dirX = dirXAction.ReadValue<float>();
+        float dirY = dirYAction.ReadValue<float>();
+
         WalkCheck(dirX);
-        JumpCheck(jump);
-        MoveAndSlide();
+        JumpCheck();
+        MoveAndSlide(dirX);
     }
 
     private void WalkCheck(float dirX)
     {
-        inputVector.x = 0f;
-        if (Keyboard.current != null)
-        {
+        ;
 
-            if (dirX < 0) inputVector.x = -1f;
-            if (dirX > 0) inputVector.x = 1f;
-        }
     }
 
-    private void JumpCheck(bool jumpBtn)
+    private void JumpCheck()
     {
-        if (jumpBtn && jumpBuf <= 0)
+        bool jumpPressed = jumpAction.WasPressedThisFrame();
+        bool jumpHeld = jumpAction.IsPressed();
+
+        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+
+        if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
+        // drop early if rising
+        if (!jumpHeld && yVel > 0)
+        {
+            curGravity *= 2.5f;
+        }
+        // Reduce gravity when near the top of the jump
+        else if (Mathf.Abs(yVel) < apexThreshold)
+        {
+            curGravity *= apexGravityMult;
+        }
+
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
@@ -100,9 +131,9 @@ public class SimpleController : MonoBehaviour
         coyoteTimer = 0f;
         yVel = jumpSpeed;
     }
-    private void MoveAndSlide()
+    private void MoveAndSlide(float dirX)
     {
-        Vector3 moveDirection = new Vector3(inputVector.x * moveSpeed, yVel, 0f);
+        Vector3 moveDirection = new Vector3(dirX * moveSpeed, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
     }
 }
