@@ -1,0 +1,220 @@
+{
+    "version": 1,
+    "name": "PlayerControl",
+    "maps": [
+        {
+            "name": "Jump",
+            "id": "9ba246fc-5060-4814-87c1-1c2979ba57f3",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "4942b95d-22d6-4507-8e01-2da6bd51dac6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2c60da0a-9fc7-4b4e-a7ba-bc468294cbae",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Left",
+            "id": "c734f5f3-be55-4111-8a49-791d03bb4742",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "44cf731c-c347-4e85-8050-cc52704c629a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b8fabb32-ecd2-4d2f-a2b3-23181ebe0edd",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Right",
+            "id": "e2f30ce7-fffe-46b4-a350-3ac2173ba265",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "ebf645ea-7713-4b86-98d7-e8fa98e8cd1a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6027ecc1-011a-4934-bb2f-34b4f272b8db",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Up",
+            "id": "cd8edfbd-7d44-4827-8f8f-8deccbf23c23",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "b77cfca0-a292-4ec3-9a36-1d6165c4a2be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9677cbc0-b212-4719-b2ae-ec41932c5627",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Down",
+            "id": "95cc4018-5d5a-40ae-97a8-bdc86b806b59",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "517a0a85-75e5-49c8-acb7-1dd2fddd8325",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "66216999-f208-49a6-9793-4b671a05b7b6",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "ShootToggle",
+            "id": "498d9a44-b11f-4566-8a09-b94ce75e37c6",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "59b4421f-3f4a-46f7-b647-f5a8ddabb8e5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1de732b4-f6de-44ce-9d3f-21d08a37991b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "HoldWire",
+            "id": "58b25b7c-4e6c-4b7f-867b-ceccc6c74ed0",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "27f20ed3-084b-4954-a8df-4f37e62e2ee0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ea141d32-a506-4883-aa6f-d78d54d05b91",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Default",
+            "bindingGroup": "Default",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
