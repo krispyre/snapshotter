@@ -8,7 +8,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpHeight = .4f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.5f;
-    public float gravity = 9.81f;
+    public float jumpGravity = 7f;
+    public float fallGravity = 10f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
@@ -38,7 +39,7 @@ public class SimpleController : MonoBehaviour
     void Update()
     {
         // put this back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * gravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
 
         float dirX = inputActions.Player.DirX.ReadValue<float>();
         float dirY = inputActions.Player.DirY.ReadValue<float>();
@@ -66,6 +67,8 @@ public class SimpleController : MonoBehaviour
             jumpBuf = jumpBufferTime;
         }
 
+        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+
         if (controller.isGrounded)
         {
             coyoteTimer = coyoteTime;
@@ -84,7 +87,7 @@ public class SimpleController : MonoBehaviour
             }
 
             coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
-            yVel -= gravity * Time.deltaTime;
+            yVel -= curGravity * Time.deltaTime;
         }
 
         jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
