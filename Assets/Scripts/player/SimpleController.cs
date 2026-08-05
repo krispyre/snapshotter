@@ -42,9 +42,9 @@ public class SimpleController : MonoBehaviour
 
         float dirX = inputActions.Player.DirX.ReadValue<float>();
         float dirY = inputActions.Player.DirY.ReadValue<float>();
-        bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
+
         WalkCheck(dirX);
-        JumpCheck(jumpPressed);
+        JumpCheck();
         MoveAndSlide(dirX);
     }
 
@@ -54,11 +54,18 @@ public class SimpleController : MonoBehaviour
 
     }
 
-    private void JumpCheck(bool jumpPressed)
+    private void JumpCheck()
     {
+        bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
+        bool jumpReleased = inputActions.Player.Jump.WasReleasedThisFrame();
+
         if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
+        }
+        if (jumpReleased)
+        {
+            yVel = 0;
         }
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
