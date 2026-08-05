@@ -8,6 +8,9 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpHeight = .4f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.5f;
+    [SerializeField] private float apexGravityMult = 0.35f;
+    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
+
     public float jumpGravity = 7f;
     public float fallGravity = 10f;
     private float jumpSpeed; // only calced when body loaded
@@ -57,18 +60,24 @@ public class SimpleController : MonoBehaviour
     private void JumpCheck()
     {
         bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
+        bool jumpHeld = inputActions.Player.Jump.IsPressed();
         bool jumpReleased = inputActions.Player.Jump.WasReleasedThisFrame();
+
+        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
         if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
-        if (jumpReleased && yVel > 0)
+        if (!jumpHeld && yVel > 0)
         {
             yVel = 0;
+        }// APEX HANG TIME: Reduce gravity when near the top of the jump
+        else if (Mathf.Abs(yVel) < apexThreshold)
+        {
+            curGravity *= apexGravityMult;
         }
 
-        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
         if (controller.isGrounded)
         {
