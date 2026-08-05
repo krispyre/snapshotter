@@ -8,6 +8,9 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpHeight = .4f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.5f;
+    [SerializeField] private float apexGravityMult = 0.9f;
+    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
+
     public float jumpGravity = 7f;
     public float fallGravity = 10f;
     private float jumpSpeed; // only calced when body loaded
@@ -17,34 +20,52 @@ public class SimpleController : MonoBehaviour
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
     private CharacterController controller;
-    [SerializeField] private PlayerControl inputActions;
+    [SerializeField] private PlayerInput playerInput;
 
-    private void OnEnable()
-    {
-        inputActions.Enable();
-    }
+    private InputAction dirXAction;
+    private InputAction dirYAction;
+    private InputAction jumpAction;
 
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        inputActions = new PlayerControl();
+        playerInput = GetComponent<PlayerInput>();
+        CacheActions();
+    }
+
+    private void OnEnable()
+    {
+        CacheActions();
+    }
+
+    private void CacheActions()
+    {
+        if (playerInput != null && playerInput.actions != null)
+        {
+            dirXAction = playerInput.actions.FindAction("DirX");
+            dirYAction = playerInput.actions.FindAction("DirY");
+            jumpAction = playerInput.actions.FindAction("Jump");
+
+        }
     }
 
     void Update()
     {
-        // put this back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        if (dirXAction == null || dirYAction == null)
+        {
+            CacheActions();
+            if (dirXAction == null || dirYAction == null) return;
+        }
 
-        float dirX = inputActions.Player.DirX.ReadValue<float>();
-        float dirY = inputActions.Player.DirY.ReadValue<float>();
-        bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
+        // put this back to start() after tweaking
+        jumpSpeed = Mathf.Sqrt(4f * jumpGravity * jumpHeight);
+
+        float dirX = dirXAction.ReadValue<float>();
+        float dirY = dirYAction.ReadValue<float>();
+
         WalkCheck(dirX);
-        JumpCheck(jumpPressed);
+        JumpCheck();
         MoveAndSlide(dirX);
     }
 
@@ -54,14 +75,27 @@ public class SimpleController : MonoBehaviour
 
     }
 
-    private void JumpCheck(bool jumpPressed)
+    private void JumpCheck()
     {
-        if (jumpPressed && jumpBuf <= 0)
+        bool jumpHeld = jumpAction.IsPressed();
+
+        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+
+        if (jumpHeld && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
+        // drop early if rising
+        if (!jumpHeld && yVel > 0)
+        {
+            curGravity *= 2.5f;
+        }
+        // Reduce gravity when near the top of the jump
+        else if (Mathf.Abs(yVel) < apexThreshold)
+        {
+            curGravity *= apexGravityMult;
+        }
 
-        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
         if (controller.isGrounded)
         {
