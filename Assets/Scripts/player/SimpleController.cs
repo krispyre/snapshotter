@@ -59,7 +59,7 @@ public class SimpleController : MonoBehaviour
         }
 
         // put this back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(4f * jumpGravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
