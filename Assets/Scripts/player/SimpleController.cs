@@ -8,7 +8,7 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpHeight = .4f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.5f;
-    [SerializeField] private float apexGravityMult = 0.35f;
+    [SerializeField] private float apexGravityMult = 0.9f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
 
     public float jumpGravity = 7f;
@@ -41,7 +41,7 @@ public class SimpleController : MonoBehaviour
     void Update()
     {
         // put this back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(4f * jumpGravity * jumpHeight);
 
         float dirX = inputActions.Player.DirX.ReadValue<float>();
         float dirY = inputActions.Player.DirY.ReadValue<float>();
