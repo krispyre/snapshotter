@@ -7,11 +7,13 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float moveSpeed = 1.0f;
     [SerializeField] private float jumpHeight = .4f;
     [SerializeField] private float jumpBufferTime = 0.1f;
+    [SerializeField] private float coyoteTime = 0.5f;
     public float gravity = 9.81f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
     [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
+    [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
     private Vector2 inputVector = Vector2.zero;
     private CharacterController controller;
@@ -59,29 +61,42 @@ public class SimpleController : MonoBehaviour
 
     private void JumpCheck(bool jumpBtn)
     {
-        //check for input every frame, set buffer if it's not set
-        if (Keyboard.current != null && jumpBtn && jumpBuf == 0)
+        if (jumpBtn && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
+
         if (controller.isGrounded)
         {
-            // if jump buffer ongoing, jump
-            yVel = -1f;
+            coyoteTimer = coyoteTime;
+            yVel = -1f; // press player on the ground
+
             if (jumpBuf > 0)
             {
-                jumpBuf = 0;
-                yVel = jumpSpeed;
+                ExecuteJump();
             }
         }
         else
         {
+            if (coyoteTimer > 0 && jumpBuf > 0)
+            {
+                ExecuteJump();
+            }
+
+            coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
             yVel -= gravity * Time.deltaTime;
         }
-        // tickdown bufer
-        if (jumpBuf > 0) { jumpBuf -= Time.deltaTime; } else jumpBuf = 0;
+
+        jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
     }
 
+    private void ExecuteJump()
+    {
+        jumpBuf = 0f;
+        // prevent double jump and consume it
+        coyoteTimer = 0f;
+        yVel = jumpSpeed;
+    }
     private void MoveAndSlide()
     {
         Vector3 moveDirection = new Vector3(inputVector.x * moveSpeed, yVel, 0f);
