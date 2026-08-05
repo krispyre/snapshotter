@@ -16,7 +16,6 @@ public class SimpleController : MonoBehaviour
     [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
-    private Vector2 inputVector = Vector2.zero;
     private CharacterController controller;
     [SerializeField] private PlayerControl inputActions;
 
@@ -43,26 +42,21 @@ public class SimpleController : MonoBehaviour
 
         float dirX = inputActions.Player.DirX.ReadValue<float>();
         float dirY = inputActions.Player.DirY.ReadValue<float>();
-        bool jump = inputActions.Player.Jump.WasPressedThisFrame();
+        bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
         WalkCheck(dirX);
-        JumpCheck(jump);
-        MoveAndSlide();
+        JumpCheck(jumpPressed);
+        MoveAndSlide(dirX);
     }
 
     private void WalkCheck(float dirX)
     {
-        inputVector.x = 0f;
-        if (Keyboard.current != null)
-        {
+        ;
 
-            if (dirX < 0) inputVector.x = -1f;
-            if (dirX > 0) inputVector.x = 1f;
-        }
     }
 
-    private void JumpCheck(bool jumpBtn)
+    private void JumpCheck(bool jumpPressed)
     {
-        if (jumpBtn && jumpBuf <= 0)
+        if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
@@ -100,9 +94,9 @@ public class SimpleController : MonoBehaviour
         coyoteTimer = 0f;
         yVel = jumpSpeed;
     }
-    private void MoveAndSlide()
+    private void MoveAndSlide(float dirX)
     {
-        Vector3 moveDirection = new Vector3(inputVector.x * moveSpeed, yVel, 0f);
+        Vector3 moveDirection = new Vector3(dirX * moveSpeed, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
     }
 }
