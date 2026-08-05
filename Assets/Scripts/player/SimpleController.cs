@@ -63,7 +63,7 @@ public class SimpleController : MonoBehaviour
         {
             jumpBuf = jumpBufferTime;
         }
-        if (jumpReleased)
+        if (jumpReleased && yVel > 0)
         {
             yVel = 0;
         }
