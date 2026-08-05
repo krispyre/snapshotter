@@ -15,37 +15,52 @@ public class SimpleController : MonoBehaviour
 
     private Vector2 inputVector = Vector2.zero;
     private CharacterController controller;
+    [SerializeField] private PlayerControl inputActions;
 
-    void Start()
+    private void OnEnable()
+    {
+        inputActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+    }
+
+    void Awake()
     {
         controller = GetComponent<CharacterController>();
-
+        inputActions = new PlayerControl();
     }
 
     void Update()
     {
         // put this back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * gravity * jumpHeight);
-        WalkCheck();
-        JumpCheck();
+
+        float dirX = inputActions.Player.DirX.ReadValue<float>();
+        float dirY = inputActions.Player.DirY.ReadValue<float>();
+        bool jump = inputActions.Player.Jump.WasPressedThisFrame();
+        WalkCheck(dirX);
+        JumpCheck(jump);
         MoveAndSlide();
     }
 
-    private void WalkCheck()
+    private void WalkCheck(float dirX)
     {
         inputVector.x = 0f;
         if (Keyboard.current != null)
         {
 
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) inputVector.x = -1f;
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) inputVector.x = 1f;
+            if (dirX < 0) inputVector.x = -1f;
+            if (dirX > 0) inputVector.x = 1f;
         }
     }
 
-    private void JumpCheck()
+    private void JumpCheck(bool jumpBtn)
     {
         //check for input every frame, set buffer if it's not set
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && jumpBuf == 0)
+        if (Keyboard.current != null && jumpBtn && jumpBuf == 0)
         {
             jumpBuf = jumpBufferTime;
         }
