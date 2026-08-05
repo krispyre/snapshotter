@@ -69,10 +69,12 @@ public class SimpleController : MonoBehaviour
         {
             jumpBuf = jumpBufferTime;
         }
+        // drop early if rising
         if (!jumpHeld && yVel > 0)
         {
-            yVel = 0;
-        }// APEX HANG TIME: Reduce gravity when near the top of the jump
+            curGravity *= 2.5f;
+        }
+        // Reduce gravity when near the top of the jump
         else if (Mathf.Abs(yVel) < apexThreshold)
         {
             curGravity *= apexGravityMult;
