@@ -1,0 +1,16 @@
+name: Block Direct Push to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  block-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject direct pushes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "ERROR: Direct pushes to main are forbidden. Please use a Pull Request."
+          exit 1
