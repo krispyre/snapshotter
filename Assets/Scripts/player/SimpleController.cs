@@ -20,31 +20,45 @@ public class SimpleController : MonoBehaviour
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
     private CharacterController controller;
-    [SerializeField] private PlayerControl inputActions;
+    [SerializeField] private PlayerInput playerInput;
 
-    private void OnEnable()
-    {
-        inputActions.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
+    private InputAction dirXAction;
+    private InputAction dirYAction;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        inputActions = new PlayerControl();
+        playerInput = GetComponent<PlayerInput>();
+        CacheActions();
+    }
+
+    private void OnEnable()
+    {
+        CacheActions();
+    }
+
+    private void CacheActions()
+    {
+        if (playerInput != null && playerInput.actions != null)
+        {
+            dirXAction = playerInput.actions.FindAction("DirX");
+            dirYAction = playerInput.actions.FindAction("DirY");
+        }
     }
 
     void Update()
     {
+        if (dirXAction == null || dirYAction == null)
+        {
+            CacheActions();
+            if (dirXAction == null || dirYAction == null) return;
+        }
+
         // put this back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(4f * jumpGravity * jumpHeight);
 
-        float dirX = inputActions.Player.DirX.ReadValue<float>();
-        float dirY = inputActions.Player.DirY.ReadValue<float>();
+        float dirX = dirXAction.ReadValue<float>();
+        float dirY = dirYAction.ReadValue<float>();
 
         WalkCheck(dirX);
         JumpCheck();
@@ -59,13 +73,11 @@ public class SimpleController : MonoBehaviour
 
     private void JumpCheck()
     {
-        bool jumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
-        bool jumpHeld = inputActions.Player.Jump.IsPressed();
-        bool jumpReleased = inputActions.Player.Jump.WasReleasedThisFrame();
+        bool jumpHeld = playerInput.actions["Jump"].IsPressed();
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
-        if (jumpPressed && jumpBuf <= 0)
+        if (jumpHeld && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
         }
