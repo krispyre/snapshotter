@@ -4,14 +4,14 @@ using System.ComponentModel;
 
 public class SimpleController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.0f;
-    [SerializeField] private float jumpHeight = .4f;
+    [SerializeField] private float moveSpeed = 1.2f;
+    [SerializeField] private float jumpHeight = .5f;
     [SerializeField] private float jumpBufferTime = 0.1f;
-    [SerializeField] private float coyoteTime = 0.5f;
-    [SerializeField] private float apexGravityMult = 0.9f;
-    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float apexGravityMult = 0.4f;
+    [SerializeField] private float apexThreshold = 0.4f; // start reducing gravity when yVel within [0~this].
 
-    public float jumpGravity = 50F;
+    public float jumpGravity = 30F;
     public float fallGravity = 20f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
@@ -77,6 +77,7 @@ public class SimpleController : MonoBehaviour
 
     private void JumpCheck()
     {
+        bool jumpPressed = jumpAction.WasPressedThisFrame();
         bool jumpHeld = jumpAction.IsPressed();
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
