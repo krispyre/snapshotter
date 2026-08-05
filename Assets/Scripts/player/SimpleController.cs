@@ -24,6 +24,8 @@ public class SimpleController : MonoBehaviour
 
     private InputAction dirXAction;
     private InputAction dirYAction;
+    private InputAction jumpAction;
+
 
     void Awake()
     {
@@ -43,6 +45,8 @@ public class SimpleController : MonoBehaviour
         {
             dirXAction = playerInput.actions.FindAction("DirX");
             dirYAction = playerInput.actions.FindAction("DirY");
+            jumpAction = playerInput.actions.FindAction("Jump");
+
         }
     }
 
@@ -73,7 +77,7 @@ public class SimpleController : MonoBehaviour
 
     private void JumpCheck()
     {
-        bool jumpHeld = playerInput.actions["Jump"].IsPressed();
+        bool jumpHeld = jumpAction.IsPressed();
 
         float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
