@@ -11,8 +11,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float apexGravityMult = 0.9f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
 
-    public float jumpGravity = 7f;
-    public float fallGravity = 10f;
+    public float jumpGravity = 50F;
+    public float fallGravity = 20f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
