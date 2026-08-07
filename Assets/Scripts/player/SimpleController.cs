@@ -98,6 +98,8 @@ public class SimpleController : MonoBehaviour
         }
 
 
+        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+
         if (controller.isGrounded)
         {
             coyoteTimer = coyoteTime;
