@@ -101,18 +101,21 @@ public class SimpleController : MonoBehaviour
     }
     private void DebugTime(bool isdebug)
     {
-        if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+        if (isdebug)
         {
-            if (Time.timeScale != 1)
+            if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
             {
-                Time.timeScale = 1f;
-                Debug.Log("normal time");
-            }
-            else
-            {
-                Time.timeScale = 0.25f;
-                Debug.Log("slow time");
+                if (Time.timeScale != 1)
+                {
+                    Time.timeScale = 1f;
+                    Debug.Log("normal time");
+                }
+                else
+                {
+                    Time.timeScale = 0.25f;
+                    Debug.Log("slow time");
 
+                }
             }
         }
     }
