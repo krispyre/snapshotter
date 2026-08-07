@@ -99,7 +99,6 @@ public class SimpleController : MonoBehaviour
 
         WalkCheck(dirX);
         WallSlide(dirX);
-        WallCling(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
         DebugTime(true);
@@ -195,13 +194,15 @@ public class SimpleController : MonoBehaviour
                 yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
                 isEnteringWall = false;
             }
-                curGravity = wallSlideGravity;
+            curGravity = wallSlideGravity;
+            WallCling(dirX);
         }
         else
         {
             isWallSliding = false;
             isEnteringWall = true;
         }
+
     }
 
     private void WallCling(float dirX)
@@ -210,6 +211,7 @@ public class SimpleController : MonoBehaviour
         {
             isWallClinging = true;
             curGravity = 0f;
+            yVel = 0f;
         }
         else
         {
