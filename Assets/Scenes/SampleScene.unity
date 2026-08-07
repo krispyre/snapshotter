@@ -228,10 +228,11 @@ MonoBehaviour:
     m_Bits: 8
   isWallSliding: 0
   isWallClinging: 0
+  isTouchingWall: 0
   isEnteringWall: 1
   isRight: 1
   curGravity: 0
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 78692847}
   owo: 0
   yVel: 0
 --- !u!4 &78692845
@@ -243,7 +244,7 @@ Transform:
   m_GameObject: {fileID: 78692842}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0.22249985, z: 0}
+  m_LocalPosition: {x: 2.64, y: 3.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
