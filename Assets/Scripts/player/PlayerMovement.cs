@@ -186,7 +186,7 @@ public class SimpleController : MonoBehaviour
     }
     private void WallSlide(float dirX)
     {
-        if (!controller.isGrounded && isTouchingWall)
+        if (!controller.isGrounded && isTouchingWall && yVel < 0)
         {
             isWallSliding = true;
             if (isEnteringWall)
@@ -195,14 +195,6 @@ public class SimpleController : MonoBehaviour
                 yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
                 isEnteringWall = false;
             }
-
-            if (yVel > 0)
-            {
-                // owo++;
-                // Debug.Log("nope" + owo);
-                curGravity = fallGravity;
-            }
-            else
                 curGravity = wallSlideGravity;
         }
         else
