@@ -9,10 +9,10 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
-    [SerializeField] private float apexThreshold = 0.4f; // start reducing gravity when yVel within [0~this].
+    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
 
-    public float jumpGravity = 30F;
-    public float fallGravity = 20f;
+    public float jumpGravity = 55F;
+    public float fallGravity = 18f;
     private float jumpSpeed; // only calced when body loaded
     private float xVel = 0f;
     private float yVel = 0f;
@@ -86,19 +86,16 @@ public class SimpleController : MonoBehaviour
         {
             jumpBuf = jumpBufferTime;
         }
-        // drop early if rising
+        // drop early if button released
         if (!jumpHeld && yVel > 0)
         {
-            curGravity *= 2.5f;
+            yVel *= .4f;
         }
         // Reduce gravity when near the top of the jump
         else if (Mathf.Abs(yVel) < apexThreshold)
         {
             curGravity *= apexGravityMult;
         }
-
-
-        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
         if (controller.isGrounded)
         {
