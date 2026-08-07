@@ -34,6 +34,7 @@ public class SimpleController : MonoBehaviour
     [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
 
     [SerializeField][ReadOnlyInspector] private bool isWallClinging = false;
+    [SerializeField][ReadOnlyInspector] private bool isTouchingWall;
     [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
 
     [SerializeField][ReadOnlyInspector] private bool isRight = true;
@@ -90,12 +91,15 @@ public class SimpleController : MonoBehaviour
 
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        isTouchingWall = (Physics.OverlapSphere(wallCheckL.transform.position, 0.02f, wallLayer).Length > 0) ||
+        (Physics.OverlapSphere(wallCheckR.transform.position, 0.02f, wallLayer).Length > 0);
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
 
         WalkCheck(dirX);
         WallSlide(dirX);
+        WallCling(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
         DebugTime(true);
@@ -134,13 +138,6 @@ public class SimpleController : MonoBehaviour
         }
 
     }
-
-    private bool isWalled()
-    {
-        return (Physics.OverlapSphere(wallCheckL.transform.position, 0.02f, wallLayer).Length > 0) ||
-        (Physics.OverlapSphere(wallCheckR.transform.position, 0.02f, wallLayer).Length > 0);
-    }
-
     private void JumpCheck()
     {
         bool jumpPressed = jumpAction.WasPressedThisFrame();
@@ -189,12 +186,8 @@ public class SimpleController : MonoBehaviour
     }
     private void WallSlide(float dirX)
     {
-        if (!controller.isGrounded && isWalled())
+        if (!controller.isGrounded && isTouchingWall)
         {
-            if (dirX != 0)
-            {
-                isWallClinging = true;
-            }
             isWallSliding = true;
             if (isEnteringWall)
             {
@@ -217,7 +210,19 @@ public class SimpleController : MonoBehaviour
             isWallSliding = false;
             isEnteringWall = true;
         }
+    }
 
+    private void WallCling(float dirX)
+    {
+        if (!controller.isGrounded && isTouchingWall && dirX != 0)
+        {
+            isWallClinging = true;
+            curGravity = 0f;
+        }
+        else
+        {
+            isWallClinging = false;
+        }
     }
 
     private void ExecuteJump()
