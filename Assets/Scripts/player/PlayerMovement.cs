@@ -22,6 +22,10 @@ public class SimpleController : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private PlayerInput playerInput;
 
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private bool isWallSliding;
+
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
@@ -67,12 +71,21 @@ public class SimpleController : MonoBehaviour
         WalkCheck(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
+        WallSlide(dirX);
+
+
+
     }
 
     private void WalkCheck(float dirX)
     {
         ;
 
+    }
+
+    private bool isWalled()
+    {
+        return Physics.OverlapSphere(wallCheck.transform.position, 0.02f, wallLayer).Length > 0;
     }
 
     private void JumpCheck()
@@ -119,6 +132,19 @@ public class SimpleController : MonoBehaviour
         }
 
         jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
+    }
+    private void WallSlide(float dirX)
+    {
+        if (controller.isGrounded && isWalled() && dirX != 0)
+        {
+            isWallSliding = true;
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+
+        if (isWalled()) Debug.Log("asfdsaljk");
     }
 
     private void ExecuteJump()
