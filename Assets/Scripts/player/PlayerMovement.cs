@@ -27,9 +27,9 @@ public class SimpleController : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private bool isWallSliding = false;
-    [SerializeField] private bool isRight = true;
-    [SerializeField] private float curGravity;
+    [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
+    [SerializeField][ReadOnlyInspector] private bool isRight = true;
+    [SerializeField][ReadOnlyInspector] private float curGravity;
 
     // input controllers
     [SerializeField] private PlayerInput playerInput;
