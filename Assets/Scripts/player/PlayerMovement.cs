@@ -86,7 +86,6 @@ public class SimpleController : MonoBehaviour
 
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
-        // Time.timeScale = 0.5f;
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -95,7 +94,22 @@ public class SimpleController : MonoBehaviour
         WallSlide(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
+        DebugTime(true);
 
+    }
+    private void DebugTime(bool isdebug)
+    {
+        if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            if (Time.timeScale != 1)
+            {
+                Time.timeScale = 1f;
+            }
+            else
+            {
+                Time.timeScale = 0.5f;
+            }
+        }
     }
 
     private void WalkCheck(float dirX)
@@ -176,9 +190,9 @@ public class SimpleController : MonoBehaviour
 
             if (yVel > 0)
             {
-                owo++;
-                Debug.Log("nope" + owo);
-                curGravity = fallGravity * 3f;
+                // owo++;
+                // Debug.Log("nope" + owo);
+                curGravity = fallGravity;
             }
             else
                 curGravity = wallSlideGravity;
