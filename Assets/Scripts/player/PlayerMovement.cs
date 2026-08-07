@@ -10,11 +10,14 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
-    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
+    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
+    [SerializeField] private float wallSlideGravity = 1f;
+
     //jump params
     public float jumpGravity = 55F;
     public float fallGravity = 18f;
     private float jumpSpeed; // only calced when body loaded
+
     // jump assist params
     [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
@@ -23,7 +26,9 @@ public class SimpleController : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private bool isWallSliding;
+    [SerializeField] private bool isWallSliding = false;
+    [SerializeField] private bool isRight = true;
+    [SerializeField] private float curGravity;
 
     // input controllers
     [SerializeField] private PlayerInput playerInput;
@@ -74,9 +79,10 @@ public class SimpleController : MonoBehaviour
         float dirY = dirYAction.ReadValue<float>();
 
         WalkCheck(dirX);
+        WallSlide(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
-        WallSlide(dirX);
+
 
 
 
@@ -84,7 +90,14 @@ public class SimpleController : MonoBehaviour
 
     private void WalkCheck(float dirX)
     {
-        ;
+        if (dirX > 0)
+        {
+            isRight = true;
+        }
+        else if (dirX < 0)
+        {
+            isRight = false;
+        }
 
     }
 
@@ -98,7 +111,8 @@ public class SimpleController : MonoBehaviour
         bool jumpPressed = jumpAction.WasPressedThisFrame();
         bool jumpHeld = jumpAction.IsPressed();
 
-        float curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+
+        if (!isWallSliding) curGravity = yVel <= 0 ? fallGravity : jumpGravity;
 
         if (jumpPressed && jumpBuf <= 0)
         {
@@ -140,9 +154,10 @@ public class SimpleController : MonoBehaviour
     }
     private void WallSlide(float dirX)
     {
-        if (controller.isGrounded && isWalled() && dirX != 0)
+        if (!controller.isGrounded && isWalled() && dirX != 0)
         {
             isWallSliding = true;
+            curGravity = wallSlideGravity;
         }
         else
         {
