@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
+using System;
 
 public class SimpleController : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float apexGravityMult = 0.4f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
     [SerializeField] private float wallSlideGravity = 1f;
-    [SerializeField] private float terminalVel = 50f;
+    [SerializeField] private float terminalWallSlideSpeed = 10f;
+    [SerializeField] private float terminalSpeed = 50f;
 
     //jump params
     public float jumpGravity = 55F;
@@ -84,7 +86,7 @@ public class SimpleController : MonoBehaviour
 
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
-        // Time.timeScale = 0.5f;
+        Time.timeScale = 0.5f;
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -185,6 +187,7 @@ public class SimpleController : MonoBehaviour
             isWallSliding = false;
             isEnteringWall = true;
         }
+
     }
 
     private void ExecuteJump()
@@ -196,6 +199,8 @@ public class SimpleController : MonoBehaviour
     }
     private void MoveAndSlide(float dirX)
     {
+        if (isWallSliding) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
+        else yVel = Mathf.Max(yVel, -terminalSpeed);
         Vector3 moveDirection = new Vector3(dirX * moveSpeed, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
     }
