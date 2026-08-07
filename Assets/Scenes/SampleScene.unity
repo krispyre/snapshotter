@@ -225,8 +225,9 @@ MonoBehaviour:
   wallCheckR: {fileID: 274271723}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   isWallSliding: 0
+  isWallClinging: 0
   isEnteringWall: 1
   isRight: 1
   curGravity: 0

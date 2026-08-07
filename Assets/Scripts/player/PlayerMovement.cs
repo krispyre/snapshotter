@@ -32,6 +32,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
+
+    [SerializeField][ReadOnlyInspector] private bool isWallClinging = false;
     [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
 
     [SerializeField][ReadOnlyInspector] private bool isRight = true;
@@ -189,6 +191,10 @@ public class SimpleController : MonoBehaviour
     {
         if (!controller.isGrounded && isWalled())
         {
+            if (dirX != 0)
+            {
+                isWallClinging = true;
+            }
             isWallSliding = true;
             if (isEnteringWall)
             {
