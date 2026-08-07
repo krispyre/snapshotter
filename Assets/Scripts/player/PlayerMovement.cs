@@ -28,6 +28,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
+    [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
+
     [SerializeField][ReadOnlyInspector] private bool isRight = true;
     [SerializeField][ReadOnlyInspector] private float curGravity;
 
@@ -37,8 +39,10 @@ public class SimpleController : MonoBehaviour
     private InputAction dirYAction;
     private InputAction jumpAction;
 
+    public int owo = 0;
+
     private float xVel = 0f;
-    private float yVel = 0f;
+    [SerializeField][ReadOnlyInspector] private float yVel = 0f;
 
 
 
@@ -65,6 +69,11 @@ public class SimpleController : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+
+    }
+
     void Update()
     {
         if (dirXAction == null || dirYAction == null)
@@ -73,8 +82,9 @@ public class SimpleController : MonoBehaviour
             if (dirXAction == null || dirYAction == null) return;
         }
 
-        // put this back to start() after tweaking
+        // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        // Time.timeScale = 0.5f;
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -83,9 +93,6 @@ public class SimpleController : MonoBehaviour
         WallSlide(dirX);
         JumpCheck();
         MoveAndSlide(dirX);
-
-
-
 
     }
 
@@ -158,18 +165,26 @@ public class SimpleController : MonoBehaviour
         if (!controller.isGrounded && isWalled() && dirX != 0)
         {
             isWallSliding = true;
+            // if (isEnteringWall)
+            // {
+            //     yVel = Mathf.Max(-20, yVel / 10);
+            //     isEnteringWall = false;
+            // }
+
             if (yVel > 0)
             {
-                yVel *= apexGravityMult;
+                owo++;
+                Debug.Log("nope" + owo);
+                curGravity = fallGravity * 3f;
             }
-            curGravity = wallSlideGravity;
+            else
+                curGravity = wallSlideGravity;
         }
         else
         {
             isWallSliding = false;
+            isEnteringWall = true;
         }
-
-        if (isWalled()) Debug.Log("asfdsaljk");
     }
 
     private void ExecuteJump()
