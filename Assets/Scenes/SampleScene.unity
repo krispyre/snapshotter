@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &53393645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 53393646}
+  m_Layer: 0
+  m_Name: wallCheckLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &53393646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53393645}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 78692845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &78692842
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,25 +208,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleController
   moveSpeed: 1.2
-  jumpHeight: 0.8
+  jumpHeight: 0.5
   jumpBufferTime: 0.1
   coyoteTime: 0.1
   apexGravityMult: 0.4
   apexThreshold: 0.5
-  wallSlideGravity: 2.11
-  terminalVel: 50
+  wallSlideGravity: 4
+  wallSlideEnterDampMult: 0.2
+  terminalWallSlideSpeed: 5
+  terminalSpeed: 50
   jumpGravity: 55
   fallGravity: 18
   jumpBuf: 0
   coyoteTimer: 0
-  wallCheck: {fileID: 274271723}
+  wallCheckL: {fileID: 53393646}
+  wallCheckR: {fileID: 274271723}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   isWallSliding: 0
+  isEnteringWall: 1
   isRight: 1
   curGravity: 0
-  playerInput: {fileID: 78692847}
+  playerInput: {fileID: 0}
+  owo: 0
+  yVel: 0
 --- !u!4 &78692845
 Transform:
   m_ObjectHideFlags: 0
@@ -212,6 +249,7 @@ Transform:
   - {fileID: 742331655}
   - {fileID: 817177551}
   - {fileID: 274271723}
+  - {fileID: 53393646}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &78692846
@@ -266,7 +304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274271723}
   m_Layer: 0
-  m_Name: wallCheck
+  m_Name: wallCheckRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

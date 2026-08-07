@@ -28,7 +28,8 @@ public class SimpleController : MonoBehaviour
 
     // movement vars
     private CharacterController controller;
-    [SerializeField] private Transform wallCheck;
+    [SerializeField] private Transform wallCheckL;
+    [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
     [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
@@ -131,7 +132,8 @@ public class SimpleController : MonoBehaviour
 
     private bool isWalled()
     {
-        return Physics.OverlapSphere(wallCheck.transform.position, 0.02f, wallLayer).Length > 0;
+        return (Physics.OverlapSphere(wallCheckL.transform.position, 0.02f, wallLayer).Length > 0) ||
+        (Physics.OverlapSphere(wallCheckR.transform.position, 0.02f, wallLayer).Length > 0);
     }
 
     private void JumpCheck()
