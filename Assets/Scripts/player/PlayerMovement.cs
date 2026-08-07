@@ -4,31 +4,36 @@ using System.ComponentModel;
 
 public class SimpleController : MonoBehaviour
 {
+    // params
     [SerializeField] private float moveSpeed = 1.2f;
     [SerializeField] private float jumpHeight = .5f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [0~this].
-
+    //jump params
     public float jumpGravity = 55F;
     public float fallGravity = 18f;
     private float jumpSpeed; // only calced when body loaded
-    private float xVel = 0f;
-    private float yVel = 0f;
+    // jump assist params
     [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
     [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
 
+    // movement vars
     private CharacterController controller;
-    [SerializeField] private PlayerInput playerInput;
-
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private bool isWallSliding;
 
+    // input controllers
+    [SerializeField] private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
+
+    private float xVel = 0f;
+    private float yVel = 0f;
+
 
 
     void Awake()
