@@ -12,15 +12,16 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float apexGravityMult = 0.4f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
     [SerializeField] private float wallSlideGravity = 1f;
+    [SerializeField] private float terminalVel = 50f;
 
     //jump params
     public float jumpGravity = 55F;
     public float fallGravity = 18f;
     private float jumpSpeed; // only calced when body loaded
 
-    // jump assist params
-    [SerializeField][ReadOnly(true)] private float jumpBuf = 0;
-    [SerializeField][ReadOnly(true)] private float coyoteTimer = 0;
+    // jump assist vars
+    [SerializeField][ReadOnlyInspector] private float jumpBuf = 0;
+    [SerializeField][ReadOnlyInspector] private float coyoteTimer = 0;
 
     // movement vars
     private CharacterController controller;
@@ -157,6 +158,10 @@ public class SimpleController : MonoBehaviour
         if (!controller.isGrounded && isWalled() && dirX != 0)
         {
             isWallSliding = true;
+            if (yVel > 0)
+            {
+                yVel *= apexGravityMult;
+            }
             curGravity = wallSlideGravity;
         }
         else
