@@ -86,7 +86,7 @@ public class SimpleController : MonoBehaviour
 
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
-        Time.timeScale = 0.5f;
+        // Time.timeScale = 0.5f;
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -167,11 +167,12 @@ public class SimpleController : MonoBehaviour
         if (!controller.isGrounded && isWalled() && dirX != 0)
         {
             isWallSliding = true;
-            // if (isEnteringWall)
-            // {
-            //     yVel = Mathf.Max(-20, yVel / 10);
-            //     isEnteringWall = false;
-            // }
+            if (isEnteringWall)
+            {
+                // slow down when enter wall, 
+                yVel = Mathf.Max(-terminalWallSlideSpeed, yVel / 10);
+                isEnteringWall = false;
+            }
 
             if (yVel > 0)
             {
