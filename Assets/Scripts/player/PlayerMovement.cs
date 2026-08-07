@@ -12,8 +12,9 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
     [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
-    [SerializeField] private float wallSlideGravity = 1f;
-    [SerializeField] private float terminalWallSlideSpeed = 10f;
+    [SerializeField] private float wallSlideGravity = 4f;
+    [SerializeField] private float wallSlideEnterDampMult = 0.2f;
+    [SerializeField] private float terminalWallSlideSpeed = 5f;
     [SerializeField] private float terminalSpeed = 50f;
 
     //jump params
@@ -104,10 +105,13 @@ public class SimpleController : MonoBehaviour
             if (Time.timeScale != 1)
             {
                 Time.timeScale = 1f;
+                Debug.Log("normal time");
             }
             else
             {
-                Time.timeScale = 0.5f;
+                Time.timeScale = 0.25f;
+                Debug.Log("slow time");
+
             }
         }
     }
@@ -178,13 +182,13 @@ public class SimpleController : MonoBehaviour
     }
     private void WallSlide(float dirX)
     {
-        if (!controller.isGrounded && isWalled() && dirX != 0)
+        if (!controller.isGrounded && isWalled())
         {
             isWallSliding = true;
             if (isEnteringWall)
             {
                 // slow down when enter wall, 
-                yVel = Mathf.Max(-terminalWallSlideSpeed, yVel / 10);
+                yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
                 isEnteringWall = false;
             }
 
