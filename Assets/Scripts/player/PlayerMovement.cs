@@ -6,7 +6,7 @@ using System;
 public class SimpleController : MonoBehaviour
 {
     // params
-    [SerializeField] private float moveSpeed = 1.2f;
+    [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float jumpHeight = .5f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
