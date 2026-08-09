@@ -101,6 +101,7 @@ public class SimpleController : MonoBehaviour
         WalkCheck(dirX);
         WallSlide(dirX);
         JumpCheck();
+        FallCheck();
         MoveAndSlide(dirX);
         DebugTime(true);
 
@@ -146,7 +147,7 @@ public class SimpleController : MonoBehaviour
         bool jumpHeld = jumpAction.IsPressed();
 
 
-        curGravity = yVel <= 0 ? fallGravity : jumpGravity;
+        curGravity = jumpGravity;
         if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
@@ -184,11 +185,6 @@ public class SimpleController : MonoBehaviour
         }
         // countdown jumpbuffer
         jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
-        if (false)
-        {
-            state = PlayerState.Fall;
-            curGravity = fallGravity;
-        }
     }
     private void WallSlide(float dirX)
     {
@@ -219,6 +215,14 @@ public class SimpleController : MonoBehaviour
         // prevent double jump and consume it
         coyoteTimer = 0f;
         yVel = jumpSpeed;
+    }
+    private void FallCheck()
+    {
+        if (!controller.isGrounded && yVel <= 0)
+        {
+            state = PlayerState.Fall;
+            curGravity = fallGravity;
+        }
     }
     private void WallJump(float dirX)
     {
