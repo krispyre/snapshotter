@@ -15,6 +15,8 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float wallSlideGravity = 4f;
     [SerializeField] private float wallSlideEnterDampMult = 0.2f;
     [SerializeField] private float terminalWallSlideSpeed = 5f;
+
+    [SerializeField] private float wallJumpKickSpeed = 5f;
     [SerializeField] private float terminalSpeed = 50f;
 
     //jump params
@@ -31,24 +33,21 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField][ReadOnlyInspector] private bool isWallSliding = false;
-
-    [SerializeField][ReadOnlyInspector] private bool isWallClinging = false;
     [SerializeField][ReadOnlyInspector] private bool isTouchingWall;
     [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
 
     [SerializeField][ReadOnlyInspector] private bool isRight = true;
     [SerializeField][ReadOnlyInspector] private float curGravity;
 
+    enum PlayerState { Walk, Idle, WallJump, Jump, WallSlide, WallCling, Fall };
+    [SerializeField][ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
+
     // input controllers
     [SerializeField] private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
-
-    public int owo = 0;
-
-    private float xVel = 0f;
+    [SerializeField][ReadOnlyInspector] private float xVel = 0f;
     [SerializeField][ReadOnlyInspector] private float yVel = 0f;
 
 
@@ -78,7 +77,7 @@ public class SimpleController : MonoBehaviour
 
     void Start()
     {
-
+        ;
     }
 
     void Update()
@@ -97,6 +96,8 @@ public class SimpleController : MonoBehaviour
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
 
+        // todo idle if not moving
+        if (xVel == 0 && controller.isGrounded) state = PlayerState.Idle;
         WalkCheck(dirX);
         WallSlide(dirX);
         JumpCheck();
@@ -135,6 +136,8 @@ public class SimpleController : MonoBehaviour
         {
             isRight = false;
         }
+        if (dirX != 0) { state = PlayerState.Walk; }
+        xVel = dirX * moveSpeed;
 
     }
     private void JumpCheck()
@@ -143,8 +146,7 @@ public class SimpleController : MonoBehaviour
         bool jumpHeld = jumpAction.IsPressed();
 
 
-        if (!isWallSliding) curGravity = yVel <= 0 ? fallGravity : jumpGravity;
-
+        curGravity = yVel <= 0 ? fallGravity : jumpGravity;
         if (jumpPressed && jumpBuf <= 0)
         {
             jumpBuf = jumpBufferTime;
@@ -178,16 +180,21 @@ public class SimpleController : MonoBehaviour
             }
 
             coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
-            yVel -= curGravity * Time.deltaTime;
-        }
 
+        }
+        // countdown jumpbuffer
         jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
+        if (false)
+        {
+            state = PlayerState.Fall;
+            curGravity = fallGravity;
+        }
     }
     private void WallSlide(float dirX)
     {
         if (!controller.isGrounded && isTouchingWall && yVel < 0)
         {
-            isWallSliding = true;
+            state = PlayerState.WallSlide;
             if (isEnteringWall)
             {
                 // slow down when enter wall, 
@@ -196,41 +203,52 @@ public class SimpleController : MonoBehaviour
             }
             curGravity = wallSlideGravity;
             WallCling(dirX);
+            WallJump(dirX);
         }
         else
         {
-            isWallSliding = false;
             isEnteringWall = true;
         }
 
+    }
+    private void ExecuteJump()
+    {
+        state = PlayerState.Jump;
+        curGravity = jumpGravity;
+        jumpBuf = 0f;
+        // prevent double jump and consume it
+        coyoteTimer = 0f;
+        yVel = jumpSpeed;
+    }
+    private void WallJump(float dirX)
+    {
+        bool jumpPressed = jumpAction.WasPressedThisFrame();
+        bool jumpHeld = jumpAction.IsPressed();
+        // vary jump dist if holding?
+        if ((state == PlayerState.WallSlide || state == PlayerState.WallCling) && jumpPressed)
+        {
+            state = PlayerState.WallJump;
+            xVel += wallJumpKickSpeed * dirX;
+        }
     }
 
     private void WallCling(float dirX)
     {
         if (!controller.isGrounded && isTouchingWall && dirX != 0)
         {
-            isWallClinging = true;
+            state = PlayerState.WallCling;
             curGravity = 0f;
             yVel = 0f;
         }
-        else
-        {
-            isWallClinging = false;
-        }
     }
 
-    private void ExecuteJump()
-    {
-        jumpBuf = 0f;
-        // prevent double jump and consume it
-        coyoteTimer = 0f;
-        yVel = jumpSpeed;
-    }
     private void MoveAndSlide(float dirX)
     {
-        if (isWallSliding) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
+        yVel -= curGravity * Time.deltaTime;
+        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
         else yVel = Mathf.Max(yVel, -terminalSpeed);
-        Vector3 moveDirection = new Vector3(dirX * moveSpeed, yVel, 0f);
+
+        Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
     }
 }
