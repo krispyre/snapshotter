@@ -34,7 +34,9 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField][ReadOnlyInspector] private bool isTouchingWall;
-    [SerializeField][ReadOnlyInspector] private bool isEnteringWall = true;
+
+    [SerializeField][ReadOnlyInspector] private float wallDirection;
+    [SerializeField][ReadOnlyInspector] private bool wasTouchingWall = false;
 
     [SerializeField][ReadOnlyInspector] private bool isRight = true;
     [SerializeField][ReadOnlyInspector] private float curGravity;
@@ -82,7 +84,7 @@ public class SimpleController : MonoBehaviour
 
     void Update()
     {
-        if (dirXAction == null || dirYAction == null)
+        if (dirXAction == null || dirYAction == null || jumpAction == null)
         {
             CacheActions();
             if (dirXAction == null || dirYAction == null) return;
@@ -90,21 +92,130 @@ public class SimpleController : MonoBehaviour
 
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
-        isTouchingWall = (Physics.OverlapSphere(wallCheckL.transform.position, 0.02f, wallLayer).Length > 0) ||
-        (Physics.OverlapSphere(wallCheckR.transform.position, 0.02f, wallLayer).Length > 0);
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
+        bool jumpPressed = jumpAction.WasPressedThisFrame();
+        bool jumpHeld = jumpAction.IsPressed();
 
-        // todo idle if not moving
-        if (xVel == 0 && controller.isGrounded) state = PlayerState.Idle;
-        WalkCheck(dirX);
-        WallSlide(dirX);
-        JumpCheck();
-        FallCheck();
-        MoveAndSlide(dirX);
+        UpdateSensors(dirX, jumpPressed);
+        SetState(dirX);
+        StateExecute(dirX, jumpHeld);
         DebugTime(true);
 
+    }
+    private void UpdateSensors(float dirX, bool jumpPressed)
+    {
+        bool wallL = Physics.OverlapSphere(wallCheckL.position, 0.02f, wallLayer).Length > 0;
+        bool wallR = Physics.OverlapSphere(wallCheckR.position, 0.02f, wallLayer).Length > 0;
+        
+        wasTouchingWall = isTouchingWall;
+        isTouchingWall = wallL || wallR;
+        wallDirection = wallR ? 1 : (wallL ? -1 : 0);
+
+        if (dirX > 0) isRight = true;
+        else if (dirX < 0) isRight = false;
+
+        // Timers
+        if (controller.isGrounded) coyoteTimer = coyoteTime;
+        else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
+
+        if (jumpPressed) jumpBuf = jumpBufferTime;
+        else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
+
+    }
+
+    private void SetState(float dirX)
+    {
+        // ground jump
+        if (controller.isGrounded)
+        {
+            if (jumpBuf > 0)
+            {
+                Jump();
+                return;
+            }
+            state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
+            return;
+        }
+
+        // assisted jump
+        if (coyoteTimer > 0 && jumpBuf > 0)
+        {
+            Jump();
+            return;
+        }
+
+        // wall slide/cling
+        if (isTouchingWall && yVel <= 0)
+        {
+            if (jumpBuf > 0)
+            {
+                WallJump();
+                return;
+            }
+            // todo note this should only happen to airborne
+            bool pushingIntoWall = (dirX < 0 && wallDirection == -1) || (dirX > 0 && wallDirection == 1);
+            state = pushingIntoWall ? PlayerState.WallCling : PlayerState.WallSlide;
+            return;
+        }
+
+        if (yVel > 0 && state != PlayerState.WallJump)
+        {
+            state = PlayerState.Jump;
+        }
+        else if (state != PlayerState.WallJump)
+        {
+            state = PlayerState.Fall;
+        }
+    }
+
+    private void StateExecute(float dirX, bool jumpHeld)
+    {
+        xVel = dirX * moveSpeed;
+
+        switch (state)
+        {
+            case PlayerState.Idle:
+            case PlayerState.Walk:
+                yVel = -1f;
+                curGravity = jumpGravity;
+                break;
+
+            case PlayerState.Jump:
+                curGravity = jumpGravity;
+                // release jump fall early
+                if (!jumpHeld && yVel > 0)
+                    yVel *= 0.4f;
+
+                // Reduce gravity when near the top of the jump
+                if (Mathf.Abs(yVel) < apexThreshold)
+                    curGravity *= apexGravityMult;
+                break;
+
+            case PlayerState.Fall:
+                curGravity = fallGravity;
+                break;
+
+            case PlayerState.WallCling:
+                curGravity = 0f;
+                yVel = 0f;
+                break;
+
+            case PlayerState.WallSlide:
+                // slow down when enter wall
+                if (!wasTouchingWall)
+                    yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
+
+                curGravity = wallSlideGravity;
+                break;
+
+            case PlayerState.WallJump:
+                curGravity = jumpGravity;
+                // Transition back to normal aerial control once rising velocity finishes
+                if (yVel <= 0) state = PlayerState.Fall;
+                break;
+        }
     }
     private void DebugTime(bool isdebug)
     {
@@ -127,113 +238,25 @@ public class SimpleController : MonoBehaviour
         }
     }
 
-    private void WalkCheck(float dirX)
-    {
-        if (dirX > 0)
-        {
-            isRight = true;
-        }
-        else if (dirX < 0)
-        {
-            isRight = false;
-        }
-        if (dirX != 0) { state = PlayerState.Walk; }
-        xVel = dirX * moveSpeed;
-
-    }
-    private void JumpCheck()
-    {
-        bool jumpPressed = jumpAction.WasPressedThisFrame();
-        bool jumpHeld = jumpAction.IsPressed();
-
-
-        curGravity = jumpGravity;
-        if (jumpPressed && jumpBuf <= 0)
-        {
-            jumpBuf = jumpBufferTime;
-        }
-        // drop early if button released
-        if (!jumpHeld && yVel > 0)
-        {
-            yVel *= .4f;
-        }
-        // Reduce gravity when near the top of the jump
-        else if (Mathf.Abs(yVel) < apexThreshold)
-        {
-            curGravity *= apexGravityMult;
-        }
-
-        if (controller.isGrounded)
-        {
-            coyoteTimer = coyoteTime;
-            yVel = -1f; // press player on the ground
-
-            if (jumpBuf > 0)
-            {
-                ExecuteJump();
-            }
-        }
-        else
-        {
-            if (coyoteTimer > 0 && jumpBuf > 0)
-            {
-                ExecuteJump();
-            }
-
-            coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
-
-        }
-        // countdown jumpbuffer
-        jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
-    }
-    private void WallSlide(float dirX)
-    {
-        if (!controller.isGrounded && isTouchingWall && yVel < 0)
-        {
-            state = PlayerState.WallSlide;
-            if (isEnteringWall)
-            {
-                // slow down when enter wall, 
-                yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
-                isEnteringWall = false;
-            }
-            curGravity = wallSlideGravity;
-            WallCling(dirX);
-            WallJump(dirX);
-        }
-        else
-        {
-            isEnteringWall = true;
-        }
-
-    }
-    private void ExecuteJump()
+    private void Jump()
     {
         state = PlayerState.Jump;
-        curGravity = jumpGravity;
         jumpBuf = 0f;
         // prevent double jump and consume it
         coyoteTimer = 0f;
         yVel = jumpSpeed;
     }
-    private void FallCheck()
+    private void WallJump()
     {
-        if (!controller.isGrounded && yVel <= 0)
-        {
-            state = PlayerState.Fall;
-            curGravity = fallGravity;
-        }
-    }
-    private void WallJump(float dirX)
-    {
-        bool jumpPressed = jumpAction.WasPressedThisFrame();
-        bool jumpHeld = jumpAction.IsPressed();
+        state = PlayerState.WallJump;
+        curGravity = jumpGravity;
+        jumpBuf = 0f;
+        coyoteTimer = 0f;
+
+        yVel = jumpSpeed; //todo varied too
         // vary jump dist if holding?
-        if ((state == PlayerState.WallSlide || state == PlayerState.WallCling) && jumpPressed)
-        {
-            state = PlayerState.WallJump;
-            xVel += wallJumpKickSpeed * dirX;
-        }
+        // Kick away from the wall opposite to wallDirection
+        xVel = -wallDirection * wallJumpKickSpeed;
     }
 
     private void WallCling(float dirX)
