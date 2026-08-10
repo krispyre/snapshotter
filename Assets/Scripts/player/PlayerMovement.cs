@@ -7,8 +7,8 @@ public class SimpleController : MonoBehaviour
     const bool IS_DEBUG = true;
     [Header("move params")]
     [SerializeField] private float walkAccel = 15f;
-    [SerializeField] private float walkDecel = 20f;
-    [SerializeField] private float airAccel = 20f;
+    [SerializeField] private float walkDecel = 20f;// for forwards
+    [SerializeField] private float airAccel = 20f;//for turn around&stop
     [SerializeField] private float airDecel = 30f;
     [SerializeField] private float maxWalkSpeed = 2f;//run is different
     [SerializeField] private float maxAirSpeed = 5;//no wavedashing
@@ -174,27 +174,33 @@ public class SimpleController : MonoBehaviour
         {
             case PlayerState.Idle:
             case PlayerState.Walk:
-                curGravity = jumpGravity;
-                if (controller.isGrounded)
+                curGravity = jumpGravity;//ground control, larger friction
+                if (dirX != 0)
                 {
-                    //ground control, larger friction
-                    if (dirX != 0)
-                    { curXAccel = walkAccel * dirX; }
-                    else
+
+                    if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
                     {
-
-                        if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
-                        {
-                            curXAccel = 0;
-                            xVel = 0;
-
-                        }
-                        else
-                        {
-                            curXAccel = walkDecel * -Mathf.Sign(xVel);
-                        }
+                        //Turning Around
+                        curXAccel = walkDecel * dirX;
                     }
+                    else
+                    {   //Going forward
+                        curXAccel = walkAccel * dirX;
+                    }
+                }
+                else
+                {
+                    if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
+                    {
+                        //Snap to 0
+                        curXAccel = 0;
+                        xVel = 0;
 
+                    }
+                    else
+                    { // Brake
+                        curXAccel = walkDecel * -Mathf.Sign(xVel);
+                    }
                 }
                 yVel = -1f;
 
@@ -243,13 +249,23 @@ public class SimpleController : MonoBehaviour
     {
         // air control logic. shared between jump, walljump, fall
         if (dirX != 0)
-        { curXAccel = airAccel * dirX; }
+        {
+
+            if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
+            {
+                //Turning Around
+                curXAccel = airDecel * dirX;
+            }
+            else
+            {   //Going forward
+                curXAccel = airAccel * dirX;
+            }
+        }
         else
         {
+            // Brake
             curXAccel = airDecel * -Mathf.Sign(xVel);
-
         }
-
     }
 
     private void Jump()
