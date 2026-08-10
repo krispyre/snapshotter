@@ -2,35 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
 
-public class SimpleController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     const bool IS_DEBUG = true;
-    [Header("move params")]
-    [SerializeField] private float walkAccel = 15f;
-    [SerializeField] private float walkDecel = 30f;// for forwards
-    [SerializeField] private float airAccel = 20f;//for turn around&stop
-    [SerializeField] private float airDecel = 30f;
-    [SerializeField] private float maxWalkSpeed = 1.5f;//run is different
-    [SerializeField] private float maxAirSpeed = 3;//no wavedashing
-
-    [Header("jump params")]
-    [SerializeField] private float jumpHeight = 0.5f;
-    public float jumpGravity = 40f;
-    public float fallGravity = 15f;
-    [SerializeField] private float jumpBufferTime = 0.1f;
-    [SerializeField] private float coyoteTime = 0.1f;
-    [SerializeField] private float apexGravityMult = 0.4f;
-    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
-    [SerializeField] private float wallSlideGravity = 4f;
-    [SerializeField] private float wallSlideEnterDampMult = 0.2f;
-    [SerializeField] private float terminalWallSlideSpeed = 5f;
-    [SerializeField] private float wallJumpKickSpeed = 5f;
-
-    [SerializeField] private float terminalFallSpeed = 50f;
-    [SerializeField] private Transform wallCheckL;
-    [SerializeField] private Transform wallCheckR;
-    [SerializeField] private LayerMask wallLayer;
-
+    [SerializeField] private PlayerMvmtParams mvmtParams;
     [Header("debug")]
     [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
@@ -40,6 +15,9 @@ public class SimpleController : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
     [SerializeField, ReadOnlyInspector] private float curXAccel;
+    [SerializeField] private Transform wallCheckL;
+    [SerializeField] private Transform wallCheckR;
+    [SerializeField] private LayerMask wallLayer;
 
     private CharacterController controller;
     private PlayerInput playerInput;
@@ -89,7 +67,7 @@ public class SimpleController : MonoBehaviour
         }
 
         // todo put these back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2f * mvmtParams.jumpGravity * mvmtParams.jumpHeight);
 
         float dirX = dirXAction.ReadValue<float>();
         float dirY = dirYAction.ReadValue<float>();
@@ -116,10 +94,10 @@ public class SimpleController : MonoBehaviour
         else if (dirX < 0) isRight = false;
 
         // Timers
-        if (controller.isGrounded) coyoteTimer = coyoteTime;
+        if (controller.isGrounded) coyoteTimer = mvmtParams.coyoteTime;
         else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
 
-        if (jumpPressed) jumpBuf = jumpBufferTime;
+        if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
     }
 
@@ -174,27 +152,27 @@ public class SimpleController : MonoBehaviour
         {
             case PlayerState.Idle:
             case PlayerState.Walk:
-                curGravity = jumpGravity;//ground control, larger friction
+                curGravity = mvmtParams.jumpGravity;//ground control, larger friction
                 GroundControl(dirX);
                 yVel = -1f;
 
                 break;
 
             case PlayerState.Jump:
-                curGravity = jumpGravity;
+                curGravity = mvmtParams.jumpGravity;
                 // release jump fall early
                 if (!jumpHeld && yVel > 0)
                     yVel *= 0.4f;
 
                 // Reduce gravity when near the top of the jump
-                if (Mathf.Abs(yVel) < apexThreshold)
-                    curGravity *= apexGravityMult;
+                if (Mathf.Abs(yVel) < mvmtParams.apexThreshold)
+                    curGravity *= mvmtParams.apexGravityMult;
 
                 AirControl(dirX);
                 break;
 
             case PlayerState.Fall:
-                curGravity = fallGravity;
+                curGravity = mvmtParams.fallGravity;
                 AirControl(dirX);
                 break;
 
@@ -206,13 +184,13 @@ public class SimpleController : MonoBehaviour
             case PlayerState.WallSlide:
                 // slow down when enter wall
                 if (!wasTouchingWall)
-                    yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
+                    yVel = Mathf.Max(-mvmtParams.terminalWallSlideSpeed, yVel * mvmtParams.wallSlideEnterDampMult);
 
-                curGravity = wallSlideGravity;
+                curGravity = mvmtParams.wallSlideGravity;
                 break;
 
             case PlayerState.WallJump:
-                curGravity = jumpGravity;
+                curGravity = mvmtParams.jumpGravity;
                 // Transition back to normal aerial control once rising velocity finishes
                 AirControl(dirX);
                 if (yVel <= 0) state = PlayerState.Fall;
@@ -228,11 +206,11 @@ public class SimpleController : MonoBehaviour
             if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
             {
                 //Turning Around
-                curXAccel = walkDecel * dirX;
+                curXAccel = mvmtParams.walkDecel * dirX;
             }
             else
             {   //Going forward
-                curXAccel = walkAccel * dirX;
+                curXAccel = mvmtParams.walkAccel * dirX;
             }
         }
         else
@@ -246,7 +224,7 @@ public class SimpleController : MonoBehaviour
             }
             else
             { // Brake
-                curXAccel = walkDecel * -Mathf.Sign(xVel);
+                curXAccel = mvmtParams.walkDecel * -Mathf.Sign(xVel);
             }
         }
     }
@@ -261,11 +239,11 @@ public class SimpleController : MonoBehaviour
             if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
             {
                 //Turning Around
-                curXAccel = airDecel * dirX;
+                curXAccel = mvmtParams.airDecel * dirX;
             }
             else
             {   //Going forward
-                curXAccel = airAccel * dirX;
+                curXAccel = mvmtParams.airAccel * dirX;
             }
         }
         else
@@ -279,7 +257,7 @@ public class SimpleController : MonoBehaviour
             }
             else
             {// Brake
-                curXAccel = airDecel * -Mathf.Sign(xVel);
+                curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
         }
     }
@@ -287,7 +265,7 @@ public class SimpleController : MonoBehaviour
     private void Jump()
     {
         state = PlayerState.Jump;
-        curGravity = jumpGravity;
+        curGravity = mvmtParams.jumpGravity;
         jumpBuf = 0f;
         coyoteTimer = 0f;
         yVel = jumpSpeed;
@@ -295,7 +273,7 @@ public class SimpleController : MonoBehaviour
     private void WallJump()
     {
         state = PlayerState.WallJump;
-        curGravity = jumpGravity;
+        curGravity = mvmtParams.jumpGravity;
         jumpBuf = 0f;
         coyoteTimer = 0f;
 
@@ -313,14 +291,14 @@ public class SimpleController : MonoBehaviour
 
         if (controller.isGrounded)
         {
-            xVel = Mathf.Clamp(xVel, -maxWalkSpeed, maxWalkSpeed);
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
         }
         else
         {
-            xVel = Mathf.Clamp(xVel, -maxAirSpeed, maxAirSpeed);
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
-        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
-        else yVel = Mathf.Max(yVel, -terminalFallSpeed);
+        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
+        else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
 
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);

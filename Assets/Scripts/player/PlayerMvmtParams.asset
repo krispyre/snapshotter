@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24866e0320fd4334c8a29fa3c17f0d60, type: 3}
+  m_Name: PlayerMvmtParams
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMvmtParams
+  walkAccel: 15
+  walkDecel: 30
+  airAccel: 20
+  airDecel: 30
+  maxWalkSpeed: 1.5
+  maxAirSpeed: 3
+  jumpHeight: 0.5
+  jumpGravity: 40
+  fallGravity: 15
+  jumpBufferTime: 0.1
+  coyoteTime: 0.1
+  apexGravityMult: 0.4
+  apexThreshold: 0.5
+  wallSlideGravity: 4
+  wallSlideEnterDampMult: 0.2
+  terminalWallSlideSpeed: 5
+  wallJumpKickSpeed: 5
+  terminalFallSpeed: 10
