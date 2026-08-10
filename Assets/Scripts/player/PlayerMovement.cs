@@ -80,7 +80,7 @@ public class SimpleController : MonoBehaviour
         ;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (dirXAction == null || dirYAction == null || jumpAction == null)
         {
