@@ -175,33 +175,7 @@ public class SimpleController : MonoBehaviour
             case PlayerState.Idle:
             case PlayerState.Walk:
                 curGravity = jumpGravity;//ground control, larger friction
-                if (dirX != 0)
-                {
-
-                    if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
-                    {
-                        //Turning Around
-                        curXAccel = walkDecel * dirX;
-                    }
-                    else
-                    {   //Going forward
-                        curXAccel = walkAccel * dirX;
-                    }
-                }
-                else
-                {
-                    if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
-                    {
-                        //Snap to 0
-                        curXAccel = 0;
-                        xVel = 0;
-
-                    }
-                    else
-                    { // Brake
-                        curXAccel = walkDecel * -Mathf.Sign(xVel);
-                    }
-                }
+                GroundControl(dirX);
                 yVel = -1f;
 
                 break;
@@ -245,6 +219,39 @@ public class SimpleController : MonoBehaviour
                 break;
         }
     }
+
+    private void GroundControl(float dirX)
+    {
+        if (dirX != 0)
+        {
+
+            if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
+            {
+                //Turning Around
+                curXAccel = walkDecel * dirX;
+            }
+            else
+            {   //Going forward
+                curXAccel = walkAccel * dirX;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
+            {
+                //Snap to 0
+                curXAccel = 0;
+                xVel = 0;
+
+            }
+            else
+            { // Brake
+                curXAccel = walkDecel * -Mathf.Sign(xVel);
+            }
+        }
+    }
+
+
     private void AirControl(float dirX)
     {
         // air control logic. shared between jump, walljump, fall
@@ -263,8 +270,17 @@ public class SimpleController : MonoBehaviour
         }
         else
         {
-            // Brake
-            curXAccel = airDecel * -Mathf.Sign(xVel);
+            if (Mathf.Abs(xVel) < 0.005)//todo a really small threshold
+            {
+                //Snap to 0
+                curXAccel = 0;
+                xVel = 0;
+
+            }
+            else
+            {// Brake
+                curXAccel = airDecel * -Mathf.Sign(xVel);
+            }
         }
     }
 
