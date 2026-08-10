@@ -207,8 +207,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6011af0c17d264c854f176a7251af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleController
-  moveSpeed: 2
+  walkAccel: 15
+  walkDecel: 20
+  airAccel: 20
+  airDecel: 30
+  maxWalkSpeed: 2
+  maxAirSpeed: 10
   jumpHeight: 0.5
+  jumpGravity: 40
+  fallGravity: 15
   jumpBufferTime: 0.1
   coyoteTime: 0.1
   apexGravityMult: 0.4
@@ -217,24 +224,20 @@ MonoBehaviour:
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
   wallJumpKickSpeed: 5
-  terminalSpeed: 50
-  jumpGravity: 55
-  fallGravity: 18
-  jumpBuf: 0
-  coyoteTimer: 0
+  terminalFallSpeed: 50
   wallCheckL: {fileID: 53393646}
   wallCheckR: {fileID: 274271723}
   wallLayer:
     serializedVersion: 2
     m_Bits: 8
-  isTouchingWall: 0
-  isEnteringWall: 1
-  isRight: 1
-  curGravity: 0
-  state: 1
-  playerInput: {fileID: 78692847}
+  state: 0
   xVel: 0
   yVel: 0
+  isTouchingWall: 0
+  wallDirection: 0
+  isRight: 1
+  curGravity: 0
+  curXAccel: 0
 --- !u!4 &78692845
 Transform:
   m_ObjectHideFlags: 0

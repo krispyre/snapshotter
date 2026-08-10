@@ -4,10 +4,14 @@ using System.ComponentModel;
 
 public class SimpleController : MonoBehaviour
 {
-    const bool IS_DEBUG=true;
+    const bool IS_DEBUG = true;
     [Header("move params")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float terminalSpeed = 50f;
+    [SerializeField] private float walkAccel = 15f;
+    [SerializeField] private float walkDecel = 20f;
+    [SerializeField] private float airAccel = 20f;
+    [SerializeField] private float airDecel = 30f;
+    [SerializeField] private float maxWalkSpeed = 2f;//run is different
+    [SerializeField] private float maxAirSpeed = 5;//no wavedashing
 
     [Header("jump params")]
     [SerializeField] private float jumpHeight = 0.5f;
@@ -21,7 +25,7 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float wallSlideEnterDampMult = 0.2f;
     [SerializeField] private float terminalWallSlideSpeed = 5f;
     [SerializeField] private float wallJumpKickSpeed = 5f;
-    
+
     [SerializeField] private float terminalFallSpeed = 50f;
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
@@ -35,6 +39,7 @@ public class SimpleController : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
+    [SerializeField, ReadOnlyInspector] private float curXAccel;
 
     private CharacterController controller;
     private PlayerInput playerInput;
@@ -46,7 +51,7 @@ public class SimpleController : MonoBehaviour
     private float jumpSpeed;
     private float jumpBuf;
     private float coyoteTimer;
-    
+
     private bool wasTouchingWall;
 
     private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
@@ -102,7 +107,7 @@ public class SimpleController : MonoBehaviour
     {
         bool wallL = Physics.OverlapSphere(wallCheckL.position, 0.02f, wallLayer).Length > 0;
         bool wallR = Physics.OverlapSphere(wallCheckR.position, 0.02f, wallLayer).Length > 0;
-        
+
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
         wallDirection = wallR ? 1 : (wallL ? -1 : 0);
@@ -165,14 +170,34 @@ public class SimpleController : MonoBehaviour
 
     private void StateExecute(float dirX, bool jumpHeld)
     {
-        xVel = dirX * moveSpeed;
-
         switch (state)
         {
             case PlayerState.Idle:
             case PlayerState.Walk:
-                yVel = -2f; // Keeps character firmly grounded
                 curGravity = jumpGravity;
+                if (controller.isGrounded)
+                {
+                    //ground control, larger friction
+                    if (dirX != 0)
+                    { curXAccel = walkAccel * dirX; }
+                    else
+                    {
+
+                        if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
+                        {
+                            curXAccel = 0;
+                            xVel = 0;
+
+                        }
+                        else
+                        {
+                            curXAccel = walkDecel * -Mathf.Sign(xVel);
+                        }
+                    }
+
+                }
+                yVel = -1f;
+
                 break;
 
             case PlayerState.Jump:
@@ -184,10 +209,13 @@ public class SimpleController : MonoBehaviour
                 // Reduce gravity when near the top of the jump
                 if (Mathf.Abs(yVel) < apexThreshold)
                     curGravity *= apexGravityMult;
+
+                AirControl(dirX);
                 break;
 
             case PlayerState.Fall:
                 curGravity = fallGravity;
+                AirControl(dirX);
                 break;
 
             case PlayerState.WallCling:
@@ -206,9 +234,22 @@ public class SimpleController : MonoBehaviour
             case PlayerState.WallJump:
                 curGravity = jumpGravity;
                 // Transition back to normal aerial control once rising velocity finishes
+                AirControl(dirX);
                 if (yVel <= 0) state = PlayerState.Fall;
                 break;
         }
+    }
+    private void AirControl(float dirX)
+    {
+        // air control logic. shared between jump, walljump, fall
+        if (dirX != 0)
+        { curXAccel = airAccel * dirX; }
+        else
+        {
+            curXAccel = airDecel * -Mathf.Sign(xVel);
+
+        }
+
     }
 
     private void Jump()
@@ -229,12 +270,23 @@ public class SimpleController : MonoBehaviour
         yVel = jumpSpeed; //todo varied too
         // vary jump dist if holding?
         // Kick away from the wall opposite to wallDirection
-        xVel = -wallDirection * wallJumpKickSpeed; 
+        // xVel += -wallDirection * wallJumpKickSpeed;
     }
 
     private void MoveAndSlide()
     {
         yVel -= curGravity * Time.deltaTime;
+
+        xVel += curXAccel * Time.deltaTime;
+
+        if (controller.isGrounded)
+        {
+            xVel = Mathf.Clamp(xVel, -maxWalkSpeed, maxWalkSpeed);
+        }
+        else
+        {
+            xVel = Mathf.Clamp(xVel, -maxAirSpeed, maxAirSpeed);
+        }
         if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
         else yVel = Mathf.Max(yVel, -terminalFallSpeed);
 
@@ -244,10 +296,13 @@ public class SimpleController : MonoBehaviour
 
     private void DebugTime(bool isDebug)
     {
-        if (isDebug){if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+        if (isDebug)
         {
-            Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
-            Debug.Log($"Time scale set to: {Time.timeScale}");
-        }}
+            if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+            {
+                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
+                Debug.Log($"Time scale set to: {Time.timeScale}");
+            }
+        }
     }
 }
