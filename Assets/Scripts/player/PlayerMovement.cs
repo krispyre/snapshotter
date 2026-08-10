@@ -11,8 +11,8 @@ public class SimpleController : MonoBehaviour
 
     [Header("jump params")]
     [SerializeField] private float jumpHeight = 0.5f;
-    public float jumpGravity = 55f;
-    public float fallGravity = 18f;
+    public float jumpGravity = 40f;
+    public float fallGravity = 15f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
