@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
-using System;
 
 public class SimpleController : MonoBehaviour
 {
-    // params
+    const bool IS_DEBUG=true;
+    [Header("move params")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float jumpHeight = .5f;
+    [SerializeField] private float terminalSpeed = 50f;
+
+    [Header("jump params")]
+    [SerializeField] private float jumpHeight = 0.5f;
+    public float jumpGravity = 55f;
+    public float fallGravity = 18f;
     [SerializeField] private float jumpBufferTime = 0.1f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float apexGravityMult = 0.4f;
@@ -15,56 +20,45 @@ public class SimpleController : MonoBehaviour
     [SerializeField] private float wallSlideGravity = 4f;
     [SerializeField] private float wallSlideEnterDampMult = 0.2f;
     [SerializeField] private float terminalWallSlideSpeed = 5f;
-
     [SerializeField] private float wallJumpKickSpeed = 5f;
-    [SerializeField] private float terminalSpeed = 50f;
-
-    //jump params
-    public float jumpGravity = 55F;
-    public float fallGravity = 18f;
-    private float jumpSpeed; // only calced when body loaded
-
-    // jump assist vars
-    [SerializeField][ReadOnlyInspector] private float jumpBuf = 0;
-    [SerializeField][ReadOnlyInspector] private float coyoteTimer = 0;
-
-    // movement vars
-    private CharacterController controller;
+    
+    [SerializeField] private float terminalFallSpeed = 50f;
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField][ReadOnlyInspector] private bool isTouchingWall;
 
-    [SerializeField][ReadOnlyInspector] private float wallDirection;
-    [SerializeField][ReadOnlyInspector] private bool wasTouchingWall = false;
+    [Header("debug")]
+    [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
+    [SerializeField, ReadOnlyInspector] private float xVel = 0f;
+    [SerializeField, ReadOnlyInspector] private float yVel = 0f;
+    [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
+    [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
+    [SerializeField, ReadOnlyInspector] private bool isRight = true;
+    [SerializeField, ReadOnlyInspector] private float curGravity;
 
-    [SerializeField][ReadOnlyInspector] private bool isRight = true;
-    [SerializeField][ReadOnlyInspector] private float curGravity;
-
-    enum PlayerState { Walk, Idle, WallJump, Jump, WallSlide, WallCling, Fall };
-    [SerializeField][ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
-
-    // input controllers
-    [SerializeField] private PlayerInput playerInput;
+    private CharacterController controller;
+    private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
-    [SerializeField][ReadOnlyInspector] private float xVel = 0f;
-    [SerializeField][ReadOnlyInspector] private float yVel = 0f;
 
+    //movement vars
+    private float jumpSpeed;
+    private float jumpBuf;
+    private float coyoteTimer;
+    
+    private bool wasTouchingWall;
 
+    private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
 
-    void Awake()
+    private void Awake()
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         CacheActions();
     }
 
-    private void OnEnable()
-    {
-        CacheActions();
-    }
+    private void OnEnable() => CacheActions();
 
     private void CacheActions()
     {
@@ -73,7 +67,6 @@ public class SimpleController : MonoBehaviour
             dirXAction = playerInput.actions.FindAction("DirX");
             dirYAction = playerInput.actions.FindAction("DirY");
             jumpAction = playerInput.actions.FindAction("Jump");
-
         }
     }
 
@@ -101,7 +94,8 @@ public class SimpleController : MonoBehaviour
         UpdateSensors(dirX, jumpPressed);
         SetState(dirX);
         StateExecute(dirX, jumpHeld);
-        DebugTime(true);
+        MoveAndSlide();
+        DebugTime(IS_DEBUG);
 
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
@@ -122,7 +116,6 @@ public class SimpleController : MonoBehaviour
 
         if (jumpPressed) jumpBuf = jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
-
     }
 
     private void SetState(float dirX)
@@ -178,7 +171,7 @@ public class SimpleController : MonoBehaviour
         {
             case PlayerState.Idle:
             case PlayerState.Walk:
-                yVel = -1f;
+                yVel = -2f; // Keeps character firmly grounded
                 curGravity = jumpGravity;
                 break;
 
@@ -217,32 +210,12 @@ public class SimpleController : MonoBehaviour
                 break;
         }
     }
-    private void DebugTime(bool isdebug)
-    {
-        if (isdebug)
-        {
-            if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
-            {
-                if (Time.timeScale != 1)
-                {
-                    Time.timeScale = 1f;
-                    Debug.Log("normal time");
-                }
-                else
-                {
-                    Time.timeScale = 0.25f;
-                    Debug.Log("slow time");
-
-                }
-            }
-        }
-    }
 
     private void Jump()
     {
         state = PlayerState.Jump;
+        curGravity = jumpGravity;
         jumpBuf = 0f;
-        // prevent double jump and consume it
         coyoteTimer = 0f;
         yVel = jumpSpeed;
     }
@@ -256,26 +229,25 @@ public class SimpleController : MonoBehaviour
         yVel = jumpSpeed; //todo varied too
         // vary jump dist if holding?
         // Kick away from the wall opposite to wallDirection
-        xVel = -wallDirection * wallJumpKickSpeed;
+        xVel = -wallDirection * wallJumpKickSpeed; 
     }
 
-    private void WallCling(float dirX)
-    {
-        if (!controller.isGrounded && isTouchingWall && dirX != 0)
-        {
-            state = PlayerState.WallCling;
-            curGravity = 0f;
-            yVel = 0f;
-        }
-    }
-
-    private void MoveAndSlide(float dirX)
+    private void MoveAndSlide()
     {
         yVel -= curGravity * Time.deltaTime;
         if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
-        else yVel = Mathf.Max(yVel, -terminalSpeed);
+        else yVel = Mathf.Max(yVel, -terminalFallSpeed);
 
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    private void DebugTime(bool isDebug)
+    {
+        if (isDebug){if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
+            Debug.Log($"Time scale set to: {Time.timeScale}");
+        }}
     }
 }
