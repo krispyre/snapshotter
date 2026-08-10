@@ -7,11 +7,11 @@ public class SimpleController : MonoBehaviour
     const bool IS_DEBUG = true;
     [Header("move params")]
     [SerializeField] private float walkAccel = 15f;
-    [SerializeField] private float walkDecel = 20f;// for forwards
+    [SerializeField] private float walkDecel = 30f;// for forwards
     [SerializeField] private float airAccel = 20f;//for turn around&stop
     [SerializeField] private float airDecel = 30f;
-    [SerializeField] private float maxWalkSpeed = 2f;//run is different
-    [SerializeField] private float maxAirSpeed = 5;//no wavedashing
+    [SerializeField] private float maxWalkSpeed = 1.5f;//run is different
+    [SerializeField] private float maxAirSpeed = 3;//no wavedashing
 
     [Header("jump params")]
     [SerializeField] private float jumpHeight = 0.5f;
@@ -49,8 +49,8 @@ public class SimpleController : MonoBehaviour
 
     //movement vars
     private float jumpSpeed;
-    private float jumpBuf;
-    private float coyoteTimer;
+    [SerializeField, ReadOnlyInspector] private float jumpBuf;
+    [SerializeField, ReadOnlyInspector] private float coyoteTimer;
 
     private bool wasTouchingWall;
 
