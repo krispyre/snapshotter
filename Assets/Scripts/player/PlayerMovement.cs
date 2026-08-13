@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
         ;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (dirXAction == null || dirYAction == null || jumpAction == null)
         {
