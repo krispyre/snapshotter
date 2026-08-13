@@ -30,6 +30,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private float jumpBuf;
     [SerializeField, ReadOnlyInspector] private float coyoteTimer;
 
+    //input cache
+    private float inputDirX;
+    private float inputDirY;
+    private bool jumpPressed;
+    private bool jumpHeld;
+
     private bool wasTouchingWall;
 
     private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
@@ -58,7 +64,8 @@ public class PlayerMovement : MonoBehaviour
         ;
     }
 
-    void FixedUpdate()
+    // update check inputs, fixedupdate calc physics
+    void Update()
     {
         if (dirXAction == null || dirYAction == null || jumpAction == null)
         {
@@ -69,17 +76,23 @@ public class PlayerMovement : MonoBehaviour
         // todo put these back to start() after tweaking
         jumpSpeed = Mathf.Sqrt(2f * mvmtParams.jumpGravity * mvmtParams.jumpHeight);
 
-        float dirX = dirXAction.ReadValue<float>();
-        float dirY = dirYAction.ReadValue<float>();
-        bool jumpPressed = jumpAction.WasPressedThisFrame();
-        bool jumpHeld = jumpAction.IsPressed();
+        inputDirX = dirXAction.ReadValue<float>();
+        inputDirY = dirYAction.ReadValue<float>();
+        if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
+        jumpHeld = jumpAction.IsPressed();
 
-        UpdateSensors(dirX, jumpPressed);
-        SetState(dirX);
-        StateExecute(dirX, jumpHeld);
-        MoveAndSlide();
+
         DebugTime(IS_DEBUG);
 
+    }
+
+    void FixedUpdate()
+    {
+        UpdateSensors(inputDirX, jumpPressed);
+        SetState(inputDirX);
+        StateExecute(inputDirX, jumpHeld);
+        MoveAndSlide();
+        jumpPressed = false;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {

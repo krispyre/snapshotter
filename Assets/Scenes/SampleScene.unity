@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleController
   mvmtParams: {fileID: 11400000, guid: a4b236ffb11661e43a2803a596201c49, type: 2}
-  state: 0
+  state: 1
   xVel: 0
   yVel: 0
   isTouchingWall: 0
