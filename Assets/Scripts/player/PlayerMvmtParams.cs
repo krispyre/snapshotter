@@ -19,9 +19,11 @@ public class PlayerMvmtParams : ScriptableObject
     public float coyoteTime = 0.1f;
     public float apexGravityMult = 0.4f;
     public float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
+    public float terminalFallSpeed = 10f;
+    [Header("wall")]
     public float wallSlideGravity = 4f;
     public float wallSlideEnterDampMult = 0.2f;
     public float terminalWallSlideSpeed = 5f;
     public float wallJumpKickSpeed = 5f;
-    public float terminalFallSpeed = 10f;
+    public int wallJumpLock = 8;//frame count
 }

@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24866e0320fd4334c8a29fa3c17f0d60, type: 3}
   m_Name: PlayerMvmtParams
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMvmtParams
-  walkAccel: 15
+  walkAccel: 16.6
   walkDecel: 30
   airAccel: 20
   airDecel: 30
-  maxWalkSpeed: 1.5
+  maxWalkSpeed: 1.8
   maxAirSpeed: 2
   jumpHeight: 0.5
-  jumpGravity: 40
-  fallGravity: 15
+  jumpGravity: 30
+  fallGravity: 10
   jumpBufferTime: 0.1
   coyoteTime: 0.1
   apexGravityMult: 0.4
@@ -28,5 +28,5 @@ MonoBehaviour:
   wallSlideGravity: 4
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 5
+  wallJumpKickSpeed: 8
   terminalFallSpeed: 10

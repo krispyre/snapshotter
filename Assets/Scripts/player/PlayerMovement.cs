@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
     private CharacterController controller;
     private PlayerInput playerInput;
@@ -199,13 +200,25 @@ public class PlayerMovement : MonoBehaviour
                 if (!wasTouchingWall)
                     yVel = Mathf.Max(-mvmtParams.terminalWallSlideSpeed, yVel * mvmtParams.wallSlideEnterDampMult);
 
+
                 curGravity = mvmtParams.wallSlideGravity;
                 break;
 
             case PlayerState.WallJump:
                 curGravity = mvmtParams.jumpGravity;
                 // Transition back to normal aerial control once rising velocity finishes
-                AirControl(dirX);
+                if (wallJumpLockTimer > 0)
+                {
+                    // lock left right yet, only give back control after it ends
+                    wallJumpLockTimer--;
+                    curXAccel = 0;//-wallDirection * 1.2f;
+                }
+                else
+                {
+                    wallJumpLockTimer = 0;
+                    AirControl(dirX);
+                }
+
                 if (yVel <= 0) state = PlayerState.Fall;
                 break;
         }
@@ -228,7 +241,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (Mathf.Abs(xVel) < 0.01)//todo a really small threshold
+            if (Mathf.Abs(xVel) < 0.21)//todo a really small threshold
             {
                 //Snap to 0
                 curXAccel = 0;
@@ -285,15 +298,19 @@ public class PlayerMovement : MonoBehaviour
     }
     private void WallJump()
     {
+        // init state setup
         state = PlayerState.WallJump;
         curGravity = mvmtParams.jumpGravity;
+        wallJumpLockTimer = mvmtParams.wallJumpLock;
+        // Debug.Log(wallJumpLockTimer + " " + wallJumpLock);
         jumpBuf = 0f;
         coyoteTimer = 0f;
 
         yVel = jumpSpeed; //todo varied too
+
         // vary jump dist if holding?
         // Kick away from the wall opposite to wallDirection
-        // xVel += -wallDirection * wallJumpKickSpeed;
+        xVel += -wallDirection * mvmtParams.wallJumpKickSpeed;
     }
 
     private void MoveAndSlide()
