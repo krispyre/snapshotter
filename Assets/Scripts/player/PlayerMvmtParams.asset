@@ -29,5 +29,5 @@ MonoBehaviour:
   wallSlideGravity: 2
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 500
-  wallJumpLock: 50
+  wallJumpKickSpeed: 3
+  wallJumpLock: 8

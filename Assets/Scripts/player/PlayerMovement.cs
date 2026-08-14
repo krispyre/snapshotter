@@ -330,13 +330,19 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            ;
+            xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
         }
         if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
         else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
 
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    private float GetMaxAirSpeed()
+    {
+        if (state == PlayerState.WallJump) return float.MaxValue;
+        return mvmtParams.maxAirSpeed;
     }
 
     private void DebugTime(bool isDebug)
