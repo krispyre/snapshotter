@@ -16,8 +16,8 @@ MonoBehaviour:
   walkDecel: 30
   airAccel: 20
   airDecel: 30
-  maxWalkSpeed: 1.8
-  maxAirSpeed: 2
+  maxWalkSpeed: 1.5
+  maxAirSpeed: 1.7
   jumpHeight: 0.5
   jumpGravity: 30
   fallGravity: 10
@@ -25,8 +25,9 @@ MonoBehaviour:
   coyoteTime: 0.1
   apexGravityMult: 0.4
   apexThreshold: 0.5
+  terminalFallSpeed: 10
   wallSlideGravity: 4
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 8
-  terminalFallSpeed: 10
+  wallJumpKickSpeed: 20
+  wallJumpLock: 8
