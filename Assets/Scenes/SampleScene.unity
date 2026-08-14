@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 53393646}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: wallCheckLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 78692846}
   - component: {fileID: 78692847}
   - component: {fileID: 78692844}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -472,7 +472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 274271723}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: wallCheckRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 329037025}
   - component: {fileID: 329037024}
   - component: {fileID: 329037023}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1994,7 +1994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 742331655}
   - component: {fileID: 742331656}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: sprite
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2087,7 +2087,7 @@ GameObject:
   - component: {fileID: 817177554}
   - component: {fileID: 817177553}
   - component: {fileID: 817177552}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: camTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -26,8 +26,8 @@ MonoBehaviour:
   apexGravityMult: 0.4
   apexThreshold: 0.5
   terminalFallSpeed: 10
-  wallSlideGravity: 4
+  wallSlideGravity: 2
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 20
-  wallJumpLock: 8
+  wallJumpKickSpeed: 500
+  wallJumpLock: 50

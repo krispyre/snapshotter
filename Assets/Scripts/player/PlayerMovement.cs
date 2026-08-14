@@ -183,24 +183,27 @@ public class PlayerMovement : MonoBehaviour
                     curGravity *= mvmtParams.apexGravityMult;
 
                 AirControl(dirX);
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.Fall:
                 curGravity = mvmtParams.fallGravity;
                 AirControl(dirX);
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.WallCling:
                 curGravity = 0f;
                 yVel = 0f;
+                xVel = wallDirection;
                 break;
 
             case PlayerState.WallSlide:
                 // slow down when enter wall
+                xVel = wallDirection;
+
                 if (!wasTouchingWall)
                     yVel = Mathf.Max(-mvmtParams.terminalWallSlideSpeed, yVel * mvmtParams.wallSlideEnterDampMult);
-
-
                 curGravity = mvmtParams.wallSlideGravity;
                 break;
 
@@ -211,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     // lock left right yet, only give back control after it ends
                     wallJumpLockTimer--;
-                    curXAccel = 0;//-wallDirection * 1.2f;
+                    curXAccel = wallDirection * 1.2f;
                 }
                 else
                 {
@@ -219,7 +222,7 @@ public class PlayerMovement : MonoBehaviour
                     AirControl(dirX);
                 }
 
-                if (yVel <= 0) state = PlayerState.Fall;
+                if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
                 break;
         }
     }
@@ -286,6 +289,7 @@ public class PlayerMovement : MonoBehaviour
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
         }
+
     }
 
     private void Jump()
@@ -311,6 +315,7 @@ public class PlayerMovement : MonoBehaviour
         // vary jump dist if holding?
         // Kick away from the wall opposite to wallDirection
         xVel += -wallDirection * mvmtParams.wallJumpKickSpeed;
+        Debug.Log(xVel + " " + mvmtParams.wallJumpKickSpeed);
     }
 
     private void MoveAndSlide()
@@ -325,7 +330,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
+            ;
         }
         if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
         else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
