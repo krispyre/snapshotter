@@ -2,31 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
 
-public class SimpleController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    const bool IS_DEBUG=true;
-    [Header("move params")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float terminalSpeed = 50f;
-
-    [Header("jump params")]
-    [SerializeField] private float jumpHeight = 0.5f;
-    public float jumpGravity = 40f;
-    public float fallGravity = 15f;
-    [SerializeField] private float jumpBufferTime = 0.1f;
-    [SerializeField] private float coyoteTime = 0.1f;
-    [SerializeField] private float apexGravityMult = 0.4f;
-    [SerializeField] private float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
-    [SerializeField] private float wallSlideGravity = 4f;
-    [SerializeField] private float wallSlideEnterDampMult = 0.2f;
-    [SerializeField] private float terminalWallSlideSpeed = 5f;
-    [SerializeField] private float wallJumpKickSpeed = 5f;
-    
-    [SerializeField] private float terminalFallSpeed = 50f;
-    [SerializeField] private Transform wallCheckL;
-    [SerializeField] private Transform wallCheckR;
-    [SerializeField] private LayerMask wallLayer;
-
+    const bool IS_DEBUG = true;
+    [SerializeField] private PlayerMvmtParams mvmtParams;
     [Header("debug")]
     [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
@@ -35,6 +14,11 @@ public class SimpleController : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
+    [SerializeField, ReadOnlyInspector] private float curXAccel;
+    [SerializeField] private Transform wallCheckL;
+    [SerializeField] private Transform wallCheckR;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
     private CharacterController controller;
     private PlayerInput playerInput;
@@ -44,9 +28,15 @@ public class SimpleController : MonoBehaviour
 
     //movement vars
     private float jumpSpeed;
-    private float jumpBuf;
-    private float coyoteTimer;
-    
+    [SerializeField, ReadOnlyInspector] private float jumpBuf;
+    [SerializeField, ReadOnlyInspector] private float coyoteTimer;
+
+    //input cache
+    private float inputDirX;
+    private float inputDirY;
+    private bool jumpPressed;
+    private bool jumpHeld;
+
     private bool wasTouchingWall;
 
     private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
@@ -75,6 +65,7 @@ public class SimpleController : MonoBehaviour
         ;
     }
 
+    // update check inputs, fixedupdate calc physics
     void Update()
     {
         if (dirXAction == null || dirYAction == null || jumpAction == null)
@@ -84,25 +75,31 @@ public class SimpleController : MonoBehaviour
         }
 
         // todo put these back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2f * mvmtParams.jumpGravity * mvmtParams.jumpHeight);
 
-        float dirX = dirXAction.ReadValue<float>();
-        float dirY = dirYAction.ReadValue<float>();
-        bool jumpPressed = jumpAction.WasPressedThisFrame();
-        bool jumpHeld = jumpAction.IsPressed();
+        inputDirX = dirXAction.ReadValue<float>();
+        inputDirY = dirYAction.ReadValue<float>();
+        if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
+        jumpHeld = jumpAction.IsPressed();
 
-        UpdateSensors(dirX, jumpPressed);
-        SetState(dirX);
-        StateExecute(dirX, jumpHeld);
-        MoveAndSlide();
+
         DebugTime(IS_DEBUG);
 
+    }
+
+    void FixedUpdate()
+    {
+        UpdateSensors(inputDirX, jumpPressed);
+        SetState(inputDirX);
+        StateExecute(inputDirX, jumpHeld);
+        MoveAndSlide();
+        jumpPressed = false;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
         bool wallL = Physics.OverlapSphere(wallCheckL.position, 0.02f, wallLayer).Length > 0;
         bool wallR = Physics.OverlapSphere(wallCheckR.position, 0.02f, wallLayer).Length > 0;
-        
+
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
         wallDirection = wallR ? 1 : (wallL ? -1 : 0);
@@ -111,10 +108,10 @@ public class SimpleController : MonoBehaviour
         else if (dirX < 0) isRight = false;
 
         // Timers
-        if (controller.isGrounded) coyoteTimer = coyoteTime;
+        if (controller.isGrounded) coyoteTimer = mvmtParams.coyoteTime;
         else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
 
-        if (jumpPressed) jumpBuf = jumpBufferTime;
+        if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
     }
 
@@ -165,89 +162,198 @@ public class SimpleController : MonoBehaviour
 
     private void StateExecute(float dirX, bool jumpHeld)
     {
-        xVel = dirX * moveSpeed;
-
         switch (state)
         {
             case PlayerState.Idle:
             case PlayerState.Walk:
-                yVel = -2f; // Keeps character firmly grounded
-                curGravity = jumpGravity;
+                curGravity = mvmtParams.jumpGravity;//ground control, larger friction
+                GroundControl(dirX);
+                yVel = -1f;
+
                 break;
 
             case PlayerState.Jump:
-                curGravity = jumpGravity;
+                curGravity = mvmtParams.jumpGravity;
                 // release jump fall early
                 if (!jumpHeld && yVel > 0)
                     yVel *= 0.4f;
 
                 // Reduce gravity when near the top of the jump
-                if (Mathf.Abs(yVel) < apexThreshold)
-                    curGravity *= apexGravityMult;
+                if (Mathf.Abs(yVel) < mvmtParams.apexThreshold)
+                    curGravity *= mvmtParams.apexGravityMult;
+
+                AirControl(dirX);
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.Fall:
-                curGravity = fallGravity;
+                curGravity = mvmtParams.fallGravity;
+                AirControl(dirX);
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.WallCling:
                 curGravity = 0f;
                 yVel = 0f;
+                xVel = wallDirection;
                 break;
 
             case PlayerState.WallSlide:
                 // slow down when enter wall
-                if (!wasTouchingWall)
-                    yVel = Mathf.Max(-terminalWallSlideSpeed, yVel * wallSlideEnterDampMult);
+                xVel = wallDirection;
 
-                curGravity = wallSlideGravity;
+                if (!wasTouchingWall)
+                    yVel = Mathf.Max(-mvmtParams.terminalWallSlideSpeed, yVel * mvmtParams.wallSlideEnterDampMult);
+                curGravity = mvmtParams.wallSlideGravity;
                 break;
 
             case PlayerState.WallJump:
-                curGravity = jumpGravity;
+                curGravity = mvmtParams.jumpGravity;
                 // Transition back to normal aerial control once rising velocity finishes
-                if (yVel <= 0) state = PlayerState.Fall;
+                if (wallJumpLockTimer > 0)
+                {
+                    // lock left right yet, only give back control after it ends
+                    wallJumpLockTimer--;
+                    curXAccel = wallDirection * 1.2f;
+                }
+                else
+                {
+                    wallJumpLockTimer = 0;
+                    AirControl(dirX);
+                }
+
+                if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
                 break;
         }
+    }
+
+    private void GroundControl(float dirX)
+    {
+        if (dirX != 0)
+        {
+
+            if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
+            {
+                //Turning Around
+                curXAccel = mvmtParams.walkDecel * dirX;
+            }
+            else
+            {   //Going forward
+                curXAccel = mvmtParams.walkAccel * dirX;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(xVel) < 0.21)//todo a really small threshold
+            {
+                //Snap to 0
+                curXAccel = 0;
+                xVel = 0;
+
+            }
+            else
+            { // Brake
+                curXAccel = mvmtParams.walkDecel * -Mathf.Sign(xVel);
+            }
+        }
+    }
+
+
+    private void AirControl(float dirX)
+    {
+        // air control logic. shared between jump, walljump, fall
+        if (dirX != 0)
+        {
+
+            if (Mathf.Sign(dirX) != Mathf.Sign(xVel))
+            {
+                //Turning Around
+                curXAccel = mvmtParams.airDecel * dirX;
+            }
+            else
+            {   //Going forward
+                curXAccel = mvmtParams.airAccel * dirX;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(xVel) < 0.005)//todo a really small threshold
+            {
+                //Snap to 0
+                curXAccel = 0;
+                xVel = 0;
+
+            }
+            else
+            {// Brake
+                curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
+            }
+        }
+
     }
 
     private void Jump()
     {
         state = PlayerState.Jump;
-        curGravity = jumpGravity;
+        curGravity = mvmtParams.jumpGravity;
         jumpBuf = 0f;
         coyoteTimer = 0f;
         yVel = jumpSpeed;
     }
     private void WallJump()
     {
+        // init state setup
         state = PlayerState.WallJump;
-        curGravity = jumpGravity;
+        curGravity = mvmtParams.jumpGravity;
+        wallJumpLockTimer = mvmtParams.wallJumpLock;
+        // Debug.Log(wallJumpLockTimer + " " + wallJumpLock);
         jumpBuf = 0f;
         coyoteTimer = 0f;
 
         yVel = jumpSpeed; //todo varied too
+
         // vary jump dist if holding?
         // Kick away from the wall opposite to wallDirection
-        xVel = -wallDirection * wallJumpKickSpeed; 
+        xVel += -wallDirection * mvmtParams.wallJumpKickSpeed;
+        Debug.Log(xVel + " " + mvmtParams.wallJumpKickSpeed);
     }
 
     private void MoveAndSlide()
     {
         yVel -= curGravity * Time.deltaTime;
-        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -terminalWallSlideSpeed);
-        else yVel = Mathf.Max(yVel, -terminalFallSpeed);
+
+        xVel += curXAccel * Time.deltaTime;
+
+        if (controller.isGrounded)
+        {
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
+        }
+        else
+        {
+            xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
+        }
+        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
+        else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
 
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
         controller.Move(moveDirection * Time.deltaTime);
     }
 
+    private float GetMaxAirSpeed()
+    {
+        if (state == PlayerState.WallJump) return float.MaxValue;
+        return mvmtParams.maxAirSpeed;
+    }
+
     private void DebugTime(bool isDebug)
     {
-        if (isDebug){if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+        if (isDebug)
         {
-            Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
-            Debug.Log($"Time scale set to: {Time.timeScale}");
-        }}
+            if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+            {
+                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
+                Debug.Log($"Time scale set to: {Time.timeScale}");
+            }
+        }
     }
 }
