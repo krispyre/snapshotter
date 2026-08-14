@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24866e0320fd4334c8a29fa3c17f0d60, type: 3}
   m_Name: PlayerMvmtParams
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMvmtParams
-  walkAccel: 16.6
-  walkDecel: 30
-  airAccel: 20
-  airDecel: 30
+  walkAccel: 10
+  walkDecel: 12
+  airAccel: 15
+  airDecel: 12
   maxWalkSpeed: 1.5
   maxAirSpeed: 1.7
   jumpHeight: 0.5
   jumpGravity: 30
-  fallGravity: 10
+  fallGravity: 20
   jumpBufferTime: 0.1
   coyoteTime: 0.1
-  apexGravityMult: 0.4
+  apexGravityMult: 0.22
   apexThreshold: 0.5
   terminalFallSpeed: 10
   wallSlideGravity: 2
