@@ -1,35 +1,46 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public partial class PlayerMovement : MonoBehaviour
 {
-
-    [SerializeField] GameObject claw;
+    [SerializeField] private ClawParams data;//idfk how to nameit
+    [SerializeField] Transform clawPointer; // object for claw object to reference
+    [SerializeField] GameObject claw; // object for claw object to reference
+    [SerializeField, ReadOnlyInspector] bool engaged = false;
     void UpdateMousePos()
     {
-        //FACT CHECK THIS!!!!!!
-
         if (Mouse.current == null) return;
 
-        // Read screen position
-        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
-
-        // 1. Create plane at character depth facing camera (+Z / -Z)
         Plane plane = new Plane(Vector3.back, new Vector3(0, 0, transform.position.z));
+        Ray mouseRay = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        // 2. Convert mouse screen point to 3D ray
-        Ray ray = mainCamera.ScreenPointToRay(mouseScreenPos);
-
-        // 3. Calculate ray intersection with plane
-        if (plane.Raycast(ray, out float enterDistance))
+        if (plane.Raycast(mouseRay, out float enterDistance))
         {
-            Vector3 mouseWorldPos = ray.GetPoint(enterDistance);
+            //update pointer pos
+            Vector3 mouseWorldPos = mouseRay.GetPoint(enterDistance);
 
-            // Aim vector from shoulder height, not feet
-            Vector3 aimDirection = mouseWorldPos - transform.position;
+            clawPointer.position = mouseWorldPos;
 
-            claw.transform.position = mouseWorldPos;
+            //shoot 
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                engaged = !engaged;
+                Vector3 aimDirection = mouseWorldPos - transform.position;
+                Ray clawRay = new Ray(transform.position, aimDirection);
+
+                if (Physics.Raycast(clawRay, out RaycastHit hitInfo, data.armLength))
+                {
+                    Vector3 landingTarget = hitInfo.point;
+                    claw.transform.position = landingTarget;
+                }
+                else
+                {
+                    Debug.LogAssertion("claw miss");
+                }
+            }
         }
+
     }
 }
 
