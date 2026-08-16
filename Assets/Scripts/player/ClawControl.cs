@@ -1,13 +1,18 @@
 using System;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public partial class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private ClawParams data;//idfk how to nameit
+    [Header("claw")]
+    [SerializeField] private ClawParams clawParams;//idfk how to nameit
     [SerializeField] Transform clawPointer; // object for claw object to reference
     [SerializeField] GameObject claw; // object for claw object to reference
+    [SerializeField] ClawLandingTarget landingTarget;
     [SerializeField, ReadOnlyInspector] bool engaged = false;
+
+    // part of UpdateSensors()
     void UpdateMousePos()
     {
         if (Mouse.current == null) return;
@@ -25,22 +30,35 @@ public partial class PlayerMovement : MonoBehaviour
             //shoot 
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                engaged = !engaged;
-                Vector3 aimDirection = mouseWorldPos - transform.position;
-                Ray clawRay = new Ray(transform.position, aimDirection);
-
-                if (Physics.Raycast(clawRay, out RaycastHit hitInfo, data.armLength))
-                {
-                    Vector3 landingTarget = hitInfo.point;
-                    claw.transform.position = landingTarget;
-                }
-                else
-                {
-                    Debug.LogAssertion("claw miss");
-                }
+                Shoot(mouseWorldPos);
             }
         }
-
     }
+
+    private void Shoot(Vector3 mousePos)
+    {
+        engaged = !engaged;
+        Vector3 aimDirection = mousePos - transform.position;
+        Ray clawRay = new Ray(transform.position, aimDirection);
+
+        if (Physics.Raycast(clawRay, out RaycastHit hitInfo, clawParams.armLength))
+        {
+            landingTarget.position = hitInfo.point;
+            landingTarget.hit = true;
+            claw.transform.position = (Vector3)landingTarget.position;
+        }
+        else
+        {
+            Debug.LogAssertion("claw miss");
+            landingTarget.hit = false;
+        }
+    }
+}
+
+[Serializable]
+public struct ClawLandingTarget
+{
+    public Vector3 position;
+    public bool hit;
 }
 

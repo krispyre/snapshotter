@@ -6,7 +6,7 @@ public partial class PlayerMovement : MonoBehaviour
 {
     const bool IS_DEBUG = true;
     [SerializeField] private PlayerMvmtParams mvmtParams;
-    [Header("debug")]
+    [Header("bot")]
     [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
     [SerializeField, ReadOnlyInspector] private float yVel = 0f;
