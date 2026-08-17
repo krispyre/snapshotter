@@ -299,8 +299,8 @@ public partial class PlayerMovement : MonoBehaviour
     {
         state = PlayerState.Jump;
         curGravity = mvmtParams.jumpGravity;
-        jumpBuf = 0f;
-        coyoteTimer = 0f;
+        jumpBuf = 0;
+        coyoteTimer = 0;
         yVel = jumpSpeed;
     }
     private void WallJump()
@@ -310,8 +310,8 @@ public partial class PlayerMovement : MonoBehaviour
         curGravity = mvmtParams.jumpGravity;
         wallJumpLockTimer = mvmtParams.wallJumpLock;
         // Debug.Log(wallJumpLockTimer + " " + wallJumpLock);
-        jumpBuf = 0f;
-        coyoteTimer = 0f;
+        jumpBuf = 0;
+        coyoteTimer = 0;
 
         yVel = jumpSpeed; //todo varied too
 

@@ -21,8 +21,8 @@ MonoBehaviour:
   jumpHeight: 0.5
   jumpGravity: 30
   fallGravity: 20
-  jumpBufferTime: 0.1
-  coyoteTime: 0.1
+  jumpBufferTime: 6
+  coyoteTime: 6
   apexGravityMult: 0.22
   apexThreshold: 0.5
   terminalFallSpeed: 10
