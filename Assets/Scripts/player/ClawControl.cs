@@ -9,8 +9,13 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField] private ClawParams clawParams;//idfk how to nameit
     [SerializeField] Transform clawPointer; // object for claw object to reference
     [SerializeField] GameObject claw; // object for claw object to reference
-    [SerializeField] ClawLandingTarget landingTarget;
-    [SerializeField, ReadOnlyInspector] bool engaged = false;
+    [SerializeField, ReadOnlyInspector] Vector3 landingTarget;
+    [SerializeField, ReadOnlyInspector] ClawState clawState = ClawState.Ready;
+    [SerializeField, ReadOnlyInspector] int clawTimer; //frame count
+
+    // ready? => shoot => hit  => pull => hanging + playerCling => release
+    //                 miss => return => ready
+    enum ClawState { Ready, Shooting, Hit, Hanging, Miss, Pulling, Return }
 
     // part of UpdateSensors()
     void UpdateMousePos()
@@ -30,6 +35,7 @@ public partial class PlayerMovement : MonoBehaviour
             //shoot 
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
+                //move to setstate()
                 Shoot(mouseWorldPos);
             }
         }
@@ -37,28 +43,21 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void Shoot(Vector3 mousePos)
     {
-        engaged = !engaged;
         Vector3 aimDirection = mousePos - transform.position;
         Ray clawRay = new Ray(transform.position, aimDirection);
 
         if (Physics.Raycast(clawRay, out RaycastHit hitInfo, clawParams.armLength))
         {
-            landingTarget.position = hitInfo.point;
-            landingTarget.hit = true;
-            claw.transform.position = (Vector3)landingTarget.position;
+            landingTarget = hitInfo.point;
+            claw.transform.position = landingTarget;
+            clawState = ClawState.Shooting;
+            clawTimer = clawParams.arriveTime;
         }
         else
         {
             Debug.LogAssertion("claw miss");
-            landingTarget.hit = false;
+            clawState = ClawState.Miss;
+            clawTimer = clawParams.arriveTime;
         }
     }
 }
-
-[Serializable]
-public struct ClawLandingTarget
-{
-    public Vector3 position;
-    public bool hit;
-}
-
