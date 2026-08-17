@@ -25,6 +25,7 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
+    private InputAction shootAction;
     [SerializeField] Camera mainCamera;
 
     //movement vars
@@ -37,10 +38,11 @@ public partial class PlayerMovement : MonoBehaviour
     private float inputDirY;
     private bool jumpPressed;
     private bool jumpHeld;
+    private bool shootPressed;
 
     private bool wasTouchingWall;
 
-    private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
+    private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
 
     private void Awake()
     {
@@ -58,6 +60,7 @@ public partial class PlayerMovement : MonoBehaviour
             dirXAction = playerInput.actions.FindAction("DirX");
             dirYAction = playerInput.actions.FindAction("DirY");
             jumpAction = playerInput.actions.FindAction("Jump");
+            shootAction = playerInput.actions.FindAction("Shoot");//todo whats the name
         }
     }
 
@@ -81,6 +84,7 @@ public partial class PlayerMovement : MonoBehaviour
         inputDirX = dirXAction.ReadValue<float>();
         inputDirY = dirYAction.ReadValue<float>();
         if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
+        if (shootAction.WasPressedThisFrame()) shootPressed = true;
         jumpHeld = jumpAction.IsPressed();
 
 
@@ -92,9 +96,11 @@ public partial class PlayerMovement : MonoBehaviour
     {
         UpdateSensors(inputDirX, jumpPressed);
         SetState(inputDirX);
+        SetClawState(shootPressed);
         StateExecute(inputDirX, jumpHeld);
-        MoveAndSlide();
+        MoveAndSlide();// todo override speed clamps after this for claw physics
         jumpPressed = false;
+        shootPressed = false;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
@@ -226,6 +232,15 @@ public partial class PlayerMovement : MonoBehaviour
                 }
 
                 if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
+                break;
+            case PlayerState.Clawing:
+                xVel = 0;
+                yVel = 0;
+                curXAccel = 0;
+                curGravity = 0;
+                break;
+            case PlayerState.ClawFly:
+                curGravity = 0;
                 break;
         }
     }
