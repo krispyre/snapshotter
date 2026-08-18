@@ -53,6 +53,7 @@ public partial class PlayerMovement : MonoBehaviour
                 {
                     if (shootPressed)
                     {
+                        Debug.Log("shoot");
                         Vector3 aimDirection = clawPointer.position - transform.position;
                         Ray clawRay = new Ray(transform.position, aimDirection);
 
@@ -80,8 +81,10 @@ public partial class PlayerMovement : MonoBehaviour
                 }
                 break;
             case ClawState.Shooting:
+                Debug.Log("owowoo");
                 if (Vector3.Distance(claw.transform.position, landingTarget) < 0.02)
                 {
+                    Debug.Log("arrive");
                     claw.transform.position = landingTarget;
                     clawTimer = clawParams.pullDelay;
                     if (missed)
@@ -120,6 +123,7 @@ public partial class PlayerMovement : MonoBehaviour
                     //if claw is near body
                     clawState = ClawState.Ready;
                     state = prevState;
+                    claw.SetActive(false);
                 }
                 break;
         }
@@ -138,6 +142,7 @@ public partial class PlayerMovement : MonoBehaviour
                 claw.transform.rotation = r;
 
                 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
+                Debug.Log(vel + " aaaa");
                 claw_xVel = vel.x;
                 claw_yVel = vel.y;
                 break;
@@ -159,7 +164,7 @@ public partial class PlayerMovement : MonoBehaviour
                 claw_yVel = vel.y;
                 break;
             case ClawState.Ready:
-                claw.SetActive(false);
+
                 break;
 
         }

@@ -99,6 +99,7 @@ public partial class PlayerMovement : MonoBehaviour
         UpdateSensors(inputDirX, jumpPressed);
         SetClawState(shootPressed);
         SetState(inputDirX);
+        ExecuteClawState();
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         ClawMoveAndSlide();
