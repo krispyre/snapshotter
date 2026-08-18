@@ -47,7 +47,7 @@ public partial class PlayerMovement : MonoBehaviour
             case ClawState.Ready:
                 //add delay todo
                 {
-                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                    if (shootPressed)
                     {
                         Vector3 aimDirection = clawPointer.position - transform.position;
                         Ray clawRay = new Ray(transform.position, aimDirection);
@@ -79,7 +79,7 @@ public partial class PlayerMovement : MonoBehaviour
                 if (clawTimer > 0)
                 {
                     clawTimer--;
-                    break;
+
                 }
                 else
                 {
@@ -87,14 +87,14 @@ public partial class PlayerMovement : MonoBehaviour
                     if (missed)
                     {
                         clawState = ClawState.Miss;
-                        break;
+
                     }
                     else
                     {
                         clawState = ClawState.Hit;
-                        break;
                     }
                 }
+                break;
             case ClawState.Hit:
                 if (clawTimer > 0)
                 {
@@ -111,48 +111,45 @@ public partial class PlayerMovement : MonoBehaviour
                 if (clawTimer > 0)
                 {
                     clawTimer--;
-                    break;
+
                 }
                 else
                 {
                     clawTimer = clawParams.returnTime;
                     clawState = ClawState.Return;
-                    break;
                 }
+                break;
 
             case ClawState.Pulling:
                 if (clawTimer > 0)
                 {
-                    Vector3 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
-                    xVel = vel.x;
-                    yVel = vel.y;
+                    // Vector3 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
+                    // xVel = vel.x;
+                    // yVel = vel.y;
 
                     clawTimer--;
-                    break;
                 }
                 else
                 {
                     clawState = ClawState.Hanging;
-                    break;
                 }
+                break;
             case ClawState.Hanging:
                 if (shootPressed)//todo should not capture???
                 {
                     clawTimer = clawParams.returnTime;
                     clawState = ClawState.Return;
-
                 }
                 break;
             case ClawState.Return:
                 if (clawTimer > 0)
                 {
                     clawTimer--;
-                    break;
                 }
                 else
                 {
-                    goback();
-                    break;
+                    //if claw is near body
+                    clawState = ClawState.Ready;
                 }
                 break;
 

@@ -60,7 +60,7 @@ public partial class PlayerMovement : MonoBehaviour
             dirXAction = playerInput.actions.FindAction("DirX");
             dirYAction = playerInput.actions.FindAction("DirY");
             jumpAction = playerInput.actions.FindAction("Jump");
-            shootAction = playerInput.actions.FindAction("Shoot");//todo whats the name
+            shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
         }
     }
 
