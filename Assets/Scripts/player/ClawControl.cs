@@ -3,6 +3,7 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public partial class PlayerMovement : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField] private ClawParams clawParams;//idfk how to nameit
     [SerializeField] Transform clawPointer; // object for claw object to reference?
     [SerializeField] GameObject claw; // object for claw object to reference
+    [SerializeField, ReadOnlyInspector] float claw_xVel;
+    [SerializeField, ReadOnlyInspector] float claw_yVel;
+
     [SerializeField, ReadOnlyInspector] Vector3 landingTarget;
     [SerializeField, ReadOnlyInspector] bool missed;
     [SerializeField, ReadOnlyInspector] ClawState clawState = ClawState.Ready;
@@ -19,7 +23,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     // ready? => shoot => hit  => pull => hanging + playerCling => release
     //                 miss => return => ready
-    enum ClawState { Ready, Shooting, Hit, Hanging, Miss, Pulling, Return }
+    enum ClawState { Ready, Shooting, Grabbing, Miss, Return }
 
     // part of UpdateSensors()
     void UpdateMousePos()
@@ -60,29 +64,25 @@ public partial class PlayerMovement : MonoBehaviour
                         }
                         else
                         {
+                            landingTarget = transform.position + clawParams.armLength * aimDirection;
                             Debug.LogAssertion("claw miss");
                             missed = true;
                         }
-                        clawTimer = clawParams.flyTime;
-                        // todotodotodo 
-                        // claw.velocity = Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
 
                         // decide player state here!!!!!!!!!!!!
                         prevState = state;
+
+                        claw.transform.position = transform.position;
+                        claw.SetActive(true);
                         state = PlayerState.Clawing;
                         clawState = ClawState.Shooting;
                     }
                 }
                 break;
             case ClawState.Shooting:
-                //should arrive when 0
-                if (clawTimer > 0)
+                if (Vector3.Distance(claw.transform.position, landingTarget) < 0.02)
                 {
-                    clawTimer--;
-
-                }
-                else
-                {
+                    claw.transform.position = landingTarget;
                     clawTimer = clawParams.pullDelay;
                     if (missed)
                     {
@@ -91,20 +91,8 @@ public partial class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        clawState = ClawState.Hit;
+                        clawState = ClawState.Grabbing;
                     }
-                }
-                break;
-            case ClawState.Hit:
-                if (clawTimer > 0)
-                {
-                    clawTimer--;
-                }
-                else //time to transition to the next!!
-                {
-                    clawTimer = clawParams.pullTime;
-                    clawState = ClawState.Pulling;
-                    state = PlayerState.ClawFly;
                 }
                 break;
 
@@ -116,45 +104,76 @@ public partial class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
-                    clawTimer = clawParams.returnTime;
                     clawState = ClawState.Return;
                 }
                 break;
-
-            case ClawState.Pulling:
-                if (clawTimer > 0)
-                {
-                    // Vector3 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
-                    // xVel = vel.x;
-                    // yVel = vel.y;
-
-                    clawTimer--;
-                }
-                else
-                {
-                    clawState = ClawState.Hanging;
-                }
-                break;
-            case ClawState.Hanging:
-                if (shootPressed)//todo should not capture???
+            case ClawState.Grabbing:
+                if (shootPressed)
                 {
                     clawTimer = clawParams.returnTime;
                     clawState = ClawState.Return;
                 }
                 break;
             case ClawState.Return:
-                if (clawTimer > 0)
-                {
-                    clawTimer--;
-                }
-                else
+                if (Vector3.Distance(claw.transform.position, transform.position) < 0.02)
                 {
                     //if claw is near body
                     clawState = ClawState.Ready;
                     state = prevState;
                 }
                 break;
+        }
+    }
+    void ExecuteClawState()
+    {
+        Vector3 vel;// no meaning, for reusing
+        Vector3 clawDir;
+        Quaternion r;
+        switch (clawState)
+        {
+            //todo remove copypaste
+            case ClawState.Shooting:
+                clawDir = landingTarget - transform.position;
+                r = Quaternion.LookRotation(clawDir, Vector3.up);
+                claw.transform.rotation = r;
+
+                vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
+                claw_xVel = vel.x;
+                claw_yVel = vel.y;
+                break;
+            case ClawState.Grabbing:
+                clawDir = claw.transform.position - transform.position;
+                r = Quaternion.LookRotation(clawDir, Vector3.up);
+                claw.transform.rotation = r;
+
+                claw_xVel = 0;
+                claw_yVel = 0;
+                break;
+            case ClawState.Return:
+                clawDir = transform.position - claw.transform.position;
+                r = Quaternion.LookRotation(clawDir, Vector3.up);
+                claw.transform.rotation = r;
+
+                vel = (claw.transform.position - transform.position).normalized * Vector3.Distance(claw.transform.position, transform.position) / (clawParams.returnTime * (1 / 60f));
+                claw_xVel = vel.x;
+                claw_yVel = vel.y;
+                break;
+            case ClawState.Ready:
+                claw.SetActive(false);
+                break;
 
         }
+    }
+
+    void ClawMoveAndSlide()
+    {
+        Vector3 moveDirection = new Vector3(claw_xVel, claw_yVel, 0f);
+        claw.transform.position += moveDirection * Time.deltaTime;
+    }
+
+    // use to replace tthe messy copypaste in execuyte clawstate
+    private void LookAt(Vector3 a, Vector3 b)
+    {
+        ;
     }
 }

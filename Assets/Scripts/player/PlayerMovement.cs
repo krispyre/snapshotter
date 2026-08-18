@@ -101,6 +101,7 @@ public partial class PlayerMovement : MonoBehaviour
         SetState(inputDirX);
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
+        ClawMoveAndSlide();
         jumpPressed = false;
         shootPressed = false;
     }
@@ -128,7 +129,17 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void SetState(float dirX)
     {
-        if (state == PlayerState.Clawing) Debug.Log(111);
+        if (state == PlayerState.Clawing) return;
+        if (state == PlayerState.ClawFly)
+        {
+            if (Vector3.Distance(transform.position, claw.transform.position) < 0.02)
+            {
+                ;
+            }
+        }
+        ;
+
+
         // non claw actions.
         if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
         {// ground jump
@@ -246,6 +257,9 @@ public partial class PlayerMovement : MonoBehaviour
                 curGravity = 0;
                 break;
             case PlayerState.ClawFly:
+                Vector3 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
+                xVel = vel.x;
+                yVel = vel.y;
                 curGravity = 0;
                 break;
         }
@@ -344,23 +358,25 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void MoveAndSlide()
     {
-        yVel -= curGravity * Time.deltaTime;
-
-        xVel += curXAccel * Time.deltaTime;
-
-        if (controller.isGrounded)
+        if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
         {
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
-        }
-        else
-        {
-            xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
-        }
-        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
-        else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
+            yVel -= curGravity * Time.deltaTime;
 
+            xVel += curXAccel * Time.deltaTime;
+
+            if (controller.isGrounded)
+            {
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
+            }
+            else
+            {
+                xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
+            }
+            if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
+            else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
+        }
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
-        controller.Move(moveDirection * Time.deltaTime);
+        controller.Move(moveDirection * Time.deltaTime); //should this be fixeddelta
     }
 
     private float GetMaxAirSpeed()
