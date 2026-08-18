@@ -5,9 +5,11 @@ using System.ComponentModel;
 public partial class PlayerMovement : MonoBehaviour
 {
     const bool IS_DEBUG = true;
-    [SerializeField] private PlayerMvmtParams mvmtParams;
     [Header("bot")]
+    [SerializeField] private PlayerMvmtParams mvmtParams;
     [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
+    [SerializeField, ReadOnlyInspector] private PlayerState prevState; //state before clawing
+
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
     [SerializeField, ReadOnlyInspector] private float yVel = 0f;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
@@ -95,8 +97,8 @@ public partial class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         UpdateSensors(inputDirX, jumpPressed);
-        SetState(inputDirX);
         SetClawState(shootPressed);
+        SetState(inputDirX);
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         jumpPressed = false;
@@ -126,46 +128,50 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void SetState(float dirX)
     {
-        // ground jump
-        if (controller.isGrounded)
-        {
-            if (jumpBuf > 0)
+        if (state == PlayerState.Clawing) Debug.Log(111);
+        // non claw actions.
+        if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
+        {// ground jump
+            if (controller.isGrounded)
+            {
+                if (jumpBuf > 0)
+                {
+                    Jump();
+                    return;
+                }
+                state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
+                return;
+            }
+
+            // assisted jump
+            if (coyoteTimer > 0 && jumpBuf > 0)
             {
                 Jump();
                 return;
             }
-            state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
-            return;
-        }
 
-        // assisted jump
-        if (coyoteTimer > 0 && jumpBuf > 0)
-        {
-            Jump();
-            return;
-        }
-
-        // wall slide/cling
-        if (isTouchingWall && yVel <= 0)
-        {
-            if (jumpBuf > 0)
+            // wall slide/cling
+            if (isTouchingWall && yVel <= 0)
             {
-                WallJump();
+                if (jumpBuf > 0)
+                {
+                    WallJump();
+                    return;
+                }
+                // todo note this should only happen to airborne
+                bool pushingIntoWall = (dirX < 0 && wallDirection == -1) || (dirX > 0 && wallDirection == 1);
+                state = pushingIntoWall ? PlayerState.WallCling : PlayerState.WallSlide;
                 return;
             }
-            // todo note this should only happen to airborne
-            bool pushingIntoWall = (dirX < 0 && wallDirection == -1) || (dirX > 0 && wallDirection == 1);
-            state = pushingIntoWall ? PlayerState.WallCling : PlayerState.WallSlide;
-            return;
-        }
 
-        if (yVel > 0 && state != PlayerState.WallJump)
-        {
-            state = PlayerState.Jump;
-        }
-        else if (state != PlayerState.WallJump)
-        {
-            state = PlayerState.Fall;
+            if (yVel > 0 && state != PlayerState.WallJump)
+            {
+                state = PlayerState.Jump;
+            }
+            else if (state != PlayerState.WallJump)
+            {
+                state = PlayerState.Fall;
+            }
         }
     }
 
@@ -369,7 +375,7 @@ public partial class PlayerMovement : MonoBehaviour
         {
             if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
             {
-                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
+                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.1f;
                 Debug.Log($"Time scale set to: {Time.timeScale}");
             }
         }

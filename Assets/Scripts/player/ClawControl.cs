@@ -67,8 +67,8 @@ public partial class PlayerMovement : MonoBehaviour
                         // todotodotodo 
                         // claw.velocity = Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
 
-                        // todo where to decide player state
-
+                        // decide player state here!!!!!!!!!!!!
+                        prevState = state;
                         state = PlayerState.Clawing;
                         clawState = ClawState.Shooting;
                     }
@@ -104,6 +104,7 @@ public partial class PlayerMovement : MonoBehaviour
                 {
                     clawTimer = clawParams.pullTime;
                     clawState = ClawState.Pulling;
+                    state = PlayerState.ClawFly;
                 }
                 break;
 
@@ -150,6 +151,7 @@ public partial class PlayerMovement : MonoBehaviour
                 {
                     //if claw is near body
                     clawState = ClawState.Ready;
+                    state = prevState;
                 }
                 break;
 
