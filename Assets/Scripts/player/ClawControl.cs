@@ -159,7 +159,7 @@ public partial class PlayerMovement : MonoBehaviour
                 r = Quaternion.LookRotation(clawDir, Vector3.up);
                 claw.transform.rotation = r;
 
-                vel = (claw.transform.position - transform.position).normalized * Vector3.Distance(claw.transform.position, transform.position) / (clawParams.returnTime * (1 / 60f));
+                vel = (transform.position - landingTarget).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.returnTime * (1 / 60f));
                 claw_xVel = vel.x;
                 claw_yVel = vel.y;
                 break;
