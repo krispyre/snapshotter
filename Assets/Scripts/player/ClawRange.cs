@@ -8,6 +8,10 @@ public class ClawRange : MonoBehaviour
     {
         ApplyScale();
     }
+    void Start()
+    {
+        ApplyScale();
+    }
 
     private void Update()
     {
@@ -22,7 +26,7 @@ public class ClawRange : MonoBehaviour
     {
         if (data != null)
         {
-            transform.localScale = Vector3.one * data.armLength;
+            transform.localScale = Vector3.one * data.armLength * 2;
         }
     }
 }

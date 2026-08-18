@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b8a3bff6728264183af589032009a9, type: 3}
   m_Name: ClawParams
   m_EditorClassIdentifier: Assembly-CSharp::ClawParams
-  arriveTime: 10
-  pullTime: 10
   armLength: 2
+  shootDelay: 1
+  flyTime: 10
+  pullDelay: 5
+  pullTime: 20
+  returnTime: 13
+  returnDelay: 2
