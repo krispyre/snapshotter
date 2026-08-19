@@ -42,7 +42,6 @@ public sealed class ClawReady : ClawState
 
 public sealed class ClawShooting : ClawState
 {
-    // tototosososotostotsotssotootoataotaottsdddotodttodtootdodtodtodto
     public ClawShooting(PlayerMovement p) : base(p) { }
     public void Enter()
     {
@@ -151,6 +150,7 @@ public sealed class ClawReturn : ClawState
         p.claw_yVel = 0;
     }
 
+    //todo horrendous name
     void ApplyFlight()
     {
         p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);

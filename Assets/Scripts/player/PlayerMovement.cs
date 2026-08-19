@@ -107,7 +107,7 @@ public partial class PlayerMovement : MonoBehaviour
         clawFsm.Current.FixedUpdate();
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
-        // ClawMoveAndSlide();
+        ClawMoveAndSlide();
         jumpPressed = false;
         shootPressed = false;
     }
