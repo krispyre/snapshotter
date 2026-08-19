@@ -7,8 +7,8 @@ public partial class PlayerMovement : MonoBehaviour
     const bool IS_DEBUG = true;
     [Header("bot")]
     [SerializeField] private PlayerMvmtParams mvmtParams;
-    [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
-    [SerializeField, ReadOnlyInspector] private PlayerState prevState; //state before clawing
+    [SerializeField, ReadOnlyInspector] public PlayerState state = PlayerState.Idle;
+    [SerializeField, ReadOnlyInspector] public PlayerState prevState; //state before clawing
 
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
     [SerializeField, ReadOnlyInspector] private float yVel = 0f;
@@ -36,18 +36,19 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private float coyoteTimer;
 
     //input cache
-    private float inputDirX;
-    private float inputDirY;
-    private bool jumpPressed;
-    private bool jumpHeld;
-    private bool shootPressed;
+    public float inputDirX;
+    public float inputDirY;
+    public bool jumpPressed;
+    public bool jumpHeld;
+    public bool shootPressed;
 
-    private bool wasTouchingWall;
+    public bool wasTouchingWall;
 
-    private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
+    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
 
     private void Awake()
     {
+        clawFsm = new ClawFSM(this);
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         CacheActions();
@@ -92,17 +93,21 @@ public partial class PlayerMovement : MonoBehaviour
 
         DebugTime(IS_DEBUG);
 
+        if (Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            clawFsm.SetState(clawFsm.clawReady);
+        }
+
     }
 
     void FixedUpdate()
     {
         UpdateSensors(inputDirX, jumpPressed);
-        SetClawState(shootPressed);
         SetState(inputDirX);
-        ExecuteClawState();
+        clawFsm.Current.FixedUpdate();
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
-        ClawMoveAndSlide();
+        // ClawMoveAndSlide();
         jumpPressed = false;
         shootPressed = false;
     }
@@ -125,7 +130,7 @@ public partial class PlayerMovement : MonoBehaviour
         if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
 
-        UpdateMousePos();
+        UpdateClawPointerPos();
     }
 
     private void SetState(float dirX)
