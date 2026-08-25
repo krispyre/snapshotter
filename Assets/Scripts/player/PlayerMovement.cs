@@ -57,15 +57,36 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnEnable() => CacheActions();
 
+    private void OnDisable()
+    {
+        dirXAction = null;
+        dirYAction = null;
+        jumpAction = null;
+        shootAction = null;
+    }
+
+    private void OnDestroy()
+    {
+        playerInput = null;
+        dirXAction = null;
+        dirYAction = null;
+        jumpAction = null;
+        shootAction = null;
+    }
+
     private void CacheActions()
     {
-        if (playerInput != null && playerInput.actions != null)
-        {
-            dirXAction = playerInput.actions.FindAction("DirX");
-            dirYAction = playerInput.actions.FindAction("DirY");
-            jumpAction = playerInput.actions.FindAction("Jump");
-            shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
-        }
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        // Unity destroyed objects are "fake null"; bail before touching them
+        if (playerInput == null || playerInput.actions == null)
+            return;
+
+        dirXAction = playerInput.actions.FindAction("DirX");
+        dirYAction = playerInput.actions.FindAction("DirY");
+        jumpAction = playerInput.actions.FindAction("Jump");
+        shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
     }
 
     void Start()
@@ -75,10 +96,11 @@ public partial class PlayerMovement : MonoBehaviour
     // update check inputs, fixedupdate calc physics
     void Update()
     {
-        if (dirXAction == null || dirYAction == null || jumpAction == null)
+        if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
             CacheActions();
-            if (dirXAction == null || dirYAction == null) return;
+            if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
+                return;
         }
 
         // todo put these back to start() after tweaking
@@ -93,7 +115,7 @@ public partial class PlayerMovement : MonoBehaviour
 
         DebugTime(IS_DEBUG);
 
-        if (Keyboard.current.bKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame)
         {
             clawFsm.SetState(clawFsm.clawReady);
         }
