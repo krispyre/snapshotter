@@ -125,10 +125,16 @@ public sealed class ClawGrabbing : ClawState
 
     public override void FixedUpdate()
     {
+        Debug.Log(Vector3.Distance(p.claw.transform.position, p.transform.position));
         p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);
         if (p.shootPressed)
         {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
+        }
+        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
+        {
+            p.transform.position = p.claw.transform.position;
+            p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
     }
 
@@ -143,7 +149,7 @@ public sealed class ClawReturn : ClawState
     public override void FixedUpdate()
     {
         ApplyFlight();
-        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.02f)
+        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
             p.clawFsm.SetState(p.clawFsm.clawReady);
     }
 

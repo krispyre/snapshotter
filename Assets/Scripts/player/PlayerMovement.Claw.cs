@@ -1,9 +1,5 @@
-using System;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public partial class PlayerMovement : MonoBehaviour
 {

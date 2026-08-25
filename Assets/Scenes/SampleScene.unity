@@ -160,7 +160,6 @@ GameObject:
   m_Component:
   - component: {fileID: 78692845}
   - component: {fileID: 78692843}
-  - component: {fileID: 78692846}
   - component: {fileID: 78692847}
   - component: {fileID: 78692844}
   m_Layer: 0
@@ -206,7 +205,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c6011af0c17d264c854f176a7251af9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SimpleController
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   clawParams: {fileID: 11400000, guid: 7c16dc32deb161d4a8fd57ffef25d858, type: 2}
   clawPointer: {fileID: 1692158123}
   claw: {fileID: 775922017}
@@ -249,19 +248,6 @@ Transform:
   - {fileID: 931186484}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &78692846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 78692842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15cce1fc684b56449abda670f870d12f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  controller: {fileID: 78692843}
 --- !u!114 &78692847
 MonoBehaviour:
   m_ObjectHideFlags: 0
