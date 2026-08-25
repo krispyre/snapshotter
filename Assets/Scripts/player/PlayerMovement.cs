@@ -48,7 +48,8 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        clawFsm = new ClawFSM(this);
+        ClawInit();
+
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         CacheActions();
@@ -69,7 +70,6 @@ public partial class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        ;
     }
 
     // update check inputs, fixedupdate calc physics

@@ -28,6 +28,11 @@ public partial class PlayerMovement : MonoBehaviour
     // enum ClawState { Ready, Shooting, Grabbing, Miss, Return }
 
     // part of UpdateSensors()
+    void ClawInit()
+    {
+        clawFsm = new ClawFSM(this);
+        clawFsm.SetState(clawFsm.clawReady);
+    }
     void UpdateClawPointerPos()
     {
         if (Mouse.current == null) return;
