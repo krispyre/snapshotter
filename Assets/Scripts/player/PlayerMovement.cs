@@ -115,6 +115,7 @@ public partial class PlayerMovement : MonoBehaviour
 
 
         DebugTime(IS_DEBUG);
+        ResetClaw();
 
         if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame)
         {
