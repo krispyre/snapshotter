@@ -6,6 +6,7 @@ public partial class PlayerMovement : MonoBehaviour
     [Header("claw")]
     [SerializeField] public ClawParams clawParams;//idfk how to nameit
     [SerializeField] public Transform clawPointer; // object for claw object to reference?
+    [SerializeField] public Transform armOrigin; // where the claw fires from / returns to
     [SerializeField] public GameObject claw; // object for claw object to reference
     [SerializeField, ReadOnlyInspector] public float claw_xVel;
     [SerializeField, ReadOnlyInspector] public float claw_yVel;
@@ -16,8 +17,6 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] string clawState;
     [SerializeField, ReadOnlyInspector] public int clawTimer; //frame count
     public ClawFSM clawFsm;
-
-    //todo is claw shooting from transform.position. decouple
 
     // ready? => shoot => hit  => pull => hanging + playerCling => release
     //                 miss => return => ready
@@ -34,7 +33,7 @@ public partial class PlayerMovement : MonoBehaviour
     {
         if (Mouse.current == null) return;
 
-        Plane plane = new Plane(Vector3.back, new Vector3(0, 0, transform.position.z));
+        Plane plane = new Plane(Vector3.back, new Vector3(0, 0, armOrigin.position.z));
         Ray mouseRay = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (plane.Raycast(mouseRay, out float enterDistance))

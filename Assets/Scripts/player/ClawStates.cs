@@ -48,7 +48,7 @@ public sealed class ClawShooting : ClawState
     public ClawShooting(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
-        Vector3 origin = p.transform.position;
+        Vector3 origin = p.armOrigin.position;
         Vector3 aim = p.clawPointer.position - origin;
         aim.z = 0f; // stay on the play plane
 
@@ -93,8 +93,9 @@ public sealed class ClawShooting : ClawState
 
     public override void FixedUpdate()
     {
-        p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);
-        Vector3 vel = p.LinearVel(p.transform.position, p.landingTarget, p.clawParams.flyTime);
+        Vector3 origin = p.armOrigin.position;
+        p.claw.transform.rotation = p.LookAt(origin, p.landingTarget);
+        Vector3 vel = p.LinearVel(p.clawShootOrigin, p.landingTarget, p.clawParams.flyTime);
         p.claw_xVel = vel.x;
         p.claw_yVel = vel.y;
 
@@ -143,7 +144,7 @@ public sealed class ClawGrabbing : ClawState
     public override void FixedUpdate()
     {
         Debug.Log(Vector3.Distance(p.claw.transform.position, p.transform.position));
-        p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);
+        p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
         if (p.shootPressed)
         {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
@@ -166,7 +167,7 @@ public sealed class ClawReturn : ClawState
     public override void FixedUpdate()
     {
         ApplyFlight();
-        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
+        if (Vector3.Distance(p.claw.transform.position, p.armOrigin.position) < 0.2f)
             p.clawFsm.SetState(p.clawFsm.clawReady);
     }
 
@@ -181,8 +182,9 @@ public sealed class ClawReturn : ClawState
     //todo horrendous name
     void ApplyFlight()
     {
-        p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);
-        Vector3 vel = p.LinearVel(p.landingTarget, p.transform.position, p.clawParams.returnTime);
+        Vector3 origin = p.armOrigin.position;
+        p.claw.transform.rotation = p.LookAt(origin, p.landingTarget);
+        Vector3 vel = p.LinearVel(p.landingTarget, origin, p.clawParams.returnTime);
         p.claw_xVel = vel.x;
         p.claw_yVel = vel.y;
     }
