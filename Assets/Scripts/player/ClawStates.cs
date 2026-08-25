@@ -67,6 +67,7 @@ public sealed class ClawShooting : ClawState
 
         // overrides player state here
         p.prevState = p.state;
+        p.clawShootOrigin = p.transform.position;
 
         p.claw.transform.position = p.transform.position;
         p.claw.SetActive(true);

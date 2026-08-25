@@ -106,8 +106,8 @@ public partial class PlayerMovement : MonoBehaviour
         SetState(inputDirX);
         if (clawFsm != null && clawFsm.Current != null)
         {
-        clawFsm.Current.FixedUpdate();
-        clawState = clawFsm.Current?.GetType().Name;
+            clawFsm.Current.FixedUpdate();
+            clawState = clawFsm.Current?.GetType().Name;
         }
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
@@ -267,7 +267,7 @@ public partial class PlayerMovement : MonoBehaviour
                 curGravity = 0;
                 break;
             case PlayerState.ClawFly:
-                Vector3 vel = (landingTarget - transform.position).normalized * Vector3.Distance(landingTarget, transform.position) / (clawParams.flyTime * (1 / 60f));
+                Vector3 vel = LinearVel(clawShootOrigin, landingTarget, clawParams.flyTime);
                 xVel = vel.x;
                 yVel = vel.y;
                 curGravity = 0;

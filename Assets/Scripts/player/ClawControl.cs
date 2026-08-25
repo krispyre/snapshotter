@@ -15,6 +15,7 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] public float claw_yVel;
 
     [SerializeField, ReadOnlyInspector] public Vector3 landingTarget;
+    [SerializeField, ReadOnlyInspector] public Vector3 clawShootOrigin;
     [SerializeField, ReadOnlyInspector] public bool missed;
     [SerializeField, ReadOnlyInspector] string clawState;
     [SerializeField, ReadOnlyInspector] public int clawTimer; //frame count
