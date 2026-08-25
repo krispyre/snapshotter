@@ -49,6 +49,14 @@ public partial class PlayerMovement : MonoBehaviour
         }
     }
 
+    void ResetClaw()
+    {
+        if (Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            clawFsm.SetState(clawFsm.clawReady);
+        }
+    }
+
     void ClawMoveAndSlide()
     {
         Vector3 moveDirection = new Vector3(claw_xVel, claw_yVel, 0f);

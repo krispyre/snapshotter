@@ -104,8 +104,11 @@ public partial class PlayerMovement : MonoBehaviour
     {
         UpdateSensors(inputDirX, jumpPressed);
         SetState(inputDirX);
+        if (clawFsm != null && clawFsm.Current != null)
+        {
         clawFsm.Current.FixedUpdate();
         clawState = clawFsm.Current?.GetType().Name;
+        }
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         ClawMoveAndSlide();
