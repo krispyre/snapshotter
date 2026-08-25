@@ -42,34 +42,51 @@ public sealed class ClawReady : ClawState
 
 public sealed class ClawShooting : ClawState
 {
+    const float CastRadius = 0.05f;
+    const float CastSkin = 0.02f;
+
     public ClawShooting(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
-        Vector3 aim = p.clawPointer.position - p.transform.position;
-        Ray ray = new Ray(p.transform.position, aim);
+        Vector3 origin = p.transform.position;
+        Vector3 aim = p.clawPointer.position - origin;
+        aim.z = 0f; // stay on the play plane
 
-        Debug.Log("shoot");
-        Vector3 aimDirection = p.clawPointer.position - p.transform.position;
-        Ray clawRay = new Ray(p.transform.position, aimDirection);
+        if (aim.sqrMagnitude < 0.0001f)
+            aim = Vector3.right;
+        Vector3 dir = aim.normalized;
 
-        if (Physics.Raycast(clawRay, out RaycastHit hitInfo, p.clawParams.armLength))
+        // MeshCollider raycasts ignore backfaces; enable for this query only
+        bool prevBackfaces = Physics.queriesHitBackfaces;
+        Physics.queriesHitBackfaces = true;
+        // start slightly behind so we still catch walls we're already touching
+        bool didHit = Physics.SphereCast(
+            origin - dir * CastSkin,
+            CastRadius,
+            dir,
+            out RaycastHit hitInfo,
+            p.clawParams.armLength + CastSkin,
+            p.WallLayer,
+            QueryTriggerInteraction.Ignore);
+        Physics.queriesHitBackfaces = prevBackfaces;
+
+        if (didHit)
         {
             p.landingTarget = hitInfo.point;
-            p.claw.transform.position = p.landingTarget;
+            p.landingTarget.z = origin.z;
             p.missed = false;
         }
         else
         {
-            p.landingTarget = p.transform.position + p.clawParams.armLength * aimDirection;
-            Debug.LogAssertion("claw miss");
+            p.landingTarget = origin + dir * p.clawParams.armLength;
             p.missed = true;
         }
 
         // overrides player state here
         p.prevState = p.state;
-        p.clawShootOrigin = p.transform.position;
+        p.clawShootOrigin = origin;
 
-        p.claw.transform.position = p.transform.position;
+        p.claw.transform.position = origin;
         p.claw.SetActive(true);
         p.state = PlayerMovement.PlayerState.Clawing;
     }

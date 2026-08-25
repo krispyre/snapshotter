@@ -20,6 +20,7 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
+    public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
     private CharacterController controller;
