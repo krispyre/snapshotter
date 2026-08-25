@@ -16,7 +16,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     [SerializeField, ReadOnlyInspector] public Vector3 landingTarget;
     [SerializeField, ReadOnlyInspector] public bool missed;
-    [SerializeField, ReadOnlyInspector] ClawState clawState;
+    [SerializeField, ReadOnlyInspector] string clawState;
     [SerializeField, ReadOnlyInspector] public int clawTimer; //frame count
     public ClawFSM clawFsm;
 
