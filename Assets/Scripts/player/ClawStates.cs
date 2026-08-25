@@ -116,7 +116,7 @@ public sealed class ClawMiss : ClawState
 
     public override void Enter()
     {
-        wait = p.clawParams.pullDelay;
+        wait = p.clawParams.returnDelay;
         p.claw_xVel = 0;
         p.claw_yVel = 0;
     }
@@ -132,23 +132,26 @@ public sealed class ClawMiss : ClawState
 
 public sealed class ClawGrabbing : ClawState
 {
+    int wait;
     public ClawGrabbing(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
+        wait = p.clawParams.pullDelay;
         p.claw_xVel = 0;
         p.claw_yVel = 0;
-
-        p.state = PlayerMovement.PlayerState.ClawFly;
     }
 
     public override void FixedUpdate()
     {
-        Debug.Log(Vector3.Distance(p.claw.transform.position, p.transform.position));
-        p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
         if (p.shootPressed)
         {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
         }
+        if (wait > 0) { wait--; return; }
+        p.state = PlayerMovement.PlayerState.ClawFly;
+
+        p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
+
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
             p.transform.position = p.claw.transform.position;
