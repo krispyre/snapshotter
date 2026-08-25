@@ -118,13 +118,17 @@ public sealed class ClawGrabbing : ClawState
     {
         p.claw_xVel = 0;
         p.claw_yVel = 0;
+
+        p.state = PlayerMovement.PlayerState.ClawFly;
     }
 
     public override void FixedUpdate()
     {
         p.claw.transform.rotation = p.LookAt(p.transform.position, p.landingTarget);
         if (p.shootPressed)
+        {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
+        }
     }
 
     public override void Exit() { }
