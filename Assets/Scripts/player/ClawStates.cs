@@ -56,6 +56,8 @@ public sealed class ClawShooting : ClawState
             aim = Vector3.right;
         Vector3 dir = aim.normalized;
 
+        // fact check this todo
+
         // MeshCollider raycasts ignore backfaces; enable for this query only
         bool prevBackfaces = Physics.queriesHitBackfaces;
         Physics.queriesHitBackfaces = true;
