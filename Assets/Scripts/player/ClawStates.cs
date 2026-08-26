@@ -154,10 +154,10 @@ public sealed class ClawGrabbing : ClawState
 
         p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
 
-        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
+        if (Vector3.Distance(p.claw.transform.position, p.BodyPosition) < 0.2f)
         {
             Debug.Log("stick");
-            p.transform.position = p.claw.transform.position;
+            p.SetBodyPosition(p.claw.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
     }

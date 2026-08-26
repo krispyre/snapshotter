@@ -56,7 +56,7 @@ public partial class PlayerMovement : MonoBehaviour
     void ClawMoveAndSlide()
     {
         Vector3 moveDirection = new Vector3(claw_xVel, claw_yVel, 0f);
-        claw.transform.position += moveDirection * Time.deltaTime;
+        claw.transform.position += moveDirection * Time.fixedDeltaTime;
     }
 
     // use to replace tthe messy copypaste in execuyte clawstate

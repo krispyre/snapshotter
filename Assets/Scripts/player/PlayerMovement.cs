@@ -15,6 +15,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
     [SerializeField, ReadOnlyInspector] private float yVel = 0f;
+    [SerializeField, ReadOnlyInspector] private bool isGrounded;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
@@ -26,7 +27,12 @@ public partial class PlayerMovement : MonoBehaviour
     public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
-    private CharacterController controller;
+    const float CastSkin = 0.01f;
+    const float MinGroundNormalY = 0.5f;
+    readonly RaycastHit[] sweepBuf = new RaycastHit[8];
+
+    private Rigidbody body;
+    private Collider bodyCollider;
     private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;
@@ -54,7 +60,20 @@ public partial class PlayerMovement : MonoBehaviour
     {
         ClawInit();
 
-        controller = GetComponent<CharacterController>();
+        body = GetComponent<Rigidbody>();
+        bodyCollider = GetComponent<Collider>();
+        if (bodyCollider == null || bodyCollider.isTrigger)
+        {
+            foreach (var col in GetComponentsInChildren<Collider>())
+            {
+                if (!col.isTrigger)
+                {
+                    bodyCollider = col;
+                    break;
+                }
+            }
+        }
+        ConfigureBody();
         playerInput = GetComponent<PlayerInput>();
         CacheActions();
     }
@@ -141,7 +160,7 @@ public partial class PlayerMovement : MonoBehaviour
         ClawMoveAndSlide();
         jumpPressed = false;
         shootPressed = false;
-        pos = transform.position;
+        pos = BodyPosition;
         claw_pos = claw.transform.position;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
@@ -157,11 +176,11 @@ public partial class PlayerMovement : MonoBehaviour
         else if (dirX < 0) isRight = false;
 
         // Timers
-        if (controller.isGrounded) coyoteTimer = mvmtParams.coyoteTime;
-        else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
+        if (isGrounded) coyoteTimer = mvmtParams.coyoteTime;
+        else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.fixedDeltaTime);
 
         if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
-        else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
+        else jumpBuf = Mathf.Max(0f, jumpBuf - Time.fixedDeltaTime);
 
         UpdateClawPointerPos();
     }
@@ -182,7 +201,7 @@ public partial class PlayerMovement : MonoBehaviour
         // non claw actions.
         if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
         {// ground jump
-            if (controller.isGrounded)
+            if (isGrounded)
             {
                 if (jumpBuf > 0)
                 {
@@ -395,15 +414,39 @@ public partial class PlayerMovement : MonoBehaviour
         Debug.Log(xVel + " " + mvmtParams.wallJumpKickSpeed);
     }
 
+    public Vector3 BodyPosition => body != null ? body.position : transform.position;
+
+    public void SetBodyPosition(Vector3 worldPos)
+    {
+        if (body == null) return;
+        worldPos.z = body.position.z;
+        body.position = worldPos;
+    }
+
+    private void ConfigureBody()
+    {
+        if (body == null) return;
+        body.isKinematic = true;
+        body.useGravity = false;
+        body.interpolation = RigidbodyInterpolation.Interpolate;
+        body.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        body.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+    }
+
+    private bool IsOwnCollider(Collider other)
+    {
+        return other != null && (other == bodyCollider || other.transform.IsChildOf(transform));
+    }
+
     private void MoveAndSlide()
     {
+        float dt = Time.fixedDeltaTime;
         if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
         {
-            yVel -= curGravity * Time.deltaTime;
+            yVel -= curGravity * dt;
+            xVel += curXAccel * dt;
 
-            xVel += curXAccel * Time.deltaTime;
-
-            if (controller.isGrounded)
+            if (isGrounded)
             {
                 xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
             }
@@ -414,8 +457,81 @@ public partial class PlayerMovement : MonoBehaviour
             if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
             else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
         }
-        Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
-        controller.Move(moveDirection * Time.deltaTime); //should this be fixeddelta
+
+        bool groundedThisMove = false;
+        Vector3 nextPos = BodyPosition;
+        nextPos = SweepMove(nextPos, new Vector3(xVel * dt, 0f, 0f), ref groundedThisMove);
+        nextPos = SweepMove(nextPos, new Vector3(0f, yVel * dt, 0f), ref groundedThisMove);
+        isGrounded = groundedThisMove;
+        if (body != null)
+            body.MovePosition(nextPos);
+    }
+
+    private Vector3 SweepMove(Vector3 origin, Vector3 delta, ref bool hitGround)
+    {
+        if (delta.sqrMagnitude < 1e-12f) return origin;
+
+        GetWorldCapsule(origin, out Vector3 p1, out Vector3 p2, out float radius);
+        float mag = delta.magnitude;
+        Vector3 dir = delta / mag;
+        int hits = Physics.CapsuleCastNonAlloc(
+            p1, p2, radius, dir, sweepBuf, mag + CastSkin, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+
+        float best = mag;
+        int bestIndex = -1;
+        for (int i = 0; i < hits; i++)
+        {
+            if (IsOwnCollider(sweepBuf[i].collider)) continue;
+            if (sweepBuf[i].distance < best)
+            {
+                best = sweepBuf[i].distance;
+                bestIndex = i;
+            }
+        }
+        if (bestIndex < 0)
+            return origin + delta;
+
+        if (sweepBuf[bestIndex].normal.y >= MinGroundNormalY)
+            hitGround = true;
+        return origin + dir * Mathf.Max(0f, best - CastSkin);
+    }
+
+    private void GetWorldCapsule(Vector3 worldPos, out Vector3 p1, out Vector3 p2, out float radius)
+    {
+        if (bodyCollider is CapsuleCollider cap)
+        {
+            Vector3 scale = transform.lossyScale;
+            float radial = Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.z));
+            radius = Mathf.Max(0.01f, cap.radius * radial - CastSkin);
+            float height = cap.height * Mathf.Abs(scale.y);
+            Vector3 center = worldPos + Vector3.Scale(cap.center, scale);
+            float half = Mathf.Max(0f, height * 0.5f - radius);
+            p1 = center + Vector3.up * half;
+            p2 = center - Vector3.up * half;
+            return;
+        }
+
+        if (bodyCollider is SphereCollider sphere)
+        {
+            float radial = Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
+            radius = Mathf.Max(0.01f, sphere.radius * radial - CastSkin);
+            p1 = p2 = worldPos + Vector3.Scale(sphere.center, transform.lossyScale);
+            return;
+        }
+
+        if (bodyCollider is BoxCollider box)
+        {
+            Vector3 extents = Vector3.Scale(box.size * 0.5f, transform.lossyScale);
+            radius = Mathf.Max(0.01f, Mathf.Min(extents.x, extents.z) - CastSkin);
+            Vector3 center = worldPos + Vector3.Scale(box.center, transform.lossyScale);
+            float half = Mathf.Max(0f, extents.y - radius);
+            p1 = center + Vector3.up * half;
+            p2 = center - Vector3.up * half;
+            return;
+        }
+
+        radius = 0.09f;
+        p1 = p2 = worldPos;
     }
 
     private float GetMaxAirSpeed()
