@@ -26,7 +26,7 @@ public partial class PlayerMovement : MonoBehaviour
     public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
-    private CharacterController controller;
+    public CharacterController controller;
     private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;

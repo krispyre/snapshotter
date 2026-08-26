@@ -103,7 +103,6 @@ public sealed class ClawShooting : ClawState
 
         if (Vector3.Distance(p.claw.transform.position, p.landingTarget) < 0.02f)
         {
-            Debug.Log("arrive");
             p.claw.transform.position = p.landingTarget;
             p.clawFsm.SetState(p.missed ? p.clawFsm.clawMiss : p.clawFsm.clawGrabbing);
         }
@@ -157,7 +156,7 @@ public sealed class ClawGrabbing : ClawState
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
             Debug.Log("stick");
-            p.transform.position = p.claw.transform.position;
+            p.controller.Move(p.claw.transform.position - p.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
     }
