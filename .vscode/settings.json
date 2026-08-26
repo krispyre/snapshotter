@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "lineman.slnx",
+    "dotnet.defaultSolution": "snapshotter.slnx",
     "editor.formatOnSave": true
 }

@@ -2,12 +2,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
 
-public class PlayerMovement : MonoBehaviour
+public partial class PlayerMovement : MonoBehaviour
 {
     const bool IS_DEBUG = true;
+    [Header("bot")]
     [SerializeField] private PlayerMvmtParams mvmtParams;
-    [Header("debug")]
-    [SerializeField, ReadOnlyInspector] private PlayerState state = PlayerState.Idle;
+    [SerializeField, ReadOnlyInspector] private Vector3 pos;
+
+    [SerializeField, ReadOnlyInspector] private Vector3 claw_pos;
+    [SerializeField, ReadOnlyInspector] public PlayerState state = PlayerState.Idle;
+    [SerializeField, ReadOnlyInspector] public PlayerState prevState; //state before clawing
+
     [SerializeField, ReadOnlyInspector] private float xVel = 0f;
     [SerializeField, ReadOnlyInspector] private float yVel = 0f;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
@@ -18,13 +23,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform wallCheckL;
     [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
+    public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
 
-    private CharacterController controller;
+    public CharacterController controller;
     private PlayerInput playerInput;
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
+    private InputAction shootAction;
+    [SerializeField] Camera mainCamera;
 
     //movement vars
     private float jumpSpeed;
@@ -32,17 +40,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private float coyoteTimer;
 
     //input cache
-    private float inputDirX;
-    private float inputDirY;
-    private bool jumpPressed;
-    private bool jumpHeld;
+    public float inputDirX;
+    public float inputDirY;
+    public bool jumpPressed;
+    public bool jumpHeld;
+    public bool shootPressed;
 
-    private bool wasTouchingWall;
+    public bool wasTouchingWall;
 
-    private enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump }
+    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
 
     private void Awake()
     {
+        ClawInit();
+
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         CacheActions();
@@ -50,28 +61,50 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable() => CacheActions();
 
+    private void OnDisable()
+    {
+        dirXAction = null;
+        dirYAction = null;
+        jumpAction = null;
+        shootAction = null;
+    }
+
+    private void OnDestroy()
+    {
+        playerInput = null;
+        dirXAction = null;
+        dirYAction = null;
+        jumpAction = null;
+        shootAction = null;
+    }
+
     private void CacheActions()
     {
-        if (playerInput != null && playerInput.actions != null)
-        {
-            dirXAction = playerInput.actions.FindAction("DirX");
-            dirYAction = playerInput.actions.FindAction("DirY");
-            jumpAction = playerInput.actions.FindAction("Jump");
-        }
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        // Unity destroyed objects are "fake null"; bail before touching them
+        if (playerInput == null || playerInput.actions == null)
+            return;
+
+        dirXAction = playerInput.actions.FindAction("DirX");
+        dirYAction = playerInput.actions.FindAction("DirY");
+        jumpAction = playerInput.actions.FindAction("Jump");
+        shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
     }
 
     void Start()
     {
-        ;
     }
 
     // update check inputs, fixedupdate calc physics
     void Update()
     {
-        if (dirXAction == null || dirYAction == null || jumpAction == null)
+        if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
             CacheActions();
-            if (dirXAction == null || dirYAction == null) return;
+            if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
+                return;
         }
 
         // todo put these back to start() after tweaking
@@ -80,10 +113,17 @@ public class PlayerMovement : MonoBehaviour
         inputDirX = dirXAction.ReadValue<float>();
         inputDirY = dirYAction.ReadValue<float>();
         if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
+        if (shootAction.WasPressedThisFrame()) shootPressed = true;
         jumpHeld = jumpAction.IsPressed();
 
 
         DebugTime(IS_DEBUG);
+        ResetClaw();
+
+        if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            clawFsm.SetState(clawFsm.clawReady);
+        }
 
     }
 
@@ -91,14 +131,24 @@ public class PlayerMovement : MonoBehaviour
     {
         UpdateSensors(inputDirX, jumpPressed);
         SetState(inputDirX);
+        if (clawFsm != null && clawFsm.Current != null)
+        {
+            clawFsm.Current.FixedUpdate();
+            clawState = clawFsm.Current?.GetType().Name;
+        }
         StateExecute(inputDirX, jumpHeld);
-        MoveAndSlide();
+        MoveAndSlide();// todo override speed clamps after this for claw physics
+        ClawMoveAndSlide();
         jumpPressed = false;
+        shootPressed = false;
+        pos = transform.position;
+        claw_pos = claw.transform.position;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
-        bool wallL = Physics.OverlapSphere(wallCheckL.position, 0.02f, wallLayer).Length > 0;
-        bool wallR = Physics.OverlapSphere(wallCheckR.position, 0.02f, wallLayer).Length > 0;
+        float dist = controller.radius + controller.skinWidth + 0.05f;
+        bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
+        bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
@@ -113,50 +163,66 @@ public class PlayerMovement : MonoBehaviour
 
         if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
+
+        UpdateClawPointerPos();
     }
 
     private void SetState(float dirX)
     {
-        // ground jump
-        if (controller.isGrounded)
+        if (state == PlayerState.Clawing) return;
+        if (state == PlayerState.ClawFly)
         {
-            if (jumpBuf > 0)
+            if (Vector3.Distance(transform.position, claw.transform.position) < 0.02)
+            {
+                ;
+            }
+        }
+        ;
+
+
+        // non claw actions.
+        if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
+        {// ground jump
+            if (controller.isGrounded)
+            {
+                if (jumpBuf > 0)
+                {
+                    Jump();
+                    return;
+                }
+                state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
+                return;
+            }
+
+            // assisted jump
+            if (coyoteTimer > 0 && jumpBuf > 0)
             {
                 Jump();
                 return;
             }
-            state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
-            return;
-        }
 
-        // assisted jump
-        if (coyoteTimer > 0 && jumpBuf > 0)
-        {
-            Jump();
-            return;
-        }
-
-        // wall slide/cling
-        if (isTouchingWall && yVel <= 0)
-        {
-            if (jumpBuf > 0)
+            // wall slide/cling
+            if (isTouchingWall && yVel <= 0)
             {
-                WallJump();
+                if (jumpBuf > 0)
+                {
+                    WallJump();
+                    return;
+                }
+                // todo note this should only happen to airborne
+                bool pushingIntoWall = (dirX < 0 && wallDirection == -1) || (dirX > 0 && wallDirection == 1);
+                state = pushingIntoWall ? PlayerState.WallCling : PlayerState.WallSlide;
                 return;
             }
-            // todo note this should only happen to airborne
-            bool pushingIntoWall = (dirX < 0 && wallDirection == -1) || (dirX > 0 && wallDirection == 1);
-            state = pushingIntoWall ? PlayerState.WallCling : PlayerState.WallSlide;
-            return;
-        }
 
-        if (yVel > 0 && state != PlayerState.WallJump)
-        {
-            state = PlayerState.Jump;
-        }
-        else if (state != PlayerState.WallJump)
-        {
-            state = PlayerState.Fall;
+            if (yVel > 0 && state != PlayerState.WallJump)
+            {
+                state = PlayerState.Jump;
+            }
+            else if (state != PlayerState.WallJump)
+            {
+                state = PlayerState.Fall;
+            }
         }
     }
 
@@ -223,6 +289,18 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
+                break;
+            case PlayerState.Clawing:
+                xVel = 0;
+                yVel = 0;
+                curXAccel = 0;
+                curGravity = 0;
+                break;
+            case PlayerState.ClawFly:
+                Vector3 vel = LinearVel(clawShootOrigin, landingTarget, clawParams.flyTime);
+                xVel = vel.x;
+                yVel = vel.y;
+                curGravity = 0;
                 break;
         }
     }
@@ -296,8 +374,8 @@ public class PlayerMovement : MonoBehaviour
     {
         state = PlayerState.Jump;
         curGravity = mvmtParams.jumpGravity;
-        jumpBuf = 0f;
-        coyoteTimer = 0f;
+        jumpBuf = 0;
+        coyoteTimer = 0;
         yVel = jumpSpeed;
     }
     private void WallJump()
@@ -307,8 +385,8 @@ public class PlayerMovement : MonoBehaviour
         curGravity = mvmtParams.jumpGravity;
         wallJumpLockTimer = mvmtParams.wallJumpLock;
         // Debug.Log(wallJumpLockTimer + " " + wallJumpLock);
-        jumpBuf = 0f;
-        coyoteTimer = 0f;
+        jumpBuf = 0;
+        coyoteTimer = 0;
 
         yVel = jumpSpeed; //todo varied too
 
@@ -320,23 +398,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveAndSlide()
     {
-        yVel -= curGravity * Time.deltaTime;
-
-        xVel += curXAccel * Time.deltaTime;
-
-        if (controller.isGrounded)
+        if (state != PlayerState.Clawing && state != PlayerState.ClawFly)
         {
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
-        }
-        else
-        {
-            xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
-        }
-        if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
-        else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
+            yVel -= curGravity * Time.deltaTime;
 
+            xVel += curXAccel * Time.deltaTime;
+
+            if (controller.isGrounded)
+            {
+                xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
+            }
+            else
+            {
+                xVel = Mathf.Clamp(xVel, -GetMaxAirSpeed(), GetMaxAirSpeed());
+            }
+            if (state == PlayerState.WallSlide) yVel = Mathf.Max(yVel, -mvmtParams.terminalWallSlideSpeed);
+            else yVel = Mathf.Max(yVel, -mvmtParams.terminalFallSpeed);
+        }
         Vector3 moveDirection = new Vector3(xVel, yVel, 0f);
-        controller.Move(moveDirection * Time.deltaTime);
+        controller.Move(moveDirection * Time.deltaTime); //should this be fixeddelta
     }
 
     private float GetMaxAirSpeed()
@@ -351,7 +431,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
             {
-                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.25f;
+                Time.timeScale = (Time.timeScale != 1f) ? 1f : 0.1f;
                 Debug.Log($"Time scale set to: {Time.timeScale}");
             }
         }

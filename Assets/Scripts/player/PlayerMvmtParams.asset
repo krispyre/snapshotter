@@ -16,13 +16,13 @@ MonoBehaviour:
   walkDecel: 12
   airAccel: 15
   airDecel: 12
-  maxWalkSpeed: 1.5
-  maxAirSpeed: 1.7
+  maxWalkSpeed: 1.7
+  maxAirSpeed: 2
   jumpHeight: 0.5
-  jumpGravity: 30
-  fallGravity: 20
-  jumpBufferTime: 0.1
-  coyoteTime: 0.1
+  jumpGravity: 20
+  fallGravity: 15
+  jumpBufferTime: 6
+  coyoteTime: 6
   apexGravityMult: 0.22
   apexThreshold: 0.5
   terminalFallSpeed: 10
