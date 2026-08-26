@@ -7,6 +7,9 @@ public partial class PlayerMovement : MonoBehaviour
     const bool IS_DEBUG = true;
     [Header("bot")]
     [SerializeField] private PlayerMvmtParams mvmtParams;
+    [SerializeField, ReadOnlyInspector] private Vector3 pos;
+
+    [SerializeField, ReadOnlyInspector] private Vector3 claw_pos;
     [SerializeField, ReadOnlyInspector] public PlayerState state = PlayerState.Idle;
     [SerializeField, ReadOnlyInspector] public PlayerState prevState; //state before clawing
 
@@ -138,6 +141,8 @@ public partial class PlayerMovement : MonoBehaviour
         ClawMoveAndSlide();
         jumpPressed = false;
         shootPressed = false;
+        pos = transform.position;
+        claw_pos = claw.transform.position;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {

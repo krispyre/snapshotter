@@ -56,7 +56,7 @@ public sealed class ClawShooting : ClawState
             aim = Vector3.right;
         Vector3 dir = aim.normalized;
 
-        // fact check this todo
+        // fact check this todoa
 
         // MeshCollider raycasts ignore backfaces; enable for this query only
         bool prevBackfaces = Physics.queriesHitBackfaces;
@@ -156,6 +156,7 @@ public sealed class ClawGrabbing : ClawState
 
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
+            Debug.Log("stick");
             p.transform.position = p.claw.transform.position;
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
