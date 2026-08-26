@@ -15,7 +15,7 @@ MonoBehaviour:
   armLength: 2.08
   shootDelay: 60
   flyTime: 7
-  pullDelay: 4
+  pullDelay: 9
   pullTime: 15
   returnTime: 13
-  returnDelay: 0
+  returnDelay: 3

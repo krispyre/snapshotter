@@ -146,8 +146,9 @@ public partial class PlayerMovement : MonoBehaviour
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
-        bool wallL = Physics.OverlapSphere(wallCheckL.position, 0.02f, wallLayer).Length > 0;
-        bool wallR = Physics.OverlapSphere(wallCheckR.position, 0.02f, wallLayer).Length > 0;
+        float dist = controller.radius + controller.skinWidth + 0.05f;
+        bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
+        bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
