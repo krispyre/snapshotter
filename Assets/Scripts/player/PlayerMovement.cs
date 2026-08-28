@@ -390,10 +390,9 @@ public partial class PlayerMovement : MonoBehaviour
 
         yVel = jumpSpeed; //todo varied too
 
-        // vary jump dist if holding?
+        // vary jump dist if holding? todo
         // Kick away from the wall opposite to wallDirection
         xVel += -wallDirection * mvmtParams.wallJumpKickSpeed;
-        Debug.Log(xVel + " " + mvmtParams.wallJumpKickSpeed);
     }
 
     private void MoveAndSlide()

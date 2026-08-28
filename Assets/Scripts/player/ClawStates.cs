@@ -168,7 +168,6 @@ public sealed class ClawGrabbing : ClawState
 
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
-            Debug.Log("stick");
             p.controller.Move(p.claw.transform.position - p.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
