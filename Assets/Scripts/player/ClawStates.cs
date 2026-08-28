@@ -76,7 +76,20 @@ public sealed class ClawShooting : ClawState
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            p.missed = false;
+            if (hitInfo.collider.gameObject.CompareTag("NonGrabbable"))
+            {
+                p.missed = true;
+            }
+            else if (hitInfo.collider.gameObject.CompareTag("Grabbable") || hitInfo.collider.gameObject.CompareTag("Untagged"))
+            {
+                if (hitInfo.collider.gameObject.CompareTag("Untagged"))
+                {
+                    Debug.LogWarning("object is not tagged, defaulting to grabbable");
+                }
+                p.missed = false;
+            }
+
+
         }
         else
         {
