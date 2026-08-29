@@ -12,7 +12,8 @@ public class CameraControl : MonoBehaviour
     public float FOVpersp = (57);
     public float maxTurningAngle = 30;
     public float maxFollowRange = 0.4f;
-    public float followSpeed = 3;
+    public float maxFollowSpeed = 1f;
+    public float followAcceleration = 2f;
 
     [Min(0)] public int toggleCooldownFrames = 60;
 
@@ -23,6 +24,7 @@ public class CameraControl : MonoBehaviour
     private Vector3 initialLocalPosition;
     private Quaternion initialLocalRotation;
     private float currentFollowDistance = 0f;
+    private float currentFollowSpeed = 0f;
 
     void Start()
     {
@@ -68,10 +70,39 @@ public class CameraControl : MonoBehaviour
                 horizontalInput -= 1f;
             }
 
-            currentFollowDistance = Mathf.Clamp(
-                currentFollowDistance + horizontalInput * followSpeed * Time.deltaTime,
-                -maxFollowRange,
-                maxFollowRange);
+            float targetSpeed = horizontalInput * maxFollowSpeed;
+
+            if (horizontalInput != 0f)
+            {
+                currentFollowSpeed = Mathf.MoveTowards(
+                    currentFollowSpeed,
+                    targetSpeed,
+                    followAcceleration * Time.deltaTime);
+            }
+            else
+            {
+                currentFollowSpeed = Mathf.MoveTowards(
+                    currentFollowSpeed,
+                    0f,
+                    followAcceleration * Time.deltaTime);
+            }
+
+            float nextFollowDistance = currentFollowDistance + currentFollowSpeed * Time.deltaTime;
+
+            if (nextFollowDistance > maxFollowRange)
+            {
+                currentFollowDistance = maxFollowRange;
+                currentFollowSpeed = Mathf.Min(currentFollowSpeed, 0f);
+            }
+            else if (nextFollowDistance < -maxFollowRange)
+            {
+                currentFollowDistance = -maxFollowRange;
+                currentFollowSpeed = Mathf.Max(currentFollowSpeed, 0f);
+            }
+            else
+            {
+                currentFollowDistance = nextFollowDistance;
+            }
         }
     }
 
