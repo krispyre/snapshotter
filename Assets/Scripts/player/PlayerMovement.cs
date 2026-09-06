@@ -288,6 +288,9 @@ public partial class PlayerMovement : MonoBehaviour
                     AirControl(dirX);
                 }
 
+                // release jump fall early
+                if (!jumpHeld && yVel > 0)
+                    yVel *= 0.4f;
                 if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
                 break;
             case PlayerState.Clawing:
