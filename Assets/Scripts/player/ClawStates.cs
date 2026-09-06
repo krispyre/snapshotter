@@ -76,7 +76,20 @@ public sealed class ClawShooting : ClawState
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            p.missed = false;
+            if (hitInfo.collider.gameObject.CompareTag("NonGrabbable"))
+            {
+                p.missed = true;
+            }
+            else if (hitInfo.collider.gameObject.CompareTag("Grabbable") || hitInfo.collider.gameObject.CompareTag("Untagged"))
+            {
+                if (hitInfo.collider.gameObject.CompareTag("Untagged"))
+                {
+                    Debug.LogWarning("object is not tagged, defaulting to grabbable");
+                }
+                p.missed = false;
+            }
+
+
         }
         else
         {
@@ -155,7 +168,6 @@ public sealed class ClawGrabbing : ClawState
 
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
-            Debug.Log("stick");
             p.controller.Move(p.claw.transform.position - p.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
         }
