@@ -14,6 +14,10 @@ public class OpenCam : MonoBehaviour
     private Vector3 initialTargetOffset;
     private int initialPriority;
 
+
+    private PlayerInput playerInput;
+    private InputAction camToggleAction;
+
     void Start()
     {
         composer = GetComponent<CinemachineRotationComposer>();
@@ -25,10 +29,15 @@ public class OpenCam : MonoBehaviour
             initialTargetOffset = composer.TargetOffset;
         }
     }
+    void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        camToggleAction = playerInput.actions.FindAction("CamToggle");
+    }
 
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+        if (camToggleAction.WasPressedThisFrame())
         {
 
             // When e key is pressed, increase the camera's priority to get control
