@@ -47,7 +47,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     void ResetClaw()
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame)
         {
             clawFsm.SetState(clawFsm.clawReady);
         }
