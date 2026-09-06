@@ -145,7 +145,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""CamToggle"",
                     ""type"": ""Button"",
-                    ""id"": ""f8116f32-b80c-485e-a6b4-1c2f29bdaf35"",
+                    ""id"": ""4c907f48-8008-4878-871c-64886b96db42"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -255,11 +255,11 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""fe5b6eec-34ca-483a-84a5-8d202e1dc476"",
+                    ""id"": ""bbed7f50-191b-483f-88e9-fecd4702e14e"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": ""Press,Hold"",
+                    ""interactions"": ""Hold,Press"",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default"",
                     ""action"": ""CamToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

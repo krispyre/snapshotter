@@ -15,7 +15,7 @@ public class OpenCam : MonoBehaviour
     private int initialPriority;
 
 
-    private PlayerInput playerInput;
+    [SerializeField] PlayerInput playerInput; // drag the player here
     private InputAction camToggleAction;
 
     void Start()
@@ -31,7 +31,6 @@ public class OpenCam : MonoBehaviour
     }
     void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
         camToggleAction = playerInput.actions.FindAction("CamToggle");
     }
 

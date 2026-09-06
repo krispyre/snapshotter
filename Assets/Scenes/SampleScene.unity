@@ -1043,6 +1043,7 @@ MonoBehaviour:
   verticalRotateScale: 0.24
   horizontalRotateScale: 0.5
   priorityIncrement: 7
+  playerInput: {fileID: 78692847}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
