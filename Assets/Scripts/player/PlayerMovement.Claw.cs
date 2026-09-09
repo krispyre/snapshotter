@@ -5,7 +5,7 @@ public partial class PlayerMovement : MonoBehaviour
 {
     [Header("claw")]
     [SerializeField] public ClawParams clawParams;//idfk how to nameit
-    [SerializeField] public GameObject clawPointer; // object for claw object to reference?
+    [SerializeField] public Transform clawPointer; // object for claw object to reference?
     [SerializeField] public Transform armOrigin; // where the claw fires from / returns to
     [SerializeField] public GameObject claw; // object for claw object to reference
     [SerializeField, ReadOnlyInspector] public float claw_xVel;
@@ -28,7 +28,6 @@ public partial class PlayerMovement : MonoBehaviour
     {
         clawFsm = new ClawFSM(this);
         clawFsm.SetState(clawFsm.clawReady);
-        clawPointer.GetComponent<MeshRenderer>().enabled = false;
     }
     void UpdateClawPointerPos()
     {
@@ -41,7 +40,7 @@ public partial class PlayerMovement : MonoBehaviour
         {
             //update pointer pos
             Vector3 mouseWorldPos = mouseRay.GetPoint(enterDistance);
-            clawPointer.transform.position = mouseWorldPos;
+            clawPointer.position = mouseWorldPos;
 
         }
     }

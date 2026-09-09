@@ -49,8 +49,8 @@ public sealed class ClawShooting : ClawState
     public override void Enter()
     {
         Vector3 origin = p.armOrigin.position;
-        Vector3 aim = new Vector3(p.inputDirX, p.inputDirY, 0f);
-        //Vector3 aim = p.clawPointer.position - origin;
+        Vector3 aim = p.clawPointer.position - origin;
+        aim.z = 0f; // stay on the play plane
 
         if (aim.sqrMagnitude < 0.0001f)
             aim = Vector3.right;
