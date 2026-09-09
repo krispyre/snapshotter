@@ -25,5 +25,5 @@ public class PlayerMvmtParams : ScriptableObject
     public float wallSlideEnterDampMult = 0.2f;
     public float terminalWallSlideSpeed = 5f;
     public float wallJumpKickSpeed = 5f;
-    public int wallJumpLock = 8;//frame count
+    public int wallJumpLock = 2;//frame count
 }
