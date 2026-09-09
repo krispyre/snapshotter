@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleController
   clawParams: {fileID: 11400000, guid: 7c16dc32deb161d4a8fd57ffef25d858, type: 2}
-  clawPointer: {fileID: 1692158123}
+  clawPointer: {fileID: 1692158120}
   armOrigin: {fileID: 78692845}
   claw: {fileID: 775922017}
   claw_xVel: 0
