@@ -12,4 +12,7 @@ public class ClawParams : ScriptableObject
     public int pullTime = 20; //time for body to arrive target. should be > flytime
     public int returnTime = 13; //time for empty claw to return to body
     public int returnDelay = 2;
+    public int recoilTime = 3;
+    public float recoilAmp = 0.5f;
+
 }
