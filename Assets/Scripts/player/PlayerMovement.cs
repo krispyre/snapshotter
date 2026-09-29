@@ -100,6 +100,8 @@ public partial class PlayerMovement : MonoBehaviour
     // update check inputs, fixedupdate calc physics
     void Update()
     {
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return; // Skip this frame if no keyboard is connected/focused
         if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
             CacheActions();
