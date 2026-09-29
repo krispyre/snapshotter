@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMvmtParams
   walkAccel: 10
   walkDecel: 12
-  airAccel: 15
+  airAccel: 31.8
   airDecel: 12
   maxWalkSpeed: 1.7
   maxAirSpeed: 2
@@ -30,4 +30,4 @@ MonoBehaviour:
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
   wallJumpKickSpeed: 3
-  wallJumpLock: 8
+  wallJumpLock: 2
