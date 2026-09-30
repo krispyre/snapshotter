@@ -1,221 +1,219 @@
 {
-    "version": 1,
-    "name": "PlayerInputs",
-    "maps": [
+  "version": 1,
+  "name": "PlayerInputs",
+  "maps": [
+    {
+      "name": "Player",
+      "id": "cd8edfbd-7d44-4827-8f8f-8deccbf23c23",
+      "actions": [
         {
-            "name": "Player",
-            "id": "cd8edfbd-7d44-4827-8f8f-8deccbf23c23",
-            "actions": [
-                {
-                    "name": "DirX",
-                    "type": "Value",
-                    "id": "f9854e94-8e92-4af3-8d25-ba8cebbdb768",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true,
-                    "priority": 0
-                },
-                {
-                    "name": "DirY",
-                    "type": "Value",
-                    "id": "082e9564-dfe4-42a2-a3e8-18509f330f73",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true,
-                    "priority": 0
-                },
-                {
-                    "name": "ShootToggle",
-                    "type": "Button",
-                    "id": "666095bf-68f5-42af-a56c-bacb8efa90c4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Hold",
-                    "type": "Button",
-                    "id": "19b43588-5fdc-4251-99d9-2607ac211472",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "7276afd0-ed8e-47a4-8005-715046752257",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "CamToggle",
-                    "type": "Button",
-                    "id": "4c907f48-8008-4878-871c-64886b96db42",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CamToggle",
-                    "type": "Button",
-                    "id": "4c907f48-8008-4878-871c-64886b96db42",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CamToggle",
-                    "type": "Button",
-                    "id": "4c907f48-8008-4878-871c-64886b96db42",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "1D Axis",
-                    "id": "2c3e2e68-25c7-4bdc-96c2-fda03806574b",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DirX",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "25db1a94-d578-4d18-a1b8-b28df7271ce6",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "DirX",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "2c39218c-d5ac-4bae-95dd-89fa0906a32e",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "DirX",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "ee5c99f9-53d5-4e30-9288-fb0b9d8f0e50",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "ShootToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "efb73192-f475-4820-947a-808928c36ecf",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "Hold",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "1D Axis",
-                    "id": "3a45d62b-886c-4e1f-9025-83530394fe28",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DirY",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "0844d530-008b-411f-a67f-8c1792814903",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "DirY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "a9b667ad-ff79-46b5-b1d4-1eaf3bd8ce76",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "DirY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "f49dfb4b-e9bc-4da2-8089-8924b121298a",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bbed7f50-191b-483f-88e9-fecd4702e14e",
-                    "path": "<Keyboard>/e",
-                    "interactions": "Hold,Press",
-                    "processors": "",
-                    "groups": ";Default",
-                    "action": "CamToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        }
-    ],
-    "controlSchemes": [
+          "name": "DirX",
+          "type": "Value",
+          "id": "f9854e94-8e92-4af3-8d25-ba8cebbdb768",
+          "expectedControlType": "Axis",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true,
+          "priority": 0
+        },
         {
-            "name": "Default",
-            "bindingGroup": "Default",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Mouse>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
+          "name": "DirY",
+          "type": "Value",
+          "id": "082e9564-dfe4-42a2-a3e8-18509f330f73",
+          "expectedControlType": "Axis",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true,
+          "priority": 0
+        },
+        {
+          "name": "ShootToggle",
+          "type": "Button",
+          "id": "666095bf-68f5-42af-a56c-bacb8efa90c4",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false,
+          "priority": 0
+        },
+        {
+          "name": "Hold",
+          "type": "Button",
+          "id": "19b43588-5fdc-4251-99d9-2607ac211472",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false,
+          "priority": 0
+        },
+        {
+          "name": "Jump",
+          "type": "Button",
+          "id": "7276afd0-ed8e-47a4-8005-715046752257",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false,
+          "priority": 0
+        },
+        {
+          "name": "CamToggle",
+          "type": "Button",
+          "id": "4c907f48-8008-4878-871c-64886b96db42",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "CamToggle",
+          "type": "Button",
+          "id": "4c907f48-8008-4878-871c-64886b96db42",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "CamToggle",
+          "type": "Button",
+          "id": "4c907f48-8008-4878-871c-64886b96db42",
+          "expectedControlType": "",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
         }
-    ]
+      ],
+      "bindings": [
+        {
+          "name": "1D Axis",
+          "id": "2c3e2e68-25c7-4bdc-96c2-fda03806574b",
+          "path": "1DAxis",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "DirX",
+          "isComposite": true,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "negative",
+          "id": "25db1a94-d578-4d18-a1b8-b28df7271ce6",
+          "path": "<Keyboard>/a",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "DirX",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "positive",
+          "id": "2c39218c-d5ac-4bae-95dd-89fa0906a32e",
+          "path": "<Keyboard>/d",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "DirX",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "",
+          "id": "ee5c99f9-53d5-4e30-9288-fb0b9d8f0e50",
+          "path": "<Mouse>/leftButton",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "ShootToggle",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "",
+          "id": "efb73192-f475-4820-947a-808928c36ecf",
+          "path": "<Mouse>/rightButton",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "Hold",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "1D Axis",
+          "id": "3a45d62b-886c-4e1f-9025-83530394fe28",
+          "path": "1DAxis",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "DirY",
+          "isComposite": true,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "negative",
+          "id": "0844d530-008b-411f-a67f-8c1792814903",
+          "path": "<Keyboard>/s",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "DirY",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "positive",
+          "id": "a9b667ad-ff79-46b5-b1d4-1eaf3bd8ce76",
+          "path": "<Keyboard>/w",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "DirY",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "",
+          "id": "f49dfb4b-e9bc-4da2-8089-8924b121298a",
+          "path": "<Keyboard>/space",
+          "interactions": "",
+          "processors": "",
+          "groups": ";Default",
+          "action": "Jump",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "",
+          "id": "bbed7f50-191b-483f-88e9-fecd4702e14e",
+          "path": "<Keyboard>/e",
+          "interactions": "Hold,Press",
+          "processors": "",
+          "groups": ";Default",
+          "action": "CamToggle",
+          "isComposite": false,
+          "isPartOfComposite": false
+        }
+      ]
+    }
+  ],
+  "controlSchemes": [
+    {
+      "name": "Default",
+      "bindingGroup": "Default",
+      "devices": [
+        {
+          "devicePath": "<Keyboard>",
+          "isOptional": false,
+          "isOR": false
+        },
+        {
+          "devicePath": "<Mouse>",
+          "isOptional": false,
+          "isOR": false
+        }
+      ]
+    }
+  ]
 }
