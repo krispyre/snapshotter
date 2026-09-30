@@ -4012,12 +4012,16 @@ PrefabInstance:
       value: playerGroup
       objectReference: {fileID: 0}
     - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 330585545}
+    - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_Actions
       value: 
       objectReference: {fileID: -944628639613478452, guid: 78d732dd8e8638c46b07e768f197ec80, type: 3}
     - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_DefaultControlScheme
-      value: 
+      value: Keyboard&Mouse
       objectReference: {fileID: 0}
     - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_NotificationBehavior
