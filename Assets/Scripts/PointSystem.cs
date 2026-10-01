@@ -7,10 +7,14 @@ public class PointSystem : MonoBehaviour
 {
     [SerializeField] private Text scoreText;
     private float initMaxPoint = 100;
-    [SerializeField] private float[] thresholds = { 20f, 40f, 60f, 80f };
+    private float curMaxPoint = 100;
+    private float pointsRecoverRate = 5;
+    [SerializeField] private float[] thresholds = { 20f, 40f, 60f, 80f, 100f };
     [SerializeField, ReadOnlyInspector] private float _points;
 
     public static PointSystem Instance;
+    [SerializeField, ReadOnlyInspector] public bool isSafe = true;
+    private bool wasSafe = false;
     public float points
     {
         get => _points;
@@ -18,9 +22,9 @@ public class PointSystem : MonoBehaviour
         {
             _points = value;
 
-            if (_points > initMaxPoint)
+            if (_points > curMaxPoint)
             {
-                _points = initMaxPoint;
+                _points = curMaxPoint;
             }
             else if (_points <= 0)
             {
@@ -31,7 +35,6 @@ public class PointSystem : MonoBehaviour
             if (scoreText != null)
             {
                 scoreText.text = "points: " + _points.ToString();
-                Debug.Log(scoreText.text);
             }
         }
     }
@@ -44,15 +47,25 @@ public class PointSystem : MonoBehaviour
 
     void Start()
     {
-        points = initMaxPoint;
+        curMaxPoint = initMaxPoint;
+        points = curMaxPoint;
     }
 
     void Update()
     {
         if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
         {
+            Debug.Log("deduct debug");
             DeductPoints(10f);
         }
+        else isSafe = true;
+
+        if (isSafe)
+        {
+            points += pointsRecoverRate * Time.deltaTime;
+            points = Mathf.Clamp(points, 0, curMaxPoint);
+        }
+
     }
 
     public void DeductPoints(float rate)
@@ -60,7 +73,27 @@ public class PointSystem : MonoBehaviour
         rate is points per second!!
     */
     {
+        isSafe = false;
         points -= rate * Time.deltaTime;
+    }
+
+    void LateUpdate()
+    {
+
+        if (isSafe && !wasSafe) // just returned to safe
+        { // set curMaxPoint to nearest point thres
+            for (int i = 0, n = thresholds.Length; i < n; i++)
+            {
+                if (_points <= thresholds[i])
+                {
+                    curMaxPoint = thresholds[i];
+                    Debug.Log(curMaxPoint);
+                    break;
+                }
+            }
+        }
+        wasSafe = isSafe;
+        isSafe = true;
     }
 
     private void OnDeath()
