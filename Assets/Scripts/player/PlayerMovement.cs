@@ -150,11 +150,12 @@ public partial class PlayerMovement : MonoBehaviour
         float dist = controller.radius + controller.skinWidth + 0.05f;
         bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
         bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
-        bool ceil = Physics.BoxCast(); // add walldetect here
+        bool isTouchingCeil = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.up, transform.rotation, dist, wallLayer); // add walldetect here
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
         wallDirection = wallR ? 1 : (wallL ? -1 : 0);
+
 
         if (dirX > 0) isRight = true;
         else if (dirX < 0) isRight = false;
@@ -193,6 +194,9 @@ public partial class PlayerMovement : MonoBehaviour
                     return;
                 }
                 state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
+                return;
+            } else if (isTouchingCeil) {
+                state = PlayerState.Fall;
                 return;
             }
 
