@@ -20,8 +20,7 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
     [SerializeField, ReadOnlyInspector] private float curXAccel;
-    [SerializeField] private Transform wallCheckL;
-    [SerializeField] private Transform wallCheckR;
+
     [SerializeField] private LayerMask wallLayer;
     public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
@@ -149,6 +148,7 @@ public partial class PlayerMovement : MonoBehaviour
         float dist = controller.radius + controller.skinWidth + 0.05f;
         bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
         bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
+        bool ceil = Physics.BoxCast(); // add walldetect here
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
