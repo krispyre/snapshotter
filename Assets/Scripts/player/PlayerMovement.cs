@@ -13,8 +13,8 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] public PlayerState state = PlayerState.Idle;
     [SerializeField, ReadOnlyInspector] public PlayerState prevState; //state before clawing
 
-    [SerializeField, ReadOnlyInspector] private float xVel = 0f;
-    [SerializeField, ReadOnlyInspector] private float yVel = 0f;
+    [SerializeField, ReadOnlyInspector] public float xVel = 0f;
+    [SerializeField, ReadOnlyInspector] public float yVel = 0f;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
@@ -99,6 +99,8 @@ public partial class PlayerMovement : MonoBehaviour
     // update check inputs, fixedupdate calc physics
     void Update()
     {
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return; // Skip this frame if no keyboard is connected/focused
         if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
             CacheActions();
@@ -294,8 +296,8 @@ public partial class PlayerMovement : MonoBehaviour
                 if (yVel <= 0 && wallJumpLockTimer <= 0) state = PlayerState.Fall;
                 break;
             case PlayerState.Clawing:
-                xVel = 0;
-                yVel = 0;
+                // xVel = 0;
+                // yVel = 0;
                 curXAccel = 0;
                 curGravity = 0;
                 break;

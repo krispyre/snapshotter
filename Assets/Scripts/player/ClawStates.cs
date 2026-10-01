@@ -42,12 +42,16 @@ public sealed class ClawReady : ClawState
 
 public sealed class ClawShooting : ClawState
 {
+    int recoilTimer;
+    Vector3 recoilVel;
     const float CastRadius = 0.05f;
     const float CastSkin = 0.02f;
 
     public ClawShooting(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
+        p.xVel = 0;
+        p.yVel = 0;
         Vector3 origin = p.armOrigin.position;
         Vector3 aim = p.clawPointer.position - origin;
         aim.z = 0f; // stay on the play plane
@@ -56,7 +60,7 @@ public sealed class ClawShooting : ClawState
             aim = Vector3.right;
         Vector3 dir = aim.normalized;
 
-        // fact check this todoa
+        // fact check this todo!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // MeshCollider raycasts ignore backfaces; enable for this query only
         bool prevBackfaces = Physics.queriesHitBackfaces;
@@ -101,6 +105,10 @@ public sealed class ClawShooting : ClawState
         p.prevState = p.state;
         p.clawShootOrigin = origin;
 
+        // recoil
+        recoilTimer = p.clawParams.recoilTime;
+        recoilVel = -aim * p.clawParams.recoilAmp;
+
         p.claw.transform.position = origin;
         p.claw.SetActive(true);
         p.state = PlayerMovement.PlayerState.Clawing;
@@ -109,6 +117,20 @@ public sealed class ClawShooting : ClawState
     public override void FixedUpdate()
     {
         Vector3 origin = p.armOrigin.position;
+        if (recoilTimer > 0)
+        {
+            float t = 1f - recoilTimer / (float)p.clawParams.recoilTime; // 0 → 1
+            t = t * t; // quad ease lol
+            Vector3 kick = Vector3.Lerp(recoilVel, Vector3.zero, t);
+            p.xVel = kick.x;
+            p.yVel = kick.y;
+            recoilTimer--;
+        }
+        else
+        {
+            p.xVel = 0;
+            p.yVel = 0;
+        }
         p.claw.transform.rotation = p.LookAt(origin, p.landingTarget);
         Vector3 vel = p.LinearVel(p.clawShootOrigin, p.landingTarget, p.clawParams.flyTime);
         p.claw_xVel = vel.x;
