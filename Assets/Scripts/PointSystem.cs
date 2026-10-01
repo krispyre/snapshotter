@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PointSystem : MonoBehaviour
 {
-    [SerializeField] private Text scoreText;
+    public UnityEvent onPointsDepleted;
+    private Text scoreText;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
     private float pointsRecoverRate = 5;
-    [SerializeField] private float[] thresholds = { 20f, 40f, 60f, 80f, 100f };
+    [SerializeField]
+    public float[] thresholds = null; //= { 20f, 40f, 60f, 80f, 100f };
     [SerializeField, ReadOnlyInspector] private float _points;
 
     public static PointSystem Instance;
@@ -29,7 +31,7 @@ public class PointSystem : MonoBehaviour
             else if (_points <= 0)
             {
                 _points = 0;
-                OnDeath();
+                OnDepleted();
             }
 
             if (scoreText != null)
@@ -37,6 +39,11 @@ public class PointSystem : MonoBehaviour
                 scoreText.text = "points: " + _points.ToString();
             }
         }
+    }
+
+    public void SetThresholds(float[] thresholds)
+    {
+        this.thresholds = thresholds;
     }
 
     void Awake()
@@ -53,10 +60,11 @@ public class PointSystem : MonoBehaviour
 
     void Update()
     {
+        if (thresholds == null) return;
         if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
         {
             Debug.Log("deduct debug");
-            DeductPoints(10f);
+            DeductPoints(50f);
         }
         else isSafe = true;
 
@@ -96,8 +104,8 @@ public class PointSystem : MonoBehaviour
         isSafe = true;
     }
 
-    private void OnDeath()
+    private void OnDepleted()
     {
-        Debug.LogWarning("U die");
+        onPointsDepleted.Invoke();
     }
 }
