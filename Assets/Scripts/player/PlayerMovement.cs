@@ -61,27 +61,10 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnEnable() => CacheActions();
 
-    private void OnDisable()
-    {
-        dirXAction = null;
-        dirYAction = null;
-        jumpAction = null;
-        shootAction = null;
-    }
-
-    private void OnDestroy()
-    {
-        playerInput = null;
-        dirXAction = null;
-        dirYAction = null;
-        jumpAction = null;
-        shootAction = null;
-    }
-
     private void CacheActions()
     {
         if (playerInput == null)
-            playerInput = GetComponent<PlayerInput>();
+            playerInput = GetComponentInParent<PlayerInput>();
 
         // Unity destroyed objects are "fake null"; bail before touching them
         if (playerInput == null || playerInput.actions == null)
@@ -104,9 +87,7 @@ public partial class PlayerMovement : MonoBehaviour
         if (keyboard == null) return; // Skip this frame if no keyboard is connected/focused
         if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
-            CacheActions();
-            if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
-                return;
+            return;
         }
 
         // todo put these back to start() after tweaking

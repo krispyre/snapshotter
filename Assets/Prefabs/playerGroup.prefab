@@ -226,7 +226,6 @@ GameObject:
   m_Component:
   - component: {fileID: 784476591589895184}
   - component: {fileID: 8009879505214163776}
-  - component: {fileID: 6603251629096034967}
   - component: {fileID: 3116406523024297940}
   - component: {fileID: 7260722442422968258}
   m_Layer: 0
@@ -282,36 +281,6 @@ CharacterController:
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6603251629096034967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1812362726903871155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 78d732dd8e8638c46b07e768f197ec80, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &3116406523024297940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +501,7 @@ MonoBehaviour:
   verticalRotateScale: 0.24
   horizontalRotateScale: 0.5
   priorityIncrement: 7
-  playerInput: {fileID: 6603251629096034967}
+  playerInput: {fileID: 0}
 --- !u!1 &4993944587330449953
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,6 +511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4705922089883589315}
+  - component: {fileID: 1004637472431722812}
   m_Layer: 0
   m_Name: playerGroup
   m_TagString: Untagged
@@ -562,14 +532,44 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5925549249526759962}
   - {fileID: 784476591589895184}
   - {fileID: 1509770914371368196}
   - {fileID: 4986931795322501114}
   - {fileID: 5348050489309137694}
   - {fileID: 8924663584559705786}
-  - {fileID: 5925549249526759962}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1004637472431722812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993944587330449953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 78d732dd8e8638c46b07e768f197ec80, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &5046266589489488917
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +812,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5925549249526759962}
-  - component: {fileID: 6042946834631121807}
+  - component: {fileID: 141728108637992417}
   - component: {fileID: 2716367608499912830}
   m_Layer: 0
   m_Name: Droid
@@ -837,8 +837,8 @@ Transform:
   - {fileID: 250488677669691338}
   m_Father: {fileID: 4705922089883589315}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6042946834631121807
-CapsuleCollider:
+--- !u!143 &141728108637992417
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -852,13 +852,15 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
+  serializedVersion: 3
   m_Height: 1.7
-  m_Direction: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.05
+  m_SkinWidth: 0.01
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2716367608499912830
 MonoBehaviour:
@@ -872,6 +874,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3590d7ece61636f4583258add6c1f5aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  mvmtParams: {fileID: 11400000, guid: a4b236ffb11661e43a2803a596201c49, type: 2}
+  state: 0
+  xVel: 0
+  yVel: 0
+  isTouchingWall: 0
+  wasTouchingWall: 0
+  wallDirection: 0
+  isRight: 1
+  curGravity: 0
+  curXAccel: 0
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallJumpLockTimer: 0
+  jumpBuf: 0
+  coyoteTimer: 0
+  inputDirX: 0
+  inputDirY: 0
+  jumpPressed: 0
+  jumpHeld: 0
 --- !u!1 &7085439962271865738
 GameObject:
   m_ObjectHideFlags: 0
