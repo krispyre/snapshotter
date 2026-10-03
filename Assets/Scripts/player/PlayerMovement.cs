@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.ComponentModel;
 
 public partial class PlayerMovement : MonoBehaviour
 {
@@ -30,6 +29,7 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction dirYAction;
     private InputAction jumpAction;
     private InputAction shootAction;
+    private InputAction interactAction;
     [SerializeField] Camera mainCamera;
 
     //movement vars
@@ -45,6 +45,7 @@ public partial class PlayerMovement : MonoBehaviour
     public bool shootPressed;
 
     public bool wasTouchingWall;
+    [SerializeField, ReadOnlyInspector] public bool isNearDroid;
 
     public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
 
@@ -72,6 +73,7 @@ public partial class PlayerMovement : MonoBehaviour
         dirYAction = playerInput.actions.FindAction("DirY");
         jumpAction = playerInput.actions.FindAction("Jump");
         shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
+        interactAction = playerInput.actions.FindAction("Interact");
     }
 
     void Start()
@@ -120,9 +122,15 @@ public partial class PlayerMovement : MonoBehaviour
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         ClawMoveAndSlide();
+
+        if (isNearDroid && interactAction.WasPressedThisFrame())
+        {
+
+            GetComponentInParent<PlayerModeController>().ReturnToDroid();
+        }
+
         jumpPressed = false;
         shootPressed = false;
-        pos = transform.position;
         claw_pos = claw.transform.position;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
@@ -406,6 +414,18 @@ public partial class PlayerMovement : MonoBehaviour
     {
         if (state == PlayerState.WallJump) return float.MaxValue;
         return mvmtParams.maxAirSpeed;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("DroidDummy")) return;
+        isNearDroid = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("DroidDummy")) return;
+        isNearDroid = false;
     }
 
     private void DebugTime(bool isDebug)
