@@ -43,9 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CamToggle",
+                    "name": "Camera",
                     "type": "Button",
                     "id": "3a72a5bf-6e4b-4bc7-9afa-4d8710f68a64",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "391f7dd8-9689-4fc0-90b4-0b67b351619c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -111,11 +120,11 @@
                 {
                     "name": "",
                     "id": "a1dba960-993f-453b-8e06-f7598ebd1743",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "CamToggle",
+                    "action": "Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -151,6 +160,17 @@
                     "action": "DirX",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "adc749f4-e02b-4823-baa2-b4dba04c6738",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

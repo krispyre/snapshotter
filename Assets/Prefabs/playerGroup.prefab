@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3488189204373049168}
   - component: {fileID: 3448047499898591686}
   m_Layer: 0
-  m_Name: PlayerCamera
+  m_Name: SpiderCamView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 3116406523024297940}
   - component: {fileID: 7260722442422968258}
   m_Layer: 0
-  m_Name: player
+  m_Name: spider
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,7 +368,7 @@ GameObject:
   - component: {fileID: 5110735383493480519}
   - component: {fileID: 3382184937277631587}
   m_Layer: 0
-  m_Name: ShottingCamera
+  m_Name: RecordingCamView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -680,7 +680,7 @@ GameObject:
   - component: {fileID: 141728108637992417}
   - component: {fileID: 2716367608499912830}
   m_Layer: 0
-  m_Name: Droid
+  m_Name: droid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

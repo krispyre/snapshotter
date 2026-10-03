@@ -129,9 +129,18 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CamToggle"",
+                    ""name"": ""Camera"",
                     ""type"": ""Button"",
                     ""id"": ""3a72a5bf-6e4b-4bc7-9afa-4d8710f68a64"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""391f7dd8-9689-4fc0-90b4-0b67b351619c"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -197,11 +206,11 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a1dba960-993f-453b-8e06-f7598ebd1743"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""CamToggle"",
+                    ""action"": ""Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -237,6 +246,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""DirX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""adc749f4-e02b-4823-baa2-b4dba04c6738"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -826,7 +846,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_DirY = m_Player.FindAction("DirY", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_ShootToggle = m_Player.FindAction("ShootToggle", throwIfNotFound: true);
-        m_Player_CamToggle = m_Player.FindAction("CamToggle", throwIfNotFound: true);
+        m_Player_Camera = m_Player.FindAction("Camera", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -924,7 +945,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_DirY;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_ShootToggle;
-    private readonly InputAction m_Player_CamToggle;
+    private readonly InputAction m_Player_Camera;
+    private readonly InputAction m_Player_Interact;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -953,9 +975,13 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @ShootToggle => m_Wrapper.m_Player_ShootToggle;
         /// <summary>
-        /// Provides access to the underlying input action "Player/CamToggle".
+        /// Provides access to the underlying input action "Player/Camera".
         /// </summary>
-        public InputAction @CamToggle => m_Wrapper.m_Player_CamToggle;
+        public InputAction @Camera => m_Wrapper.m_Player_Camera;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -994,9 +1020,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ShootToggle.started += instance.OnShootToggle;
             @ShootToggle.performed += instance.OnShootToggle;
             @ShootToggle.canceled += instance.OnShootToggle;
-            @CamToggle.started += instance.OnCamToggle;
-            @CamToggle.performed += instance.OnCamToggle;
-            @CamToggle.canceled += instance.OnCamToggle;
+            @Camera.started += instance.OnCamera;
+            @Camera.performed += instance.OnCamera;
+            @Camera.canceled += instance.OnCamera;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         /// <summary>
@@ -1020,9 +1049,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ShootToggle.started -= instance.OnShootToggle;
             @ShootToggle.performed -= instance.OnShootToggle;
             @ShootToggle.canceled -= instance.OnShootToggle;
-            @CamToggle.started -= instance.OnCamToggle;
-            @CamToggle.performed -= instance.OnCamToggle;
-            @CamToggle.canceled -= instance.OnCamToggle;
+            @Camera.started -= instance.OnCamera;
+            @Camera.performed -= instance.OnCamera;
+            @Camera.canceled -= instance.OnCamera;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         /// <summary>
@@ -1352,12 +1384,19 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShootToggle(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "CamToggle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Camera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCamToggle(InputAction.CallbackContext context);
+        void OnCamera(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -31,7 +31,7 @@ public class OpenCam : MonoBehaviour
     }
     void Awake()
     {
-        camToggleAction = playerInput.actions.FindAction("CamToggle");
+        camToggleAction = playerInput.actions.FindAction("Camera");
     }
 
     void Update()
