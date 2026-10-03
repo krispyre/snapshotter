@@ -20,8 +20,6 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
     [SerializeField, ReadOnlyInspector] private float curXAccel;
-    [SerializeField] private Transform wallCheckL;
-    [SerializeField] private Transform wallCheckR;
     [SerializeField] private LayerMask wallLayer;
     public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
