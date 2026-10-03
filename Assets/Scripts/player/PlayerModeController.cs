@@ -8,6 +8,12 @@ public class PlayerModeController : MonoBehaviour
     private InputAction dirYAction;
     private InputAction interactAction;
     [SerializeField, ReadOnlyInspector] private bool isDroid = true;
+    private GameObject droid;
+    private GameObject spider;
+    private GameObject dummy;
+    [SerializeField] public float holdDuration = 2;
+    [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
+
     private void CacheActions()
     {
         if (playerInput == null)
@@ -22,28 +28,58 @@ public class PlayerModeController : MonoBehaviour
     void Awake()
     {
         CacheActions();
+        droid = transform.Find("droid").gameObject;
+        spider = transform.Find("spider").gameObject;
+        dummy = transform.Find("droidDummy").gameObject;
+
+
+        droid.SetActive(isDroid);
+        dummy.SetActive(!isDroid);
+        spider.SetActive(!isDroid);
+
+
     }
     private void OnEnable() => CacheActions();
     void Update()
     {
+
         if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0) //todo change to held tgt
         {
-            if (isDroid)
-            {
-                SwitchToSpider();
-            }
+            holdTimer += Time.deltaTime;
+        }
+        else if (holdTimer >= 0)
+        {
+            holdTimer -= 3 * Time.deltaTime;
+        }
+        else
+        {
+            holdTimer = 0;
+        }
+
+        if (isDroid && holdTimer >= holdDuration)
+        {
+            holdTimer = 0;
+            SwitchToSpider();
         }
     }
 
     void SwitchToSpider()
     {
-        //deactivate droid, spawn dummy droid, then enable spider
+        //deactivate droid, spawn dummy droid, then enable spider at droid
+        droid.SetActive(false);
+        dummy.transform.position = droid.transform.position;
+        dummy.SetActive(true);
+        spider.transform.position = droid.transform.position;
+        spider.SetActive(true);
 
 
     }
     void ReturnToDroid()
     {
-        //deactivate droid, spawn dummy droid, then enable spider
+        //deactivate spider, despawn dummy droid, then enable droid
+        droid.SetActive(true);
+        dummy.SetActive(false);
+        spider.SetActive(false);
 
     }
 }

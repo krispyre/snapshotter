@@ -39,7 +39,7 @@ public class OpenCam : MonoBehaviour
         if (camToggleAction.WasPressedThisFrame())
         {
 
-            // When e key is pressed, increase the camera's priority to get control
+            // When [camera] key is pressed, increase the camera's priority to get control
             if (camera != null)
             {
                 if (camera.Priority == initialPriority)
