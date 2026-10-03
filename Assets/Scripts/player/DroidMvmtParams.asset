@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24866e0320fd4334c8a29fa3c17f0d60, type: 3}
-  m_Name: PlayerMvmtParams
+  m_Name: DroidMvmtParams
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMvmtParams
-  walkAccel: 10
-  walkDecel: 12
-  airAccel: 31.8
-  airDecel: 12
-  maxWalkSpeed: 1.7
-  maxAirSpeed: 2
-  jumpHeight: 0.5
-  jumpGravity: 20
-  fallGravity: 15
-  jumpBufferTime: 6
-  coyoteTime: 6
-  apexGravityMult: 0.22
-  apexThreshold: 0.5
+  walkAccel: 30
+  walkDecel: 40
+  airAccel: 20
+  airDecel: 30
+  maxWalkSpeed: 4
+  maxAirSpeed: 4.1
+  jumpHeight: 0.8
+  jumpGravity: 40
+  fallGravity: 40
+  jumpBufferTime: 0.1
+  coyoteTime: 0.1
+  apexGravityMult: 1
+  apexThreshold: 0.1
   terminalFallSpeed: 10
-  wallSlideGravity: 2
+  wallSlideGravity: 4
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 3
+  wallJumpKickSpeed: 5
   wallJumpLock: 2
