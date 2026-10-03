@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerMvmtParams", menuName = "Player/MvmtParams")]
 public class PlayerMvmtParams : ScriptableObject
 {
+    [Header("--------Droid")]
+    [Header("--------Spider")]
     [Header("move")]
     public float walkAccel = 15f;
     public float walkDecel = 30f;// for forwards

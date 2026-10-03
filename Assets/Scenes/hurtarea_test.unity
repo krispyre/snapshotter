@@ -1788,6 +1788,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   iframeTimer: 0
   iframeTime: 5
+  isExposed: 0
+  wasExposed: 0
+  onPlayerHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -3087,7 +3092,7 @@ MonoBehaviour:
       m_Calls: []
   thresholds: []
   _points: 0
-  isSafe: 1
+  danger: 0
 --- !u!43 &2104246108
 Mesh:
   m_ObjectHideFlags: 0
