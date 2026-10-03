@@ -206,11 +206,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1349845303}
 --- !u!33 &57361796
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06be53f27bfef7941aebd45a623d3edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  hurtAmt: 20
+  hurtAmt: 60
 --- !u!1 &105843829
 GameObject:
   m_ObjectHideFlags: 0

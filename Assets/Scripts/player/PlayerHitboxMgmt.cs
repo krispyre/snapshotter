@@ -1,24 +1,30 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerHitboxMgmt : MonoBehaviour
 {
-    [SerializeField, ReadOnlyInspector] private int iframeTimer;
+    [SerializeField, ReadOnlyInspector] public int iframeTimer;
     [SerializeField] private int iframeTime = 5;
-    private CharacterController controller;
+    [SerializeField, ReadOnlyInspector] public bool isExposed = false;
+    [SerializeField, ReadOnlyInspector] public bool wasExposed = false;
 
-    void Awake()
-    {
-        controller = GetComponent<CharacterController>();
-    }
+    public UnityEvent onPlayerHit;
 
     public void OnHit()
     {
-        //set for invincible frames
         iframeTimer = iframeTime;
+        onPlayerHit.Invoke();
     }
 
     void FixedUpdate()
     {
-        ;
+        if (iframeTimer > 0)
+        {
+            iframeTimer--;
+        }
+        else
+        {
+            iframeTimer = 0;
+        }
     }
 }

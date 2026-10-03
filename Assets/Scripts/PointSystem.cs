@@ -15,8 +15,7 @@ public class PointSystem : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private float _points;
 
     public static PointSystem Instance;
-    [SerializeField, ReadOnlyInspector] public bool isSafe = true;
-    private bool wasSafe = false;
+    [SerializeField, ReadOnlyInspector] private int danger;
     public float points
     {
         get => _points;
@@ -58,6 +57,16 @@ public class PointSystem : MonoBehaviour
         points = curMaxPoint;
     }
 
+    public void EnterDanger()
+    {
+        danger++;
+    }
+
+    public void ExitDanger()
+    {
+        if (danger > 0) danger--;
+    }
+
     void Update()
     {
         if (thresholds == null) return;
@@ -66,30 +75,26 @@ public class PointSystem : MonoBehaviour
             Debug.Log("deduct debug");
             DeductPoints(50f);
         }
-        else isSafe = true;
 
-        if (isSafe)
+        if (danger <= 0)
         {
             points += pointsRecoverRate * Time.deltaTime;
             points = Mathf.Clamp(points, 0, curMaxPoint);
         }
-
     }
 
-    public void DeductPoints(float rate)
+    public void DeductPoints(float amt)
     /**
         rate is points per second!!
     */
     {
-        isSafe = false;
-        points -= rate * Time.deltaTime;
+        points -= amt;
     }
 
     void LateUpdate()
     {
-
-        if (isSafe && !wasSafe) // just returned to safe
-        { // set curMaxPoint to nearest point thres
+        if (danger >= 0 && thresholds != null)
+        {
             for (int i = 0, n = thresholds.Length; i < n; i++)
             {
                 if (_points <= thresholds[i])
@@ -100,8 +105,6 @@ public class PointSystem : MonoBehaviour
                 }
             }
         }
-        wasSafe = isSafe;
-        isSafe = true;
     }
 
     private void OnDepleted()
