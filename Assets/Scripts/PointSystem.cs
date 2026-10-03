@@ -100,7 +100,6 @@ public class PointSystem : MonoBehaviour
                 if (_points <= thresholds[i])
                 {
                     curMaxPoint = thresholds[i];
-                    Debug.Log(curMaxPoint);
                     break;
                 }
             }

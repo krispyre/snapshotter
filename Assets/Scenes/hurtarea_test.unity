@@ -1788,6 +1788,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   iframeTimer: 0
   iframeTime: 5
+  isExposed: 0
+  wasExposed: 0
+  onPlayerHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,7 +1925,7 @@ Transform:
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
   m_LocalRotation: {x: 9.313111e-10, y: -0.000000004967801, z: 4.626568e-18, w: 1}
-  m_LocalPosition: {x: -7.491779, y: 4.45, z: -35.628952}
+  m_LocalPosition: {x: -8.07, y: 4.38, z: -35.628952}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2886,13 +2891,33 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 961739752}
+    - target: {fileID: 3448047499898591686, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: Composition.DeadZone.Size.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448047499898591686, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: Composition.DeadZone.Size.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448047499898591686, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: Composition.ScreenPosition.x
+      value: 1.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448047499898591686, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: Composition.HardLimits.Size.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448047499898591686, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: Composition.HardLimits.Size.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4705922089883589315, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.23764
+      value: -8.07
       objectReference: {fileID: 0}
     - target: {fileID: 4705922089883589315, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.985873
+      value: 4.38
       objectReference: {fileID: 0}
     - target: {fileID: 4705922089883589315, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2956,11 +2981,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8924663584559705786, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.254139
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8924663584559705786, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.4641268
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8924663584559705786, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3087,7 +3112,7 @@ MonoBehaviour:
       m_Calls: []
   thresholds: []
   _points: 0
-  isSafe: 1
+  danger: 0
 --- !u!43 &2104246108
 Mesh:
   m_ObjectHideFlags: 0
