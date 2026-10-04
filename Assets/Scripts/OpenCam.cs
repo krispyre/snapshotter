@@ -9,6 +9,8 @@ public class OpenCam : MonoBehaviour
     public float horizontalRotateScale = 0.5f;
     public int priorityIncrement = 2;
 
+    public float FOV = 60f;
+
     private CinemachineRotationComposer composer;
     private CinemachineCamera camera;
     private Vector3 initialTargetOffset;
@@ -23,7 +25,6 @@ public class OpenCam : MonoBehaviour
         composer = GetComponent<CinemachineRotationComposer>();
         camera = GetComponent<CinemachineCamera>();
         initialPriority = camera.Priority;
-
         if (composer != null)
         {
             initialTargetOffset = composer.TargetOffset;
@@ -38,7 +39,6 @@ public class OpenCam : MonoBehaviour
     {
         if (camToggleAction.WasPressedThisFrame())
         {
-
             // When e key is pressed, increase the camera's priority to get control
             if (camera != null)
             {
