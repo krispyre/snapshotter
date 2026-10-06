@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 2
+    m_Value: 1
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -399,6 +399,8 @@ GameObject:
   - component: {fileID: 8013159528614773909}
   - component: {fileID: 5110735383493480519}
   - component: {fileID: 3382184937277631587}
+  - component: {fileID: 3526741598306775744}
+  - component: {fileID: 9081545664537108889}
   m_Layer: 0
   m_Name: RecordingCamView
   m_TagString: Untagged
@@ -414,13 +416,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3650889508185647368}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.01442847, y: -0, z: -0, w: 0.99989593}
-  m_LocalPosition: {x: -3.97, y: 0.46, z: -4.85}
+  m_LocalRotation: {x: -0.014428494, y: 6.403853e-15, z: 1.11018603e-16, w: 0.99989593}
+  m_LocalPosition: {x: -4.254139, y: 2.324127, z: -4.85}
   m_LocalScale: {x: 0.38906404, y: 0.38906407, z: 0.38906407}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4705922089883589315}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -1.7, y: 0, z: 0}
 --- !u!114 &2709902558335876310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 1
+    m_Value: 0
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -528,7 +530,7 @@ MonoBehaviour:
   verticalRotateScale: 0.24
   horizontalRotateScale: 0.5
   priorityIncrement: 7
-  playerInput: {fileID: 1004637472431722812}
+  playerInput: {fileID: 6603251629096034967}
 --- !u!1 &4993944587330449953
 GameObject:
   m_ObjectHideFlags: 0

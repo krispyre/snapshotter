@@ -3,16 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Grabbable
-  - NonGrabbable
-  - Hurtarea
-  - DroidDummy
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Wall
+  - 
   - Water
   - UI
   - 
