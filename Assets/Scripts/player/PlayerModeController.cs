@@ -7,7 +7,7 @@ public class PlayerModeController : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction dirYAction;
     private InputAction interactAction;
-    [SerializeField, ReadOnlyInspector] private bool isDroid = true;
+    [SerializeField] private bool isDroid = true;
     private GameObject droid;
     private GameObject spider;
     private GameObject dummy;
