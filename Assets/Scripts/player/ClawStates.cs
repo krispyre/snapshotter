@@ -206,12 +206,28 @@ public sealed class ClawGrabbing : ClawState
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
             p.controller.Move(p.claw.transform.position - p.transform.position);
-            p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
-
-            if (p.jumpPressed)
+            if (Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < p.controller.skinWidth)
             {
-                p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
-                p.Jump();
+                if (p.claw.transform.position.y > p.transform.position.y)
+                {
+                    p.state = PlayerMovement.PlayerState.CeilHang;
+
+                }
+                else
+                {
+                    p.state = PlayerMovement.PlayerState.FloorGrab;
+
+                }
+            }
+            else
+            {
+                p.state = PlayerMovement.PlayerState.WallCling;
+
+                if (p.jumpPressed)
+                {
+                    p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
+                    p.Jump();
+                }
             }
 
         }
