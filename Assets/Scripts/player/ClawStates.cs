@@ -90,6 +90,7 @@ public sealed class ClawShooting : ClawState
                                 p.WallLayer,
                                 QueryTriggerInteraction.Collide);
 
+            // this only draws the rays that fail
             Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
 
             if (didHit) break;
