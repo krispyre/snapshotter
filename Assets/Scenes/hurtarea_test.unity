@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 57361796}
   - component: {fileID: 57361795}
   - component: {fileID: 57361801}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: HurtInstant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2104,6 +2104,7 @@ GameObject:
   - component: {fileID: 588348713}
   - component: {fileID: 588348712}
   - component: {fileID: 588348711}
+  - component: {fileID: 588348716}
   m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
@@ -2446,6 +2447,18 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &588348716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588348709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 311a7b0e12145bc4396493a4d32acd51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!43 &645350546
 Mesh:
   m_ObjectHideFlags: 0
