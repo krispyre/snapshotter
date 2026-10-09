@@ -81,20 +81,18 @@ public sealed class ClawShooting : ClawState
             float sign = (i % 2 == 0) ? 1f : -1f;
             float angle = sign * step * deltaAngle;
             Vector3 checkDir = Quaternion.AngleAxis(angle, Vector3.forward) * dir;
-
-            if (!didHit)
-            {
-                didHit = Physics.SphereCast(
-                    origin - dir * CastSkin,
-                    CastRadius,
-                    checkDir,
-                    out hitInfo,
-                    p.clawParams.armLength + CastSkin,
-                    p.WallLayer,
-                    QueryTriggerInteraction.Collide);
-            }
+            didHit = Physics.SphereCast(
+                                origin - dir * CastSkin,
+                                CastRadius,
+                                checkDir,
+                                out hitInfo,
+                                p.clawParams.armLength + CastSkin,
+                                p.WallLayer,
+                                QueryTriggerInteraction.Collide);
 
             Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
+
+            if (didHit) break;
         }
         Physics.queriesHitBackfaces = prevBackfaces;
 
