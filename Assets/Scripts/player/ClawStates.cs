@@ -72,7 +72,7 @@ public sealed class ClawShooting : ClawState
         // fan from the aim, then outward: 0, -d, +d, -2d, +2d, ...
         // d = fanAngleDeg / (rayCount - 1), so the outer pair is ±fanAngleDeg/2
         bool didHit = false;
-        float fanAngleDeg = 15f;
+        float fanAngleDeg = 20f;
         int rayCount = 5;
         float deltaAngle = fanAngleDeg / (rayCount - 1);
         for (int i = 0; i < rayCount; i++)
