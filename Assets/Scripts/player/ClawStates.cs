@@ -66,14 +66,36 @@ public sealed class ClawShooting : ClawState
         bool prevBackfaces = Physics.queriesHitBackfaces;
         Physics.queriesHitBackfaces = true;
         // start slightly behind so we still catch walls we're already touching
-        bool didHit = Physics.SphereCast(
-            origin - dir * CastSkin,
-            CastRadius,
-            dir,
-            out RaycastHit hitInfo,
-            p.clawParams.armLength + CastSkin,
-            p.WallLayer,
-            QueryTriggerInteraction.Ignore);
+
+        RaycastHit hitInfo = default;
+
+        // fan from the aim, then outward: 0, -d, +d, -2d, +2d, ...
+        // d = fanAngleDeg / (rayCount - 1), so the outer pair is ±fanAngleDeg/2
+        bool didHit = false;
+        float fanAngleDeg = 15f;
+        int rayCount = 5;
+        float deltaAngle = fanAngleDeg / (rayCount - 1);
+        for (int i = 0; i < rayCount; i++)
+        {
+            int step = (i + 1) / 2;
+            float sign = (i % 2 == 0) ? 1f : -1f;
+            float angle = sign * step * deltaAngle;
+            Vector3 checkDir = Quaternion.AngleAxis(angle, Vector3.forward) * dir;
+
+            if (!didHit)
+            {
+                didHit = Physics.SphereCast(
+                    origin - dir * CastSkin,
+                    CastRadius,
+                    checkDir,
+                    out hitInfo,
+                    p.clawParams.armLength + CastSkin,
+                    p.WallLayer,
+                    QueryTriggerInteraction.Collide);
+            }
+
+            Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
+        }
         Physics.queriesHitBackfaces = prevBackfaces;
 
         if (didHit)
@@ -92,8 +114,6 @@ public sealed class ClawShooting : ClawState
                 }
                 p.missed = false;
             }
-
-
         }
         else
         {
