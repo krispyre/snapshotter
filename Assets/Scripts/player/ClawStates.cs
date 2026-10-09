@@ -73,23 +73,19 @@ public sealed class ClawShooting : ClawState
             out RaycastHit hitInfo,
             p.clawParams.armLength + CastSkin,
             p.WallLayer,
-            QueryTriggerInteraction.Ignore);
+            QueryTriggerInteraction.Collide);
         Physics.queriesHitBackfaces = prevBackfaces;
 
         if (didHit)
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            if (hitInfo.collider.gameObject.CompareTag("NonGrabbable"))
+            if (hitInfo.collider.gameObject.TryGetComponent<NonGrabbable>(out NonGrabbable comp))
             {
                 p.missed = true;
             }
-            else if (hitInfo.collider.gameObject.CompareTag("Grabbable") || hitInfo.collider.gameObject.CompareTag("Untagged"))
+            else
             {
-                if (hitInfo.collider.gameObject.CompareTag("Untagged"))
-                {
-                    Debug.LogWarning("object is not tagged, defaulting to grabbable");
-                }
                 p.missed = false;
             }
 
