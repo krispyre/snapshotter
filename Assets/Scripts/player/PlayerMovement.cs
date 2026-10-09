@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.ComponentModel;
 
 public partial class PlayerMovement : MonoBehaviour
 {
@@ -31,6 +30,7 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction dirYAction;
     private InputAction jumpAction;
     private InputAction shootAction;
+    private InputAction interactAction;
     [SerializeField] Camera mainCamera;
 
     //movement vars
@@ -46,6 +46,7 @@ public partial class PlayerMovement : MonoBehaviour
     public bool shootPressed;
 
     public bool wasTouchingWall;
+    [SerializeField, ReadOnlyInspector] public bool isNearDroid;
 
     public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
 
@@ -60,27 +61,10 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnEnable() => CacheActions();
 
-    private void OnDisable()
-    {
-        dirXAction = null;
-        dirYAction = null;
-        jumpAction = null;
-        shootAction = null;
-    }
-
-    private void OnDestroy()
-    {
-        playerInput = null;
-        dirXAction = null;
-        dirYAction = null;
-        jumpAction = null;
-        shootAction = null;
-    }
-
     private void CacheActions()
     {
         if (playerInput == null)
-            playerInput = GetComponent<PlayerInput>();
+            playerInput = GetComponentInParent<PlayerInput>();
 
         // Unity destroyed objects are "fake null"; bail before touching them
         if (playerInput == null || playerInput.actions == null)
@@ -90,6 +74,7 @@ public partial class PlayerMovement : MonoBehaviour
         dirYAction = playerInput.actions.FindAction("DirY");
         jumpAction = playerInput.actions.FindAction("Jump");
         shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
+        interactAction = playerInput.actions.FindAction("Interact");
     }
 
     void Start()
@@ -103,9 +88,7 @@ public partial class PlayerMovement : MonoBehaviour
         if (keyboard == null) return; // Skip this frame if no keyboard is connected/focused
         if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
         {
-            CacheActions();
-            if (dirXAction == null || dirYAction == null || jumpAction == null || shootAction == null)
-                return;
+            return;
         }
 
         // todo put these back to start() after tweaking
@@ -140,9 +123,15 @@ public partial class PlayerMovement : MonoBehaviour
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         ClawMoveAndSlide();
+
+        if (isNearDroid && interactAction.WasPressedThisFrame())
+        {
+
+            GetComponentInParent<PlayerModeController>().ReturnToDroid();
+        }
+
         jumpPressed = false;
         shootPressed = false;
-        pos = transform.position;
         claw_pos = claw.transform.position;
     }
     private void UpdateSensors(float dirX, bool jumpPressed)
@@ -195,7 +184,9 @@ public partial class PlayerMovement : MonoBehaviour
                 }
                 state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
                 return;
-            } else if (isTouchingCeil) {
+            }
+            else if (isTouchingCeil)
+            {
                 state = PlayerState.Fall;
                 return;
             }
@@ -255,13 +246,12 @@ public partial class PlayerMovement : MonoBehaviour
                     curGravity *= mvmtParams.apexGravityMult;
 
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.Fall:
                 curGravity = mvmtParams.fallGravity;
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
+
                 break;
 
             case PlayerState.WallCling:
@@ -375,11 +365,13 @@ public partial class PlayerMovement : MonoBehaviour
             {// Brake
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
+
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
 
     }
 
-    private void Jump()
+    public void Jump()
     {
         state = PlayerState.Jump;
         curGravity = mvmtParams.jumpGravity;
@@ -431,6 +423,18 @@ public partial class PlayerMovement : MonoBehaviour
     {
         if (state == PlayerState.WallJump) return float.MaxValue;
         return mvmtParams.maxAirSpeed;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("DroidDummy")) return;
+        isNearDroid = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("DroidDummy")) return;
+        isNearDroid = false;
     }
 
     private void DebugTime(bool isDebug)
