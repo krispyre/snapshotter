@@ -192,6 +192,13 @@ public sealed class ClawGrabbing : ClawState
         {
             p.controller.Move(p.claw.transform.position - p.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
+
+            if (p.jumpPressed)
+            {
+                p.clawFsm.SetState(p.clawFsm.clawReady); // allow jumping immediately
+                p.state = PlayerMovement.PlayerState.Jump;
+            }
+
         }
     }
 
