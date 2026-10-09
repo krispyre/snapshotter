@@ -3681,25 +3681,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4934945987471862369, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 5932995952326184281, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 961739752}
-    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_VersionIndex
-      value: 2009
+    - target: {fileID: 753975927964338838, guid: d66aa81527cc33247921b884b89a2287, type: 3}
+      propertyPath: isDroid
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3072747610943268290, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -3812,6 +3796,26 @@ PrefabInstance:
     - target: {fileID: 8924663584559705786, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4934945987471862369, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 5932995952326184281, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 961739752}
+    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2009
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -50,7 +50,7 @@ public partial class PlayerMovement : MonoBehaviour
     public bool wasTouchingWall;
     [SerializeField, ReadOnlyInspector] public bool isNearDroid;
 
-    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
+    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly, CeilHang, FloorGrab }
 
     private void Awake()
     {
