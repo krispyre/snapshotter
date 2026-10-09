@@ -206,9 +206,9 @@ public sealed class ClawGrabbing : ClawState
         if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
         {
             p.controller.Move(p.claw.transform.position - p.transform.position);
-            if ((Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < 0.5))
+            if (Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < p.controller.skinWidth)
             {
-                if ((p.claw.transform.position.y > p.transform.position.y))
+                if (p.claw.transform.position.y > p.transform.position.y)
                 {
                     p.state = PlayerMovement.PlayerState.CeilHang;
 
