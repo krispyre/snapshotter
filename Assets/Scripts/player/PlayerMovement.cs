@@ -15,6 +15,8 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] public float xVel = 0f;
     [SerializeField, ReadOnlyInspector] public float yVel = 0f;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
+    [SerializeField, ReadOnlyInspector] private bool isTouchingCeil;
+
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
@@ -139,7 +141,8 @@ public partial class PlayerMovement : MonoBehaviour
         float dist = controller.radius + controller.skinWidth + 0.05f;
         bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
         bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
-        bool isTouchingCeil = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.up, transform.rotation, dist, wallLayer); // add walldetect here
+
+        isTouchingCeil = Physics.BoxCast(transform.position, new Vector3(.01f, .01f, .01f), Vector3.up, transform.rotation, dist, wallLayer);
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
@@ -187,6 +190,7 @@ public partial class PlayerMovement : MonoBehaviour
             }
             else if (isTouchingCeil)
             {
+                yVel = 0;
                 state = PlayerState.Fall;
                 return;
             }
