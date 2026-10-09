@@ -213,8 +213,8 @@ public sealed class ClawGrabbing : ClawState
 
             if (p.jumpPressed)
             {
-                p.clawFsm.SetState(p.clawFsm.clawReady); // allow jumping immediately
-                p.state = PlayerMovement.PlayerState.Jump;
+                p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
+                p.Jump();
             }
 
         }

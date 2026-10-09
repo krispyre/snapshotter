@@ -238,13 +238,12 @@ public partial class PlayerMovement : MonoBehaviour
                     curGravity *= mvmtParams.apexGravityMult;
 
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.Fall:
                 curGravity = mvmtParams.fallGravity;
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
+
                 break;
 
             case PlayerState.WallCling:
@@ -358,11 +357,13 @@ public partial class PlayerMovement : MonoBehaviour
             {// Brake
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
+
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
 
     }
 
-    private void Jump()
+    public void Jump()
     {
         state = PlayerState.Jump;
         curGravity = mvmtParams.jumpGravity;
