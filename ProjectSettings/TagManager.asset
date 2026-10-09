@@ -10,10 +10,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Grabable
+  - Fg
   - Water
   - UI
-  - NonGrabable
+  - IgnoreGrab
   - Bg
   - 
   - 
