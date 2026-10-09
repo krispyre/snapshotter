@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 57361796}
   - component: {fileID: 57361795}
   - component: {fileID: 57361801}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: HurtInstant
   m_TagString: Untagged
   m_Icon: {fileID: 0}

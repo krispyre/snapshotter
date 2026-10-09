@@ -66,21 +66,42 @@ public sealed class ClawShooting : ClawState
         bool prevBackfaces = Physics.queriesHitBackfaces;
         Physics.queriesHitBackfaces = true;
         // start slightly behind so we still catch walls we're already touching
-        bool didHit = Physics.SphereCast(
-            origin - dir * CastSkin,
-            CastRadius,
-            dir,
-            out RaycastHit hitInfo,
-            p.clawParams.armLength + CastSkin,
-            p.WallLayer,
-            QueryTriggerInteraction.Collide);
+
+        RaycastHit hitInfo = default;
+
+        // fan from the aim, then outward: 0, -d, +d, -2d, +2d, ...
+        // d = fanAngleDeg / (rayCount - 1), so the outer pair is ±fanAngleDeg/2
+        bool didHit = false;
+        float fanAngleDeg = p.clawParams.fanAngleDeg;
+        int rayCount = p.clawParams.rayCount;
+        float deltaAngle = fanAngleDeg / (rayCount - 1);
+        for (int i = 0; i < rayCount; i++)
+        {
+            int step = (i + 1) / 2;
+            float sign = (i % 2 == 0) ? 1f : -1f;
+            float angle = sign * step * deltaAngle;
+            Vector3 checkDir = Quaternion.AngleAxis(angle, Vector3.forward) * dir;
+            didHit = Physics.SphereCast(
+                                origin - dir * CastSkin,
+                                CastRadius,
+                                checkDir,
+                                out hitInfo,
+                                p.clawParams.armLength + CastSkin,
+                                p.WallLayer,
+                                QueryTriggerInteraction.Collide);
+
+            // this only draws the rays that fail
+            Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
+
+            if (didHit) break;
+        }
         Physics.queriesHitBackfaces = prevBackfaces;
 
         if (didHit)
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            if (hitInfo.collider.gameObject.TryGetComponent<NonGrabbable>(out NonGrabbable comp))
+            if (hitInfo.collider.gameObject.TryGetComponent(out NonGrabbable comp))
             {
                 p.missed = true;
             }
@@ -88,8 +109,6 @@ public sealed class ClawShooting : ClawState
             {
                 p.missed = false;
             }
-
-
         }
         else
         {
@@ -188,6 +207,13 @@ public sealed class ClawGrabbing : ClawState
         {
             p.controller.Move(p.claw.transform.position - p.transform.position);
             p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
+
+            if (p.jumpPressed)
+            {
+                p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
+                p.Jump();
+            }
+
         }
     }
 
