@@ -2339,7 +2339,7 @@ PrefabInstance:
       objectReference: {fileID: 60922684}
     - target: {fileID: 3353455095987393798, guid: 1a4d3573f5462e94cb7023ad63c603e3, type: 3}
       propertyPath: m_VersionIndex
-      value: 5565
+      value: 5562
       objectReference: {fileID: 0}
     - target: {fileID: 3353455095987393798, guid: 1a4d3573f5462e94cb7023ad63c603e3, type: 3}
       propertyPath: m_Positions.Array.data[0].x
@@ -3681,9 +3681,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4934945987471862369, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 5932995952326184281, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 961739752}
+    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2104246108}
+    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2009
+      objectReference: {fileID: 0}
     - target: {fileID: 753975927964338838, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: isDroid
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 753975927964338838, guid: d66aa81527cc33247921b884b89a2287, type: 3}
+      propertyPath: holdDuration
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3072747610943268290, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -3796,26 +3820,6 @@ PrefabInstance:
     - target: {fileID: 8924663584559705786, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934945987471862369, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 5932995952326184281, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 961739752}
-    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 2104246108}
-    - target: {fileID: 7032265599886247254, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_VersionIndex
-      value: 2009
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

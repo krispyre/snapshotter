@@ -42,8 +42,7 @@ public class PlayerModeController : MonoBehaviour
     private void OnEnable() => CacheActions();
     void Update()
     {
-
-        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0) //todo change to held tgt
+        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle) //todo change to held tgt
         {
             holdTimer += Time.deltaTime;
         }
