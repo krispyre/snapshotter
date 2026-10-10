@@ -3705,6 +3705,10 @@ PrefabInstance:
       propertyPath: isDroid
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 753975927964338838, guid: d66aa81527cc33247921b884b89a2287, type: 3}
+      propertyPath: holdDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3072747610943268290, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
