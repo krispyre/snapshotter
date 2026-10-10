@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class PointSystem : MonoBehaviour
 {
     public UnityEvent onPointsDepleted;
-    private Text scoreText;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
     private float pointsRecoverRate = 5;
@@ -19,13 +18,17 @@ public class PointSystem : MonoBehaviour
     private const string PointsKey = "points";
     private bool pointsLoaded;
 
+
+    private RectTransform bg;
+    private RectTransform fg;
+    [SerializeField] private GameObject thresBar;
     public float points
     {
         get => _points;
         private set
         {
             _points = value;
-
+            ApplyLoss();
             if (_points > curMaxPoint)
             {
                 _points = curMaxPoint;
@@ -36,22 +39,40 @@ public class PointSystem : MonoBehaviour
                 OnDepleted();
             }
 
-            if (scoreText != null)
-            {
-                scoreText.text = "points: " + _points.ToString();
-            }
+
         }
+    }
+
+    private void ApplyLoss()
+    {
+        if (fg == null || initMaxPoint <= 0f) return;
+
+        float width = ((RectTransform)transform).rect.width;
+        float loss = (points - initMaxPoint) / initMaxPoint * width; // why is it the other way around/???
+        Vector2 newOffsetMax = fg.offsetMax;
+        newOffsetMax.x = loss;
+        fg.offsetMax = newOffsetMax;
     }
 
     public void SetThresholds(float[] thresholds)
     {
         this.thresholds = thresholds;
+
+        foreach (float t in thresholds)
+        {
+            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
+            GameObject tObj = Instantiate(thresBar, transform);
+            RectTransform tRect = (RectTransform)tObj.transform;
+
+            tRect.anchoredPosition = new Vector2(x, 0);
+        }
     }
 
     void Awake()
     {
         Instance = this;
-        scoreText = GetComponent<Text>();
+        bg = GetComponent<RectTransform>();
+        fg = transform.Find("curPoints").GetComponent<RectTransform>();
     }
 
     void Start()
@@ -110,9 +131,6 @@ public class PointSystem : MonoBehaviour
     }
 
     public void DeductPoints(float amt)
-    /**
-        rate is points per second!!
-    */
     {
         points -= amt;
     }
