@@ -42,8 +42,7 @@ public class PlayerModeController : MonoBehaviour
     private void OnEnable() => CacheActions();
     void Update()
     {
-
-        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0) //todo change to held tgt
+        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle) //todo change to held tgt
         {
             holdTimer += Time.deltaTime;
         }
@@ -66,6 +65,7 @@ public class PlayerModeController : MonoBehaviour
     public void SwitchToSpider()
     {
         //deactivate droid, spawn dummy droid, then enable spider at droid
+        isDroid = false;
         droid.SetActive(false);
         dummy.transform.position = droid.transform.position;
         dummy.SetActive(true);
@@ -77,6 +77,7 @@ public class PlayerModeController : MonoBehaviour
     public void ReturnToDroid()
     {
         //deactivate spider, despawn dummy droid, then enable droid
+        isDroid = true;
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
