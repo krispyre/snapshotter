@@ -8,8 +8,8 @@ public class PointSystem : MonoBehaviour
     public UnityEvent onPointsDepleted;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
-    private float pointsRecoverRate = 5;
-    [SerializeField]
+    [SerializeField] private float pointsRecoverRate = 0.5f;
+
     public float[] thresholds = null; //= { 20f, 40f, 60f, 80f, 100f };
     [SerializeField, ReadOnlyInspector] private float _points;
 
