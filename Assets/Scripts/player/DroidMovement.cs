@@ -91,8 +91,8 @@ public class DroidMovement : MonoBehaviour
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
         float dist = controller.radius + controller.skinWidth + 0.05f;
-        bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
-        bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
+        bool wallL = Physics.BoxCast(transform.position, new Vector3(dist, dist, dist), Vector3.left, transform.rotation, dist, wallLayer);
+        bool wallR = Physics.BoxCast(transform.position, new Vector3(dist, dist, dist), Vector3.right, transform.rotation, dist, wallLayer);
 
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
