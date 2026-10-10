@@ -309,6 +309,7 @@ MonoBehaviour:
   xVel: 0
   yVel: 0
   isTouchingWall: 0
+  isTouchingCeil: 0
   wallDirection: 0
   isRight: 1
   curGravity: 0
@@ -563,9 +564,9 @@ Transform:
   - {fileID: 5925549249526759962}
   - {fileID: 784476591589895184}
   - {fileID: 1779919890363600929}
-  - {fileID: 1509770914371368196}
   - {fileID: 4986931795322501114}
   - {fileID: 5348050489309137694}
+  - {fileID: 1509770914371368196}
   - {fileID: 8924663584559705786}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -612,7 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   isDroid: 1
-  holdDuration: 2
+  holdDuration: 1
   holdTimer: 0
 --- !u!1 &5046266589489488917
 GameObject:
