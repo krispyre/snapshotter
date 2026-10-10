@@ -309,6 +309,7 @@ MonoBehaviour:
   xVel: 0
   yVel: 0
   isTouchingWall: 0
+  isTouchingCeil: 0
   wallDirection: 0
   isRight: 1
   curGravity: 0
@@ -612,7 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   isDroid: 1
-  holdDuration: 2
+  holdDuration: 1
   holdTimer: 0
 --- !u!1 &5046266589489488917
 GameObject:
