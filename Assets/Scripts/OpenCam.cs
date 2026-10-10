@@ -32,14 +32,15 @@ public class OpenCam : MonoBehaviour
     }
     void Awake()
     {
-        camToggleAction = playerInput.actions.FindAction("CamToggle");
+        camToggleAction = playerInput.actions.FindAction("Camera");
     }
 
     void Update()
     {
         if (camToggleAction.WasPressedThisFrame())
         {
-            // When e key is pressed, increase the camera's priority to get control
+
+            // When [camera] key is pressed, increase the camera's priority to get control
             if (camera != null)
             {
                 if (camera.Priority == initialPriority)
