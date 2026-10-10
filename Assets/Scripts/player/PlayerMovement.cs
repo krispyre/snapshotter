@@ -287,8 +287,9 @@ public partial class PlayerMovement : MonoBehaviour
                 else
                 {
                     wallJumpLockTimer = 0;
-                    AirControl(dirX);
                 }
+
+                AirControl(dirX);
 
                 // release jump fall early
                 if (!jumpHeld && yVel > 0)
@@ -374,8 +375,9 @@ public partial class PlayerMovement : MonoBehaviour
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
 
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
+
+        xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
 
     }
 
