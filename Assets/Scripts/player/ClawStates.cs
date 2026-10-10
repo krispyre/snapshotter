@@ -101,13 +101,19 @@ public sealed class ClawShooting : ClawState
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            if (hitInfo.collider.gameObject.TryGetComponent(out NonGrabbable comp))
+            if (hitInfo.collider.gameObject.TryGetComponent(out NonGrabbable _))
             {
                 p.missed = true;
             }
             else
             {
                 p.missed = false;
+
+                if (hitInfo.collider.gameObject.TryGetComponent(out AirGrab ag))
+                {
+                    p.landingTarget = ag.transform.position; // snap to the obj center
+                    p.landingTarget.z = origin.z;
+                }
             }
         }
         else
