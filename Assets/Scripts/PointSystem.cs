@@ -63,6 +63,15 @@ public class PointSystem : MonoBehaviour
 
             tRect.anchoredPosition = new Vector2(x, 0);
         }
+
+        foreach (float t in thresholds)
+        {
+            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
+            GameObject tObj = Instantiate(thresBar, transform);
+            RectTransform tRect = (RectTransform)tObj.transform;
+
+            tRect.anchoredPosition = new Vector2(x, 0);
+        }
     }
 
     void Awake()
