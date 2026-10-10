@@ -330,7 +330,7 @@ public partial class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (Mathf.Abs(xVel) < 0.21)//todo a really small threshold
+            if (Mathf.Abs(xVel) < 0.4)//todo a really small threshold
             {
                 //Snap to 0
                 curXAccel = 0;
