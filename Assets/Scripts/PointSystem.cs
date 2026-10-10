@@ -15,8 +15,7 @@ public class PointSystem : MonoBehaviour
 
     public static PointSystem Instance;
     [SerializeField, ReadOnlyInspector] private int danger;
-    private const string PointsKey = "points";
-    private bool pointsLoaded;
+    private const string MaxPointKey = "maxPoint";
 
 
     private RectTransform bg;
@@ -27,15 +26,13 @@ public class PointSystem : MonoBehaviour
         get => _points;
         private set
         {
+            if (value < _points) LowerMaxPoint();
             _points = value;
-            ApplyLoss();
-            if (_points > curMaxPoint)
+            UpdateDisplay();
+
+            _points = Mathf.Clamp(_points, 0, curMaxPoint);
+            if (_points <= 0)
             {
-                _points = curMaxPoint;
-            }
-            else if (_points <= 0)
-            {
-                _points = 0;
                 OnDepleted();
             }
 
@@ -43,7 +40,7 @@ public class PointSystem : MonoBehaviour
         }
     }
 
-    private void ApplyLoss()
+    private void UpdateDisplay()
     {
         if (fg == null || initMaxPoint <= 0f) return;
 
@@ -71,37 +68,32 @@ public class PointSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        curMaxPoint = PlayerPrefs.GetFloat(MaxPointKey, initMaxPoint);
         bg = GetComponent<RectTransform>();
         fg = transform.Find("curPoints").GetComponent<RectTransform>();
     }
 
     void Start()
     {
-        curMaxPoint = initMaxPoint;
-        pointsLoaded = true;
-        points = PlayerPrefs.GetFloat(PointsKey, initMaxPoint);
+        points = curMaxPoint;
     }
 
-    void OnApplicationPause(bool paused)
+    private void LowerMaxPoint()
     {
-        if (paused) SavePoints();
-    }
+        if (thresholds == null) return;
 
-    void OnApplicationQuit()
-    {
-        SavePoints();
-    }
-
-    void OnDestroy()
-    {
-        SavePoints();
-    }
-
-    private void SavePoints()
-    {
-        if (!pointsLoaded) return;
-        PlayerPrefs.SetFloat(PointsKey, _points);
-        PlayerPrefs.Save();
+        // thresholds must be in ascending order
+        foreach (float t in thresholds)
+        {
+            if (t >= curMaxPoint) return;
+            if (_points <= t)
+            {
+                curMaxPoint = t;
+                PlayerPrefs.SetFloat(MaxPointKey, curMaxPoint);
+                PlayerPrefs.Save();
+                return;
+            }
+        }
     }
 
     public void EnterDanger()
@@ -133,21 +125,6 @@ public class PointSystem : MonoBehaviour
     public void DeductPoints(float amt)
     {
         points -= amt;
-    }
-
-    void LateUpdate()
-    {
-        if (danger >= 0 && thresholds != null)
-        {
-            for (int i = 0, n = thresholds.Length; i < n; i++)
-            {
-                if (_points <= thresholds[i])
-                {
-                    curMaxPoint = thresholds[i];
-                    break;
-                }
-            }
-        }
     }
 
     private void OnDepleted()
