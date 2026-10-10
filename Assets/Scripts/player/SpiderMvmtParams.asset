@@ -16,8 +16,8 @@ MonoBehaviour:
   walkDecel: 12
   airAccel: 31.8
   airDecel: 12
-  maxWalkSpeed: 1.7
-  maxAirSpeed: 1.75
+  maxWalkSpeed: 2
+  maxAirSpeed: 2.1
   jumpHeight: 0.5
   jumpGravity: 20
   fallGravity: 15
@@ -29,5 +29,5 @@ MonoBehaviour:
   wallSlideGravity: 2
   wallSlideEnterDampMult: 0.2
   terminalWallSlideSpeed: 5
-  wallJumpKickSpeed: 3
-  wallJumpLock: 2
+  wallJumpKickSpeed: 4.5
+  wallJumpLock: 5
