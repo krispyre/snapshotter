@@ -7,6 +7,7 @@ public class LevelController : MonoBehaviour
     void Start()
     {
         PointSystem.Instance.SetThresholds(levelData.pointThresholds);
+        PointSystem.Instance.LoadMission(levelData.missionId);
         PointSystem.Instance.onPointsDepleted.AddListener(OnPlayerDeath);
     }
 
