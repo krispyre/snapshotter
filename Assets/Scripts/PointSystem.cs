@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class PointSystem : MonoBehaviour
 {
     public UnityEvent onPointsDepleted;
-    private Text scoreText;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
     private float pointsRecoverRate = 5;
@@ -16,13 +15,17 @@ public class PointSystem : MonoBehaviour
 
     public static PointSystem Instance;
     [SerializeField, ReadOnlyInspector] private int danger;
+
+    private RectTransform bg;
+    private RectTransform fg;
+    private RectTransform[] thresBars;
     public float points
     {
         get => _points;
         private set
         {
             _points = value;
-
+            ApplyLoss();
             if (_points > curMaxPoint)
             {
                 _points = curMaxPoint;
@@ -33,11 +36,19 @@ public class PointSystem : MonoBehaviour
                 OnDepleted();
             }
 
-            if (scoreText != null)
-            {
-                scoreText.text = "points: " + _points.ToString();
-            }
+
         }
+    }
+
+    private void ApplyLoss()
+    {
+        if (fg == null || initMaxPoint <= 0f) return;
+
+        float width = ((RectTransform)transform).rect.width;
+        float loss = (points - initMaxPoint) / initMaxPoint * width;
+        Vector2 newOffsetMax = fg.offsetMax;
+        newOffsetMax.x = loss;
+        fg.offsetMax = newOffsetMax;
     }
 
     public void SetThresholds(float[] thresholds)
@@ -48,7 +59,8 @@ public class PointSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        scoreText = GetComponent<Text>();
+        bg = GetComponent<RectTransform>();
+        fg = transform.Find("curPoints").GetComponent<RectTransform>();
     }
 
     void Start()
