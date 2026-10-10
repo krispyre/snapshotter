@@ -66,6 +66,7 @@ public class PlayerModeController : MonoBehaviour
     public void SwitchToSpider()
     {
         //deactivate droid, spawn dummy droid, then enable spider at droid
+        isDroid = false;
         droid.SetActive(false);
         dummy.transform.position = droid.transform.position;
         dummy.SetActive(true);
@@ -77,6 +78,7 @@ public class PlayerModeController : MonoBehaviour
     public void ReturnToDroid()
     {
         //deactivate spider, despawn dummy droid, then enable droid
+        isDroid = true;
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
