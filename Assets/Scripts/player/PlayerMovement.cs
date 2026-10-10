@@ -302,10 +302,12 @@ public partial class PlayerMovement : MonoBehaviour
                 curGravity = 0;
                 break;
             case PlayerState.ClawFly:
-                Vector3 vel = LinearVel(clawShootOrigin, landingTarget, clawParams.flyTime);
-                xVel = vel.x;
-                yVel = vel.y;
-                curGravity = 0;
+            case PlayerState.CeilHang:
+            case PlayerState.FloorGrab:
+                xVel = 0f;
+                yVel = 0f;
+                curXAccel = 0f;
+                curGravity = 0f;
                 break;
         }
     }

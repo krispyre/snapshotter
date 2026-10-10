@@ -184,10 +184,14 @@ public sealed class ClawMiss : ClawState
 public sealed class ClawGrabbing : ClawState
 {
     int wait;
+    int flyFrame = -1;
+    Vector3 flyStart;
+
     public ClawGrabbing(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
         wait = p.clawParams.pullDelay;
+        flyFrame = -1;
         p.claw_xVel = 0;
         p.claw_yVel = 0;
     }
@@ -197,39 +201,48 @@ public sealed class ClawGrabbing : ClawState
         if (p.shootPressed)
         {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
+            return;
         }
         if (wait > 0) { wait--; return; }
-        p.state = PlayerMovement.PlayerState.ClawFly;
 
         p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
 
-        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
+        if (flyFrame < 0)
         {
-            p.controller.Move(p.claw.transform.position - p.transform.position);
-            if (Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < p.controller.skinWidth)
-            {
-                if (p.claw.transform.position.y > p.transform.position.y)
-                {
-                    p.state = PlayerMovement.PlayerState.CeilHang;
+            flyStart = p.transform.position;
+            flyFrame = 0;
+        }
 
-                }
-                else
-                {
-                    p.state = PlayerMovement.PlayerState.FloorGrab;
+        int frames = Mathf.Max(1, p.clawParams.flyTime);
+        if (flyFrame < frames)
+        {
+            flyFrame++;
+            p.state = PlayerMovement.PlayerState.ClawFly;
+            p.xVel = 0f;
+            p.yVel = 0f;
+            float t = flyFrame / (float)frames;
+            Vector3 pos = Vector3.Lerp(flyStart, p.landingTarget, t);
+            p.controller.Move(pos - p.transform.position);
+            return;
+        }
 
-                }
-            }
+        p.xVel = 0f;
+        p.yVel = 0f;
+        if (Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < p.controller.skinWidth)
+        {
+            if (p.claw.transform.position.y > p.transform.position.y)
+                p.state = PlayerMovement.PlayerState.CeilHang;
             else
-            {
-                p.state = PlayerMovement.PlayerState.WallCling;
-
-                if (p.jumpPressed)
-                {
-                    p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
-                    p.Jump();
-                }
-            }
-
+                p.state = PlayerMovement.PlayerState.FloorGrab;
+        }
+        else
+        {
+            p.state = PlayerMovement.PlayerState.WallCling;
+        }
+        if (p.jumpPressed)
+        {
+            p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
+            p.Jump();
         }
     }
 
