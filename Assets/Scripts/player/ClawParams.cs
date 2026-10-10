@@ -14,5 +14,7 @@ public class ClawParams : ScriptableObject
     public int returnDelay = 2;
     public int recoilTime = 3;
     public float recoilAmp = 0.5f;
+    public float fanAngleDeg = 15f;
+    public int rayCount = 9;
 
 }

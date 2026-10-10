@@ -15,10 +15,14 @@ public partial class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnlyInspector] public float xVel = 0f;
     [SerializeField, ReadOnlyInspector] public float yVel = 0f;
     [SerializeField, ReadOnlyInspector] private bool isTouchingWall;
+    [SerializeField, ReadOnlyInspector] private bool isTouchingCeil;
+    bool wasTouchingCeil;
+
     [SerializeField, ReadOnlyInspector] private int wallDirection; // -1 for left, 1 for right
     [SerializeField, ReadOnlyInspector] private bool isRight = true;
     [SerializeField, ReadOnlyInspector] private float curGravity;
     [SerializeField, ReadOnlyInspector] private float curXAccel;
+
     [SerializeField] private LayerMask wallLayer;
     public LayerMask WallLayer => wallLayer;
     [SerializeField, ReadOnlyInspector] private int wallJumpLockTimer; //frame count
@@ -47,7 +51,7 @@ public partial class PlayerMovement : MonoBehaviour
     public bool wasTouchingWall;
     [SerializeField, ReadOnlyInspector] public bool isNearDroid;
 
-    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly }
+    public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly, CeilHang, FloorGrab }
 
     private void Awake()
     {
@@ -139,9 +143,13 @@ public partial class PlayerMovement : MonoBehaviour
         bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
         bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
 
+        wasTouchingCeil = isTouchingCeil;
+        isTouchingCeil = Physics.BoxCast(transform.position, new Vector3(.01f, .01f, .01f), Vector3.up, transform.rotation, dist, wallLayer);
+
         wasTouchingWall = isTouchingWall;
         isTouchingWall = wallL || wallR;
         wallDirection = wallR ? 1 : (wallL ? -1 : 0);
+
 
         if (dirX > 0) isRight = true;
         else if (dirX < 0) isRight = false;
@@ -180,6 +188,12 @@ public partial class PlayerMovement : MonoBehaviour
                     return;
                 }
                 state = (dirX != 0) ? PlayerState.Walk : PlayerState.Idle;//todo add pushwall
+                return;
+            }
+            else if (isTouchingCeil && !wasTouchingCeil && yVel > 0)
+            {
+                yVel = 0;
+                state = PlayerState.Fall;
                 return;
             }
 
@@ -238,13 +252,12 @@ public partial class PlayerMovement : MonoBehaviour
                     curGravity *= mvmtParams.apexGravityMult;
 
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
                 break;
 
             case PlayerState.Fall:
                 curGravity = mvmtParams.fallGravity;
                 AirControl(dirX);
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
+
                 break;
 
             case PlayerState.WallCling:
@@ -289,10 +302,12 @@ public partial class PlayerMovement : MonoBehaviour
                 curGravity = 0;
                 break;
             case PlayerState.ClawFly:
-                Vector3 vel = LinearVel(clawShootOrigin, landingTarget, clawParams.flyTime);
-                xVel = vel.x;
-                yVel = vel.y;
-                curGravity = 0;
+            case PlayerState.CeilHang:
+            case PlayerState.FloorGrab:
+                xVel = 0f;
+                yVel = 0f;
+                curXAccel = 0f;
+                curGravity = 0f;
                 break;
         }
     }
@@ -358,11 +373,13 @@ public partial class PlayerMovement : MonoBehaviour
             {// Brake
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
+
+            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
 
     }
 
-    private void Jump()
+    public void Jump()
     {
         state = PlayerState.Jump;
         curGravity = mvmtParams.jumpGravity;
