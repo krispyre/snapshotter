@@ -15,7 +15,7 @@ public class PointSystem : MonoBehaviour
 
     public static PointSystem Instance;
     [SerializeField, ReadOnlyInspector] private int danger;
-    private const string MaxPointKey = "maxPoint";
+    private MissionSave mission;
 
 
     private RectTransform bg;
@@ -26,8 +26,9 @@ public class PointSystem : MonoBehaviour
         get => _points;
         private set
         {
-            if (value < _points) LowerMaxPoint();
+            bool dropped = value < _points;
             _points = value;
+            if (dropped) LowerMaxPoint();
             UpdateDisplay();
 
             _points = Mathf.Clamp(_points, 0, curMaxPoint);
@@ -77,14 +78,34 @@ public class PointSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        curMaxPoint = PlayerPrefs.GetFloat(MaxPointKey, initMaxPoint);
         bg = GetComponent<RectTransform>();
         fg = transform.Find("curPoints").GetComponent<RectTransform>();
     }
 
-    void Start()
+    public void LoadMission(int missionId)
     {
-        points = curMaxPoint;
+        mission = SaveSystem.GetMission(missionId);
+        curMaxPoint = initMaxPoint;
+        _points = initMaxPoint;
+        // the drop from full lowers curMaxPoint to match the saved points
+        points = mission.points;
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (paused) SavePoints();
+    }
+
+    void OnDestroy()
+    {
+        SavePoints();
+    }
+
+    private void SavePoints()
+    {
+        if (mission == null) return;
+        mission.points = _points;
+        SaveSystem.Save();
     }
 
     private void LowerMaxPoint()
@@ -98,8 +119,6 @@ public class PointSystem : MonoBehaviour
             if (_points <= t)
             {
                 curMaxPoint = t;
-                PlayerPrefs.SetFloat(MaxPointKey, curMaxPoint);
-                PlayerPrefs.Save();
                 return;
             }
         }
