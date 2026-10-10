@@ -16,6 +16,9 @@ public class PointSystem : MonoBehaviour
 
     public static PointSystem Instance;
     [SerializeField, ReadOnlyInspector] private int danger;
+    private const string PointsKey = "points";
+    private bool pointsLoaded;
+
     public float points
     {
         get => _points;
@@ -54,7 +57,30 @@ public class PointSystem : MonoBehaviour
     void Start()
     {
         curMaxPoint = initMaxPoint;
-        points = curMaxPoint;
+        pointsLoaded = true;
+        points = PlayerPrefs.GetFloat(PointsKey, initMaxPoint);
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (paused) SavePoints();
+    }
+
+    void OnApplicationQuit()
+    {
+        SavePoints();
+    }
+
+    void OnDestroy()
+    {
+        SavePoints();
+    }
+
+    private void SavePoints()
+    {
+        if (!pointsLoaded) return;
+        PlayerPrefs.SetFloat(PointsKey, _points);
+        PlayerPrefs.Save();
     }
 
     public void EnterDanger()
