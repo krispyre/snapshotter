@@ -13,6 +13,7 @@ public class PlayerModeController : MonoBehaviour
     private GameObject dummy;
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
+    [SerializeField] private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
 
     private void CacheActions()
     {
@@ -71,6 +72,7 @@ public class PlayerModeController : MonoBehaviour
         dummy.SetActive(true);
         spider.transform.position = droid.transform.position;
         spider.SetActive(true);
+        openCam.changeState(true);
 
 
     }
@@ -80,6 +82,7 @@ public class PlayerModeController : MonoBehaviour
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
+        openCam.changeState(false);
 
     }
 }
