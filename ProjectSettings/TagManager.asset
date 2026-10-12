@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hurtarea
   - DroidDummy
+  - Evidence
   layers:
   - Default
   - TransparentFX
