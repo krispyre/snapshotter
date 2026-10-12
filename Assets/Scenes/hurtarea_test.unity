@@ -2764,8 +2764,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OpenCam
   driodCam: {fileID: 0}
   driodRecordCam: {fileID: 0}
-  botCam: {fileID: 0}
-  botRecordCam: {fileID: 0}
+  botCam: {fileID: 1886114835}
+  botRecordCam: {fileID: 2093968395}
   maxTurningAngle: 30
   verticalRotateScale: 0.15
   horizontalRotateScale: 0.5
@@ -4063,6 +4063,17 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!114 &1886114835 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7506497384477509428, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+  m_PrefabInstance: {fileID: 1973634053}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
 --- !u!1 &1949545182
 GameObject:
   m_ObjectHideFlags: 0
@@ -4441,6 +4452,17 @@ MonoBehaviour:
   thresholds: []
   _points: 0
   danger: 0
+--- !u!114 &2093968395 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2709902558335876310, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+  m_PrefabInstance: {fileID: 1973634053}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
 --- !u!43 &2104246108
 Mesh:
   m_ObjectHideFlags: 0

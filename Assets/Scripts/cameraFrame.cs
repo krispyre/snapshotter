@@ -7,7 +7,7 @@ public class cameraFrame : MonoBehaviour
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
     [Range(0f, 0.3f)] public float YMaxRatio = 0.1f;
 
-    public float ratioOnScreen = 0.3f;
+    public float ratioOnScreen = 0.15f;
     public float Xratio = 16f;
     public float Yratio = 9f;
     [SerializeField] CinemachineCamera viewCamera;//drag the shotting camera here
@@ -22,7 +22,7 @@ public class cameraFrame : MonoBehaviour
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        camToggleAction = playerInput.actions.FindAction("CamToggle");
+        camToggleAction = playerInput.actions.FindAction("Camera");
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
     }
@@ -134,7 +134,7 @@ public class cameraFrame : MonoBehaviour
         float lowerBoundary = Mathf.Atan(bottomViewport * verticalFovLimit);
         float upperBoundary = Mathf.Atan(topViewport * verticalFovLimit);
 
-        
+
         //loop through all of the evidences
         GameObject[] evidenceObjects = GameObject.FindGameObjectsWithTag("Evidence");
         foreach (GameObject evidenceObject in evidenceObjects)
@@ -154,6 +154,6 @@ public class cameraFrame : MonoBehaviour
                 print($"Evidence {evidenceObject.name} is outside the camera frame.");
             }
         }
-        
-     }
+
+    }
 }

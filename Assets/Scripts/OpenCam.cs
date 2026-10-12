@@ -8,20 +8,22 @@ public class OpenCam : MonoBehaviour
     public CinemachineCamera driodRecordCam;
     public CinemachineCamera botCam;
     public CinemachineCamera botRecordCam;
+    public float MaxZoomLens = 10f;
+    public float zoomSpeed = 1f;
 
-    public float maxTurningAngle = 30f;
+    public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
 
     private CinemachineRotationComposer driodComposer;
     private CinemachineRotationComposer botComposer;
 
-    // private CinemachineCamera driodCamera;
-    // private CinemachineCamera botCamera;
-
     private Vector3 BotinitialTargetOffset;
     private Vector3 DriodinitialTargetOffset;
     private bool botMode;
+    private bool isOpenCam;
+    private float currentZoomLens = 0f;
+    private float initialBotLens;
 
 
     [SerializeField] PlayerInput playerInput; // drag the player here
@@ -31,8 +33,6 @@ public class OpenCam : MonoBehaviour
     {
         driodComposer = driodRecordCam.GetComponent<CinemachineRotationComposer>();
         botComposer = botRecordCam.GetComponent<CinemachineRotationComposer>();
-        // driodCamera = driodRecordCam.GetComponent<CinemachineCamera>();
-        // botCamera = botRecordCam.GetComponent<CinemachineCamera>();
         DriodinitialTargetOffset = driodComposer.TargetOffset;
         BotinitialTargetOffset = botComposer.TargetOffset;
         botMode = true;
@@ -40,12 +40,24 @@ public class OpenCam : MonoBehaviour
     void Awake()
     {
         camToggleAction = playerInput.actions.FindAction("Camera");
+        if (botRecordCam != null)
+        {
+            initialBotLens = botRecordCam.Lens.FieldOfView;
+        }
     }
 
 
 
     void toggleCamera()
     {
+        currentZoomLens = 0f;
+        if (botRecordCam != null)
+        {
+            var lens = botRecordCam.Lens;
+            lens.FieldOfView = initialBotLens;
+            botRecordCam.Lens = lens;
+        }
+
         if (botMode)
         {
             int tmp = botCam.Priority;
@@ -64,6 +76,7 @@ public class OpenCam : MonoBehaviour
     {
         if (camToggleAction.WasPressedThisFrame())
         {
+            isOpenCam = !isOpenCam;
 
             // When [camera] key is pressed, call the toggleCamera function
             if (botRecordCam != null && driodRecordCam != null)
@@ -73,6 +86,10 @@ public class OpenCam : MonoBehaviour
 
             //When shotting camera takes control, place the mouse at the center of the screen
             Mouse.current?.WarpCursorPosition(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
+        }
+
+        if (isOpenCam)
+        {
             if (botMode)
             {
                 BotRecording();
@@ -100,6 +117,19 @@ public class OpenCam : MonoBehaviour
         Vector3 targetOffset = BotinitialTargetOffset;
         targetOffset.x = BotinitialTargetOffset.x + mouseOffset.x * maxTurningAngle * horizontalRotateScale;
         targetOffset.y = BotinitialTargetOffset.y + mouseOffset.y * maxTurningAngle * verticalRotateScale;
+
+        if (Mouse.current != null)
+        {
+            float scrollDelta = Mouse.current.scroll.ReadValue().y;
+            currentZoomLens = Mathf.Clamp(
+                currentZoomLens + scrollDelta * zoomSpeed,
+                -MaxZoomLens,
+                MaxZoomLens);
+
+            var lens = botRecordCam.Lens;
+            lens.FieldOfView = initialBotLens - currentZoomLens;
+            botRecordCam.Lens = lens;
+        }
 
         botComposer.TargetOffset = targetOffset;
         
@@ -147,4 +177,3 @@ public class OpenCam : MonoBehaviour
         
     }
 }
-
