@@ -1304,6 +1304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7869475954489006776}
   - component: {fileID: 4715235638332890846}
+  - component: {fileID: 5440460792489956387}
   m_Layer: 0
   m_Name: interactableRange
   m_TagString: Untagged
@@ -1349,6 +1350,33 @@ CapsuleCollider:
   m_Height: 3.57
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5440460792489956387
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929612646464584375}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9197229652408370156
 GameObject:
   m_ObjectHideFlags: 0

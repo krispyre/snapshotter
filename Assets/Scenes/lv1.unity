@@ -2907,6 +2907,38 @@ MonoBehaviour:
   prompt: Call Elevator
   playerInput: {fileID: 1086666149}
   elevator: {fileID: 2079954508}
+--- !u!1 &1869291194 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8929612646464584375, guid: d66aa81527cc33247921b884b89a2287, type: 3}
+  m_PrefabInstance: {fileID: 1973634053}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1869291197
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869291194}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1949545182
 GameObject:
   m_ObjectHideFlags: 0
@@ -3150,6 +3182,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8929612646464584375, guid: d66aa81527cc33247921b884b89a2287, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1869291197}
     - targetCorrespondingSourceObject: {fileID: 1812362726903871155, guid: d66aa81527cc33247921b884b89a2287, type: 3}
       insertIndex: -1
       addedObject: {fileID: 889089112}
@@ -3528,7 +3563,7 @@ MonoBehaviour:
   playerInput: {fileID: 1086666149}
   waitTimeMax: 2
   waitTimer: 0
-  waitTimerWasZero: 0
+  waitTimerTimeout: 0
 --- !u!43 &2104246108
 Mesh:
   m_ObjectHideFlags: 0
