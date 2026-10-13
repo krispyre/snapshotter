@@ -1,16 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
-public class Elevator : MonoBehaviour
+public class Elevator : Interactable
 {
-    private Collider enterTrigger;
     [SerializeField] private float waitTimeMax = 2; // wait till open or wait till close
     [SerializeField, ReadOnlyInspector] private float waitTimer;
     [SerializeField] private bool waitTimerWasZero = false;
 
-    void Awake()
+
+    override protected void Awake()
+    {
+        base.Awake();
+        prompt = "Enter";
+    }
+
+    void Start()
     {
         enterTrigger.enabled = false;
+
     }
 
     // wait 0.5s to open the door

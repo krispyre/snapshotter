@@ -5,7 +5,7 @@ public class ElevatorBtn : Interactable
 {
     [SerializeField] private Elevator elevator;
 
-    void Awake()
+    override protected void Awake()
     {
         base.Awake();
         prompt = "Wait for elevator";
