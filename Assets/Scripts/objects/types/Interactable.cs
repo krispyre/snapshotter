@@ -12,42 +12,51 @@ public class Interactable : MonoBehaviour
     private InputAction interactAction;
 
     // GetComponent<MeshRenderer>().material = Material1;
-    protected virtual void Awake()
+    protected void Awake()
     {
         enterTrigger = GetComponent<Collider>();
         meshRenderer = GetComponent<MeshRenderer>();
 
         interactAction = playerInput.actions.FindAction("Interact");
+        OnAwake();
     }
 
-    void Update()
+    protected void Update()
     {
         if (interactAction.WasPressedThisFrame())
         {
             OnInteract();
         }
+        OnUpdate();
     }
 
-    void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             Debug.Log("notice me");
             engaged = true;
+            OnPlayerEnter(other);
         }
     }
 
-    void OnTriggerExit(Collider other)
+    protected void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             Debug.Log("unnotice me");
             engaged = false;
+            OnPlayerExit(other);
         }
     }
 
+    protected virtual void OnAwake() { }
+    protected virtual void OnUpdate() { }
+    protected virtual void OnPlayerEnter(Collider other) { }
+    protected virtual void OnPlayerExit(Collider other) { }
+
     protected virtual void OnInteract()
     {
-        Debug.Log(prompt);
+        Debug.Log("interacted");
     }
 }

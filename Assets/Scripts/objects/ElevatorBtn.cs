@@ -5,14 +5,13 @@ public class ElevatorBtn : Interactable
 {
     [SerializeField] private Elevator elevator;
 
-    override protected void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         prompt = "Wait for elevator";
         Debug.Assert(elevator != null);
     }
 
-    override protected void OnInteract()
+    protected override void OnInteract()
     {
         elevator.ButtonCall();
     }

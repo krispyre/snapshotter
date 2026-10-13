@@ -5,12 +5,11 @@ public class Elevator : Interactable
 {
     [SerializeField] private float waitTimeMax = 2; // wait till open or wait till close
     [SerializeField, ReadOnlyInspector] private float waitTimer;
-    [SerializeField] private bool waitTimerWasZero = false;
+    [SerializeField] private bool waitTimerTimeout = false;
 
 
-    override protected void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         prompt = "Enter";
     }
 
@@ -23,35 +22,45 @@ public class Elevator : Interactable
     // wait 0.5s to open the door
     public void ButtonCall()
     {
-        waitTimer = 0.5f; //Random.Range(0, waitTimeMax * 10f) / 0.1f; //todo add this back
+        Debug.Log("press button");
+        waitTimer = 1f; //Random.Range(0, waitTimeMax * 10f) / 0.1f; //todo add this back
     }
 
     // close the door
-    void OnTriggerExit()
+    protected override void OnPlayerExit(Collider other)
     {
         waitTimer = 2;
-        ;
     }
 
-    void Update()
+    protected override void OnUpdate()
     {
         if (waitTimer > 0)
         {
             waitTimer -= Time.deltaTime;
-            waitTimerWasZero = false;
+            if (waitTimer <= 0)
+            {
+                waitTimer = 0;
+                waitTimerTimeout = true;
+            }
         }
 
-        if (!waitTimerWasZero && waitTimer <= 0)
+
+        if (waitTimerTimeout)
         {
+            waitTimerTimeout = false;
+
             if (enterTrigger.enabled)
             {
                 // close the door
+                Debug.Log("close door");
                 enterTrigger.enabled = false;
                 //fade out ui
             }
             else
             {
                 //open the door
+                Debug.Log("open door");
+
                 enterTrigger.enabled = true;
                 // add in ui
             }
