@@ -6,6 +6,7 @@ public class Elevator : Interactable
     [SerializeField] private float waitTimeMax = 2; // wait till open or wait till close
     [SerializeField, ReadOnlyInspector] private float waitTimer;
     [SerializeField] private bool waitTimerTimeout = false;
+    [SerializeField] private bool doorOpen = false;
 
 
     protected override void OnAwake()
@@ -13,23 +14,19 @@ public class Elevator : Interactable
         prompt = "Enter";
     }
 
-    void Start()
-    {
-        enterTrigger.enabled = false;
-
-    }
-
     // wait 0.5s to open the door
     public void ButtonCall()
     {
-        Debug.Log("press button");
-        waitTimer = 1f; //Random.Range(0, waitTimeMax * 10f) / 0.1f; //todo add this back
+        if (waitTimer <= 0 && !doorOpen)
+        {
+            Debug.Log("press button");
+            waitTimer = 1f; //Random.Range(0, waitTimeMax * 10f) / 0.1f; //todo add this back
+        }
     }
 
-    // close the door
-    protected override void OnPlayerExit(Collider other)
+    protected override void OnInteract()
     {
-        waitTimer = 2;
+        if (doorOpen) Debug.Log("open elevator ui");
     }
 
     protected override void OnUpdate()
@@ -49,11 +46,11 @@ public class Elevator : Interactable
         {
             waitTimerTimeout = false;
 
-            if (enterTrigger.enabled)
+            if (doorOpen)
             {
                 // close the door
                 Debug.Log("close door");
-                enterTrigger.enabled = false;
+                doorOpen = false;
                 //fade out ui
             }
             else
@@ -61,9 +58,18 @@ public class Elevator : Interactable
                 //open the door
                 Debug.Log("open door");
 
-                enterTrigger.enabled = true;
+                doorOpen = true;
                 // add in ui
+
+                // begin timer decrement
+                waitTimer = 5;
             }
+        }
+
+        if (engaged && doorOpen)
+        {
+            waitTimer = 5f;
+            Debug.Log("occupied, do not decrement");
         }
     }
 

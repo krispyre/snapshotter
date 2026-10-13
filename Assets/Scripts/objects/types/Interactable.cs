@@ -5,7 +5,7 @@ public class Interactable : MonoBehaviour
 {
     [SerializeField, ReadOnlyInspector] protected bool engaged;
     public string prompt;
-    protected Collider enterTrigger;
+    protected Collider trigger;
     private MeshRenderer meshRenderer;
 
     [SerializeField] private PlayerInput playerInput;
@@ -14,7 +14,7 @@ public class Interactable : MonoBehaviour
     // GetComponent<MeshRenderer>().material = Material1;
     protected void Awake()
     {
-        enterTrigger = GetComponent<Collider>();
+        trigger = GetComponent<Collider>();
         meshRenderer = GetComponent<MeshRenderer>();
 
         interactAction = playerInput.actions.FindAction("Interact");
@@ -23,7 +23,7 @@ public class Interactable : MonoBehaviour
 
     protected void Update()
     {
-        if (interactAction.WasPressedThisFrame())
+        if (interactAction.WasPressedThisFrame() && engaged)
         {
             OnInteract();
         }
@@ -34,7 +34,7 @@ public class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("notice me");
+            // Debug.Log("notice me");
             engaged = true;
             OnPlayerEnter(other);
         }
@@ -44,7 +44,7 @@ public class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("unnotice me");
+            // Debug.Log("unnotice me");
             engaged = false;
             OnPlayerExit(other);
         }
