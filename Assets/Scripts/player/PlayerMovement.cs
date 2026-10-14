@@ -287,8 +287,9 @@ public partial class PlayerMovement : MonoBehaviour
                 else
                 {
                     wallJumpLockTimer = 0;
-                    AirControl(dirX);
                 }
+
+                AirControl(dirX);
 
                 // release jump fall early
                 if (!jumpHeld && yVel > 0)
@@ -302,10 +303,12 @@ public partial class PlayerMovement : MonoBehaviour
                 curGravity = 0;
                 break;
             case PlayerState.ClawFly:
-                Vector3 vel = LinearVel(clawShootOrigin, landingTarget, clawParams.flyTime);
-                xVel = vel.x;
-                yVel = vel.y;
-                curGravity = 0;
+            case PlayerState.CeilHang:
+            case PlayerState.FloorGrab:
+                xVel = 0f;
+                yVel = 0f;
+                curXAccel = 0f;
+                curGravity = 0f;
                 break;
         }
     }
@@ -327,7 +330,7 @@ public partial class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (Mathf.Abs(xVel) < 0.21)//todo a really small threshold
+            if (Mathf.Abs(xVel) < 0.4)//todo a really small threshold
             {
                 //Snap to 0
                 curXAccel = 0;
@@ -372,8 +375,9 @@ public partial class PlayerMovement : MonoBehaviour
                 curXAccel = mvmtParams.airDecel * -Mathf.Sign(xVel);
             }
 
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
         }
+
+        xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
 
     }
 
