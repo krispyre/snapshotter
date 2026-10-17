@@ -146,7 +146,7 @@ public class cameraFrame : MonoBehaviour
                 && evidenceLocalPosition.y / evidenceLocalPosition.z >= Mathf.Tan(lowerBoundary)
                 && evidenceLocalPosition.y / evidenceLocalPosition.z <= Mathf.Tan(upperBoundary))
             {
-                evidenceObject.GetComponent<SpriteRenderer>().color = Color.green; // Change color to green if within frame
+                scanned(evidenceObject);
             }
             else
             {
@@ -155,5 +155,12 @@ public class cameraFrame : MonoBehaviour
             }
         }
 
+    }
+
+    void scanned(GameObject evidenceObject)
+    {
+        //implement waht you want to do when the evidence is scanned, for example, change its color to green and print a message
+        evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
+        print($"Scanning evidence: {evidenceObject.name}");
     }
 }
