@@ -4040,6 +4040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1443863546}
   - component: {fileID: 1443863547}
+  - component: {fileID: 1443863548}
   m_Layer: 0
   m_Name: triangle
   m_TagString: Evidence
@@ -4121,6 +4122,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1443863548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443863545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f48d40769d79d4b84f801c75bc70db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EvidenceDataContainer
+  evidenceData: {fileID: 11400000, guid: afa1d976c78d7194fb0219fdcc70c477, type: 2}
 --- !u!1 &1453130868
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,6 +4145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1453130869}
   - component: {fileID: 1453130870}
+  - component: {fileID: 1453130871}
   m_Layer: 0
   m_Name: Square
   m_TagString: Evidence
@@ -4212,6 +4227,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1453130871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453130868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f48d40769d79d4b84f801c75bc70db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EvidenceDataContainer
+  evidenceData: {fileID: 11400000, guid: 13f80f78dd2235c4b8de23c0ee720a01, type: 2}
 --- !u!1 &1462639289
 GameObject:
   m_ObjectHideFlags: 0

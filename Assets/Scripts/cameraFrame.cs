@@ -135,7 +135,11 @@ public class cameraFrame : MonoBehaviour
         float upperBoundary = Mathf.Atan(topViewport * verticalFovLimit);
 
 
-        //loop through all of the evidences
+        //loop through all of the evidences\
+        Camera outputCamera = Camera.main;
+        GameObject closestEvidence = null;
+        float closestDistance = float.PositiveInfinity;
+
         GameObject[] evidenceObjects = GameObject.FindGameObjectsWithTag("Evidence");
         foreach (GameObject evidenceObject in evidenceObjects)
         {
@@ -146,21 +150,37 @@ public class cameraFrame : MonoBehaviour
                 && evidenceLocalPosition.y / evidenceLocalPosition.z >= Mathf.Tan(lowerBoundary)
                 && evidenceLocalPosition.y / evidenceLocalPosition.z <= Mathf.Tan(upperBoundary))
             {
-                scanned(evidenceObject);
+                //Color the sprite green if it's inside the scanning area, for demo use
+                evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
+                Vector2 frameCenter = RectTransformUtility.WorldToScreenPoint(
+                    uiCamera,
+                    rectTransform.TransformPoint(rectTransform.rect.center)
+                );
+
+                Vector3 screenPos = outputCamera.WorldToScreenPoint(evidenceObject.transform.position);
+                float distanceToCursor = Vector2.Distance(screenPos, frameCenter);
+                if (distanceToCursor < closestDistance)
+                {
+                    closestDistance = distanceToCursor;
+                    closestEvidence = evidenceObject;
+                }
             }
             else
             {
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
-                print($"Evidence {evidenceObject.name} is outside the camera frame.");
             }
         }
+        //Read the evidence data that are closetest to the camera area's center
+        scanned(closestEvidence);
+
 
     }
 
     void scanned(GameObject evidenceObject)
     {
-        //implement waht you want to do when the evidence is scanned, for example, change its color to green and print a message
-        evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
-        print($"Scanning evidence: {evidenceObject.name}");
+        //implement waht you want to do when the evidence is scanned
+        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        print("Scanned evidence: " + evidenceData.objectName + " - " + evidenceData.description + " - " + evidenceData.systemResponse);
     }
 }

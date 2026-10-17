@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
-  m_Name: evidence1
+  m_Name: evidenceDataDemo2
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
-  objectName: banana
-  description: Already stained
-  systemResponse: Please don't eat this
+  objectName: Apple
+  description: A sweet, ordinary fruit
+  systemResponse: Eat it!
