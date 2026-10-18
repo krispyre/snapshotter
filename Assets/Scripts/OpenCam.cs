@@ -14,6 +14,7 @@ public class OpenCam : MonoBehaviour
     public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
+    [SerializeField] private cameraFrame cameraFrame;
 
     private CinemachineRotationComposer driodComposer;
     private CinemachineRotationComposer botComposer;
@@ -46,8 +47,6 @@ public class OpenCam : MonoBehaviour
         }
     }
 
-
-
     void toggleCamera()
     {
         currentZoomLens = 0f;
@@ -77,6 +76,7 @@ public class OpenCam : MonoBehaviour
         if (camToggleAction.WasPressedThisFrame())
         {
             isOpenCam = !isOpenCam;
+            cameraFrame.cameraToggle(isOpenCam);
 
             // When [camera] key is pressed, call the toggleCamera function
             if (botRecordCam != null && driodRecordCam != null)
@@ -159,6 +159,8 @@ public class OpenCam : MonoBehaviour
     public void changeState(bool isBotMode)
     {
         botMode = isBotMode;
+        isOpenCam = false;
+        cameraFrame.cameraToggle(false);
 
         if (botMode)
         {

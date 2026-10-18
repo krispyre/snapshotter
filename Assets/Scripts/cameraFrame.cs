@@ -10,21 +10,33 @@ public class cameraFrame : MonoBehaviour
     public float ratioOnScreen = 0.15f;
     public float Xratio = 16f;
     public float Yratio = 9f;
-    [SerializeField] CinemachineCamera viewCamera;//drag the shotting camera here
+
+    [SerializeField] CinemachineCamera DroidviewCamera;//drag the camera that is used for viewing here
+    [SerializeField] CinemachineCamera BotviewCamera;//drag the shotting camera here
     //this script should not do any changes to the camera, only refer to its variables
+
 
     private RectTransform rectTransform;
     [SerializeField] private PlayerInput playerInput;
     private InputAction camToggleAction;
     private bool isOpenCam;
     private Vector2 screenSize;
+    private CinemachineCamera viewCamera;
+
 
     void Awake()
     {
+        viewCamera = BotviewCamera; // Set the viewCamera to botviewCamera by default
+        isOpenCam = false;
         rectTransform = GetComponent<RectTransform>();
         camToggleAction = playerInput.actions.FindAction("Camera");
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
+    }
+
+    public void cameraToggle(bool state)
+    {
+        isOpenCam = state;
     }
 
     private void AdjustFrameSize()
@@ -53,12 +65,6 @@ public class cameraFrame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //When camera is toggled, display a frame that follows cursor and initiate raycastring
-        if (camToggleAction.WasPressedThisFrame())
-        {
-            isOpenCam = !isOpenCam;
-        }
-
         Vector2 currentScreenSize = new Vector2(Screen.width, Screen.height);
         if (currentScreenSize != screenSize)
         {
@@ -171,6 +177,10 @@ public class cameraFrame : MonoBehaviour
             }
         }
         //Read the evidence data that are closetest to the camera area's center
+        if (closestEvidence == null)
+        {
+            return;
+        }
         scanned(closestEvidence);
 
 
@@ -183,4 +193,18 @@ public class cameraFrame : MonoBehaviour
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
         print("Scanned evidence: " + evidenceData.objectName + " - " + evidenceData.description + " - " + evidenceData.systemResponse);
     }
+
+    public void changeMode(bool isBot)
+    {
+        if (!isBot)
+        {
+            viewCamera = BotviewCamera;
+        }
+        else
+        {
+            viewCamera = DroidviewCamera;
+        }
+    }
+
+
 }
