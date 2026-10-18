@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 2
+    m_Value: 1
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -399,6 +399,8 @@ GameObject:
   - component: {fileID: 8013159528614773909}
   - component: {fileID: 5110735383493480519}
   - component: {fileID: 3382184937277631587}
+  - component: {fileID: 3526741598306775744}
+  - component: {fileID: 9081545664537108889}
   m_Layer: 0
   m_Name: RecordingCamView
   m_TagString: Untagged
@@ -420,7 +422,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4705922089883589315}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -1.7, y: 0, z: 0}
 --- !u!114 &2709902558335876310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 1
+    m_Value: 0
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
