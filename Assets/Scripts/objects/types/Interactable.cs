@@ -16,9 +16,12 @@ public class Interactable : MonoBehaviour
     {
         trigger = GetComponent<Collider>();
         meshRenderer = GetComponent<MeshRenderer>();
-
-        interactAction = playerInput.actions.FindAction("Interact");
         OnAwake();
+    }
+    protected void Start()
+    {
+        playerInput = GameObject.Find("playerGroup").GetComponent<PlayerInput>();
+        interactAction = playerInput.actions.FindAction("Interact");
     }
 
     protected void Update()

@@ -36,7 +36,6 @@ public class OpenCam : MonoBehaviour
         botComposer = botRecordCam.GetComponent<CinemachineRotationComposer>();
         DriodinitialTargetOffset = driodComposer.TargetOffset;
         BotinitialTargetOffset = botComposer.TargetOffset;
-        botMode = true;
     }
     void Awake()
     {
