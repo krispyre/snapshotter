@@ -54,7 +54,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 784476591589895184}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -399,8 +399,6 @@ GameObject:
   - component: {fileID: 8013159528614773909}
   - component: {fileID: 5110735383493480519}
   - component: {fileID: 3382184937277631587}
-  - component: {fileID: 3526741598306775744}
-  - component: {fileID: 9081545664537108889}
   m_Layer: 0
   m_Name: RecordingCamView
   m_TagString: Untagged
@@ -526,10 +524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8973631213e4c8644b0d483039fd9d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenCam
-  driodCam: {fileID: 0}
-  driodRecordCam: {fileID: 0}
-  botCam: {fileID: 0}
-  botRecordCam: {fileID: 0}
+  driodCam: {fileID: 7506497384477509428}
+  driodRecordCam: {fileID: 2709902558335876310}
+  botCam: {fileID: 7506497384477509428}
+  botRecordCam: {fileID: 2709902558335876310}
   MaxZoomLens: 10
   zoomSpeed: 1
   maxTurningAngle: 3.26

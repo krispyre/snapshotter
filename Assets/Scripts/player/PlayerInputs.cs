@@ -139,7 +139,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 },
                 {
                     ""name"": ""Interact"",
@@ -148,7 +149,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
