@@ -12,6 +12,7 @@ public class ElevatorBtn : Interactable
 
     protected override void OnInteract()
     {
+        // Debug.Log("press btn");
         elevator.ButtonCall();
     }
 
