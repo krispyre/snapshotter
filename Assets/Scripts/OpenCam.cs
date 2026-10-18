@@ -14,6 +14,7 @@ public class OpenCam : MonoBehaviour
     public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
+    [SerializeField] private cameraFrame cameraFrame;
 
     private CinemachineRotationComposer driodComposer;
     private CinemachineRotationComposer botComposer;
@@ -21,7 +22,7 @@ public class OpenCam : MonoBehaviour
     private Vector3 BotinitialTargetOffset;
     private Vector3 DriodinitialTargetOffset;
     private bool botMode;
-    private bool isOpenCam;
+    [SerializeField] bool isOpenCam;
     private float currentZoomLens = 0f;
     private float initialBotLens;
 
@@ -45,8 +46,6 @@ public class OpenCam : MonoBehaviour
             initialBotLens = botRecordCam.Lens.FieldOfView;
         }
     }
-
-
 
     void toggleCamera()
     {
@@ -77,6 +76,7 @@ public class OpenCam : MonoBehaviour
         if (camToggleAction.WasPressedThisFrame())
         {
             isOpenCam = !isOpenCam;
+            cameraFrame.cameraToggle(isOpenCam);
 
             // When [camera] key is pressed, call the toggleCamera function
             if (botRecordCam != null && driodRecordCam != null)
@@ -132,7 +132,7 @@ public class OpenCam : MonoBehaviour
         }
 
         botComposer.TargetOffset = targetOffset;
-        
+
     }
     void DroidRecording()
     {
@@ -159,21 +159,23 @@ public class OpenCam : MonoBehaviour
     public void changeState(bool isBotMode)
     {
         botMode = isBotMode;
+        isOpenCam = false;
+        cameraFrame.cameraToggle(false);
 
         if (botMode)
         {
             botCam.Priority = 11;
             botRecordCam.Priority = 10;
             driodCam.Priority = 0;
-            driodRecordCam.Priority = 0; 
+            driodRecordCam.Priority = 0;
         }
         else
         {
             botCam.Priority = 0;
             botRecordCam.Priority = 0;
             driodCam.Priority = 11;
-            driodRecordCam.Priority = 10; 
+            driodRecordCam.Priority = 10;
         }
-        
+
     }
 }
