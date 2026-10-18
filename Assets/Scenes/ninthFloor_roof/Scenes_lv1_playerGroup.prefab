@@ -319,7 +319,6 @@ MonoBehaviour:
     m_Bits: 8
   wallJumpLockTimer: 0
   controller: {fileID: 0}
-  mainCamera: {fileID: 0}
   jumpBuf: 0
   coyoteTimer: 0
   inputDirX: 0
@@ -525,10 +524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8973631213e4c8644b0d483039fd9d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenCam
-  driodCam: {fileID: 0}
-  driodRecordCam: {fileID: 0}
-  botCam: {fileID: 0}
-  botRecordCam: {fileID: 0}
+  driodCam: {fileID: 7506497384477509428}
+  driodRecordCam: {fileID: 2709902558335876310}
+  botCam: {fileID: 7506497384477509428}
+  botRecordCam: {fileID: 2709902558335876310}
   MaxZoomLens: 10
   zoomSpeed: 1
   maxTurningAngle: 3.26
@@ -620,7 +619,7 @@ MonoBehaviour:
   isDroid: 1
   holdDuration: 1
   holdTimer: 0
-  openCam: {fileID: 0}
+  openCam: {fileID: 3382184937277631587}
 --- !u!1 &5046266589489488917
 GameObject:
   m_ObjectHideFlags: 0
