@@ -14,6 +14,7 @@ public class MissionSave
 public class SaveData
 {
     public List<MissionSave> missions = new List<MissionSave>();
+    public bool walkedStairsBefore;
 }
 
 public static class SaveSystem

@@ -8,8 +8,14 @@ public class Interactable : MonoBehaviour
     protected Collider trigger;
     private MeshRenderer meshRenderer;
 
-    [SerializeField] private PlayerInput playerInput;
+    private PlayerInput playerInput;
     private InputAction interactAction;
+    private InputAction dirXAction;
+    private InputAction dirYAction;
+
+    public bool Engaged => engaged;
+    public event System.Action<Collider> PlayerEntered;
+    public event System.Action<Collider> PlayerExited;
 
     // GetComponent<MeshRenderer>().material = Material1;
     protected void Awake()
@@ -22,6 +28,20 @@ public class Interactable : MonoBehaviour
     {
         playerInput = GameObject.Find("playerGroup").GetComponent<PlayerInput>();
         interactAction = playerInput.actions.FindAction("Interact");
+        dirXAction = playerInput.actions.FindAction("DirX");
+        dirYAction = playerInput.actions.FindAction("DirY");
+    }
+
+    public bool PressedLeft => PressedDirection(dirXAction, false);
+    public bool PressedRight => PressedDirection(dirXAction, true);
+    public bool PressedDown => PressedDirection(dirYAction, false);
+    public bool PressedUp => PressedDirection(dirYAction, true);
+
+    static bool PressedDirection(InputAction action, bool positive)
+    {
+        if (action == null || !action.WasPressedThisFrame()) return false;
+        float value = action.ReadValue<float>();
+        return positive ? value > 0f : value < 0f;
     }
 
     protected void Update()
@@ -40,6 +60,7 @@ public class Interactable : MonoBehaviour
             // Debug.Log("notice me");
             engaged = true;
             OnPlayerEnter(other);
+            PlayerEntered?.Invoke(other);
         }
     }
 
@@ -50,6 +71,7 @@ public class Interactable : MonoBehaviour
             // Debug.Log("unnotice me");
             engaged = false;
             OnPlayerExit(other);
+            PlayerExited?.Invoke(other);
         }
     }
 
