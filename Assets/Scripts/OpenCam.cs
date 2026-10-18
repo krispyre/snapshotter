@@ -22,7 +22,7 @@ public class OpenCam : MonoBehaviour
     private Vector3 BotinitialTargetOffset;
     private Vector3 DriodinitialTargetOffset;
     private bool botMode;
-    private bool isOpenCam;
+    [SerializeField] bool isOpenCam;
     private float currentZoomLens = 0f;
     private float initialBotLens;
 
@@ -132,7 +132,7 @@ public class OpenCam : MonoBehaviour
         }
 
         botComposer.TargetOffset = targetOffset;
-        
+
     }
     void DroidRecording()
     {
@@ -167,15 +167,15 @@ public class OpenCam : MonoBehaviour
             botCam.Priority = 11;
             botRecordCam.Priority = 10;
             driodCam.Priority = 0;
-            driodRecordCam.Priority = 0; 
+            driodRecordCam.Priority = 0;
         }
         else
         {
             botCam.Priority = 0;
             botRecordCam.Priority = 0;
             driodCam.Priority = 11;
-            driodRecordCam.Priority = 10; 
+            driodRecordCam.Priority = 10;
         }
-        
+
     }
 }
