@@ -34,7 +34,7 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction jumpAction;
     private InputAction shootAction;
     private InputAction interactAction;
-    [SerializeField] Camera mainCamera;
+    private Camera mainCamera; // each scene will have a main camera so i GameObject.Find("Main Camera");
 
     //movement vars
     private float jumpSpeed;
@@ -82,6 +82,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
     // update check inputs, fixedupdate calc physics
