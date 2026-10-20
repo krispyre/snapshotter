@@ -39,9 +39,16 @@ public class PlayerModeController : MonoBehaviour
         droid.SetActive(isDroid);
         dummy.SetActive(!isDroid);
         spider.SetActive(!isDroid);
-
-
     }
+
+    void Start()
+    {
+        // Sync camera priorities with the starting mode (droid by default).
+        openCam.changeState(!isDroid);
+        if (cameraFrame != null)
+            cameraFrame.changeMode(!isDroid);
+    }
+
     private void OnEnable() => CacheActions();
     void Update()
     {

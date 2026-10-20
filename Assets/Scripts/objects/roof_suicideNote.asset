@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
+  m_Name: roof_suicideNote
+  m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
+  objectName: suicide note
+  description: "Recognized text:  \u201CINo one in my life can evesr save me from
+    this hell. Please forgive my incompetence.\u201D"
+  systemResponse: Motivation is established. [todo if >=n collected] Leave site and
+    return to deployment site immediately.
