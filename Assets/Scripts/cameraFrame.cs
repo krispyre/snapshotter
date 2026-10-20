@@ -192,7 +192,7 @@ public class cameraFrame : MonoBehaviour
         }
         scanned(closestEvidence);
     }
-;
+
     void scanned(GameObject evidenceObject)
     {
         //implement waht you want to do when the evidence is scanned
