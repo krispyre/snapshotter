@@ -35,6 +35,8 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction shootAction;
     private InputAction interactAction;
     private Camera mainCamera; // each scene will have a main camera so i GameObject.Find("Main Camera");
+    private OpenCam openCam;
+    public bool isOpenCam => openCam != null && openCam.isOpenCam;
 
     //movement vars
     private float jumpSpeed;
@@ -59,6 +61,7 @@ public partial class PlayerMovement : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
+        openCam = GetComponentInParent<OpenCam>();
         CacheActions();
     }
 
@@ -100,7 +103,7 @@ public partial class PlayerMovement : MonoBehaviour
 
         inputDirX = dirXAction.ReadValue<float>();
         inputDirY = dirYAction.ReadValue<float>();
-        if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
+        if (jumpAction.WasPressedThisFrame() && !isOpenCam) jumpPressed = true;
         if (shootAction.WasPressedThisFrame()) shootPressed = true;
         jumpHeld = jumpAction.IsPressed();
 
@@ -159,7 +162,8 @@ public partial class PlayerMovement : MonoBehaviour
         if (controller.isGrounded) coyoteTimer = mvmtParams.coyoteTime;
         else coyoteTimer = Mathf.Max(0f, coyoteTimer - Time.deltaTime);
 
-        if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
+        if (isOpenCam) jumpBuf = 0f;
+        else if (jumpPressed) jumpBuf = mvmtParams.jumpBufferTime;
         else jumpBuf = Mathf.Max(0f, jumpBuf - Time.deltaTime);
 
         UpdateClawPointerPos();
@@ -183,7 +187,7 @@ public partial class PlayerMovement : MonoBehaviour
         {// ground jump
             if (controller.isGrounded)
             {
-                if (jumpBuf > 0)
+                if (jumpBuf > 0 && !isOpenCam)
                 {
                     Jump();
                     return;
@@ -199,7 +203,7 @@ public partial class PlayerMovement : MonoBehaviour
             }
 
             // assisted jump
-            if (coyoteTimer > 0 && jumpBuf > 0)
+            if (coyoteTimer > 0 && jumpBuf > 0 && !isOpenCam)
             {
                 Jump();
                 return;
@@ -208,7 +212,7 @@ public partial class PlayerMovement : MonoBehaviour
             // wall slide/cling
             if (isTouchingWall && yVel <= 0)
             {
-                if (jumpBuf > 0)
+                if (jumpBuf > 0 && !isOpenCam)
                 {
                     WallJump();
                     return;

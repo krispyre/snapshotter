@@ -22,7 +22,7 @@ public class OpenCam : MonoBehaviour
     private Vector3 BotinitialTargetOffset;
     private Vector3 DriodinitialTargetOffset;
     private bool botMode;
-    [SerializeField] bool isOpenCam;
+    [SerializeField, ReadOnlyInspector] public bool isOpenCam;
     private float currentZoomLens = 0f;
     private float initialBotLens;
 
