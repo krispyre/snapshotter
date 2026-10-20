@@ -199,11 +199,11 @@ public class cameraFrame : MonoBehaviour
     {
         if (isBot)
         {
-            viewCamera = DroidviewCamera;
+            viewCamera = BotviewCamera;
         }
         else
         {
-            viewCamera = BotviewCamera;
+            viewCamera = DroidviewCamera;
         }
     }
 
