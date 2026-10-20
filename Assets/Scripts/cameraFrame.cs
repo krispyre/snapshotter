@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using TMPro;
 
 public class cameraFrame : MonoBehaviour
 {
@@ -14,10 +15,14 @@ public class cameraFrame : MonoBehaviour
     [SerializeField] CinemachineCamera DroidviewCamera;//drag the camera that is used for viewing here
     [SerializeField] CinemachineCamera BotviewCamera;//drag the shotting camera here
     //this script should not do any changes to the camera, only refer to its variables
+    [SerializeField] private PlayerInput playerInput;
+    public TextMeshProUGUI EvidenceName;
+    public TextMeshProUGUI EvidenceDescription;
+    public TextMeshProUGUI Systemprompt;
+
 
 
     private RectTransform rectTransform;
-    [SerializeField] private PlayerInput playerInput;
     private InputAction camToggleAction;
     private bool isOpenCam;
     private Vector2 screenSize;
@@ -180,18 +185,22 @@ public class cameraFrame : MonoBehaviour
         //Read the evidence data that are closetest to the camera area's center
         if (closestEvidence == null)
         {
+            EvidenceName.text = "";
+            EvidenceDescription.text = "";
+            Systemprompt.text = "";
             return;
         }
         scanned(closestEvidence);
-
-
     }
-
+;
     void scanned(GameObject evidenceObject)
     {
         //implement waht you want to do when the evidence is scanned
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        EvidenceName.text = evidenceData.objectName;
+        EvidenceDescription.text = evidenceData.description;
+        Systemprompt.text ="\"" + evidenceData.systemResponse +"\"";
         print("Scanned evidence: " + evidenceData.objectName + " - " + evidenceData.description + " - " + evidenceData.systemResponse);
     }
 
