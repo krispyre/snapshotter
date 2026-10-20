@@ -37,11 +37,19 @@ public class cameraFrame : MonoBehaviour
         camToggleAction = playerInput.actions.FindAction("Camera");
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
+        SetUiVisible(false);
     }
 
     public void cameraToggle(bool state)
     {
         isOpenCam = state;
+        SetUiVisible(state);
+    }
+
+    void SetUiVisible(bool visible)
+    {
+        foreach (UnityEngine.UI.Graphic graphic in GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+            graphic.enabled = visible;
     }
 
     private void AdjustFrameSize()
