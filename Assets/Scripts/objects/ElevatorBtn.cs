@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class ElevatorBtn : Interactable
 {
-    [SerializeField] private Elevator elevator;
+    [SerializeField, ReadOnlyInspector] private Elevator elevator;
 
     protected override void OnAwake()
     {
+        elevator = GetComponentInChildren<Elevator>();
         prompt = "Wait for elevator";
         Debug.Assert(elevator != null);
     }
