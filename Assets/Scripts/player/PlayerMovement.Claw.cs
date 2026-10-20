@@ -30,6 +30,7 @@ public partial class PlayerMovement : MonoBehaviour
         clawFsm.SetState(clawFsm.clawReady);
     }
     void UpdateClawPointerPos()
+    //todo only trace when click
     {
         if (Mouse.current == null) return;
 

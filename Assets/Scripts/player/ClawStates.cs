@@ -66,34 +66,55 @@ public sealed class ClawShooting : ClawState
         bool prevBackfaces = Physics.queriesHitBackfaces;
         Physics.queriesHitBackfaces = true;
         // start slightly behind so we still catch walls we're already touching
-        bool didHit = Physics.SphereCast(
-            origin - dir * CastSkin,
-            CastRadius,
-            dir,
-            out RaycastHit hitInfo,
-            p.clawParams.armLength + CastSkin,
-            p.WallLayer,
-            QueryTriggerInteraction.Ignore);
+
+        RaycastHit hitInfo = default;
+
+        // fan from the aim, then outward: 0, -d, +d, -2d, +2d, ...
+        // d = fanAngleDeg / (rayCount - 1), so the outer pair is ±fanAngleDeg/2
+        bool didHit = false;
+        float fanAngleDeg = p.clawParams.fanAngleDeg;
+        int rayCount = p.clawParams.rayCount;
+        float deltaAngle = fanAngleDeg / (rayCount - 1);
+        for (int i = 0; i < rayCount; i++)
+        {
+            int step = (i + 1) / 2;
+            float sign = (i % 2 == 0) ? 1f : -1f;
+            float angle = sign * step * deltaAngle;
+            Vector3 checkDir = Quaternion.AngleAxis(angle, Vector3.forward) * dir;
+            didHit = Physics.SphereCast(
+                                origin - dir * CastSkin,
+                                CastRadius,
+                                checkDir,
+                                out hitInfo,
+                                p.clawParams.armLength + CastSkin,
+                                p.WallLayer,
+                                QueryTriggerInteraction.Collide);
+
+            // this only draws the rays that fail
+            Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
+
+            if (didHit) break;
+        }
         Physics.queriesHitBackfaces = prevBackfaces;
 
         if (didHit)
         {
             p.landingTarget = hitInfo.point;
             p.landingTarget.z = origin.z;
-            if (hitInfo.collider.gameObject.CompareTag("NonGrabbable"))
+            if (hitInfo.collider.gameObject.TryGetComponent(out NonGrabbable _))
             {
                 p.missed = true;
             }
-            else if (hitInfo.collider.gameObject.CompareTag("Grabbable") || hitInfo.collider.gameObject.CompareTag("Untagged"))
+            else
             {
-                if (hitInfo.collider.gameObject.CompareTag("Untagged"))
-                {
-                    Debug.LogWarning("object is not tagged, defaulting to grabbable");
-                }
                 p.missed = false;
+
+                if (hitInfo.collider.gameObject.TryGetComponent(out AirGrab ag))
+                {
+                    p.landingTarget = ag.transform.position; // snap to the obj center
+                    p.landingTarget.z = origin.z;
+                }
             }
-
-
         }
         else
         {
@@ -169,10 +190,14 @@ public sealed class ClawMiss : ClawState
 public sealed class ClawGrabbing : ClawState
 {
     int wait;
+    int flyFrame = -1;
+    Vector3 flyStart;
+
     public ClawGrabbing(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
         wait = p.clawParams.pullDelay;
+        flyFrame = -1;
         p.claw_xVel = 0;
         p.claw_yVel = 0;
     }
@@ -182,16 +207,48 @@ public sealed class ClawGrabbing : ClawState
         if (p.shootPressed)
         {
             p.clawFsm.SetState(p.clawFsm.clawReturn);
+            return;
         }
         if (wait > 0) { wait--; return; }
-        p.state = PlayerMovement.PlayerState.ClawFly;
 
         p.claw.transform.rotation = p.LookAt(p.armOrigin.position, p.landingTarget);
 
-        if (Vector3.Distance(p.claw.transform.position, p.transform.position) < 0.2f)
+        if (flyFrame < 0)
         {
-            p.controller.Move(p.claw.transform.position - p.transform.position);
-            p.state = PlayerMovement.PlayerState.WallCling; //todo ceiling Hang
+            flyStart = p.transform.position;
+            flyFrame = 0;
+        }
+
+        int frames = Mathf.Max(1, p.clawParams.flyTime);
+        if (flyFrame < frames)
+        {
+            flyFrame++;
+            p.state = PlayerMovement.PlayerState.ClawFly;
+            p.xVel = 0f;
+            p.yVel = 0f;
+            float t = flyFrame / (float)frames;
+            Vector3 pos = Vector3.Lerp(flyStart, p.landingTarget, t);
+            p.controller.Move(pos - p.transform.position);
+            return;
+        }
+
+        p.xVel = 0f;
+        p.yVel = 0f;
+        if (Mathf.Abs(p.claw.transform.position.x - p.transform.position.x) < p.controller.skinWidth)
+        {
+            if (p.claw.transform.position.y > p.transform.position.y)
+                p.state = PlayerMovement.PlayerState.CeilHang;
+            else
+                p.state = PlayerMovement.PlayerState.FloorGrab;
+        }
+        else
+        {
+            p.state = PlayerMovement.PlayerState.WallCling;
+        }
+        if (p.jumpPressed)
+        {
+            p.clawFsm.SetState(p.clawFsm.clawReturn); // allow jumping immediately
+            p.Jump();
         }
     }
 

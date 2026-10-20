@@ -6,55 +6,122 @@ using UnityEngine.UI;
 public class PointSystem : MonoBehaviour
 {
     public UnityEvent onPointsDepleted;
-    private Text scoreText;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
-    private float pointsRecoverRate = 5;
-    [SerializeField]
+    [SerializeField] private float pointsRecoverRate = 0.5f;
+
     public float[] thresholds = null; //= { 20f, 40f, 60f, 80f, 100f };
     [SerializeField, ReadOnlyInspector] private float _points;
 
     public static PointSystem Instance;
     [SerializeField, ReadOnlyInspector] private int danger;
+    private MissionSave mission;
+
+
+    private RectTransform bg;
+    private RectTransform fg;
+    [SerializeField] private GameObject thresBar;
     public float points
     {
         get => _points;
         private set
         {
+            bool dropped = value < _points;
             _points = value;
+            if (dropped) LowerMaxPoint();
+            UpdateDisplay();
 
-            if (_points > curMaxPoint)
+            _points = Mathf.Clamp(_points, 0, curMaxPoint);
+            if (_points <= 0)
             {
-                _points = curMaxPoint;
-            }
-            else if (_points <= 0)
-            {
-                _points = 0;
                 OnDepleted();
             }
 
-            if (scoreText != null)
-            {
-                scoreText.text = "points: " + _points.ToString();
-            }
+
         }
+    }
+
+    private void UpdateDisplay()
+    {
+        if (fg == null || initMaxPoint <= 0f) return;
+
+        float width = ((RectTransform)transform).rect.width;
+        float loss = (points - initMaxPoint) / initMaxPoint * width; // why is it the other way around/???
+        Vector2 newOffsetMax = fg.offsetMax;
+        newOffsetMax.x = loss;
+        fg.offsetMax = newOffsetMax;
     }
 
     public void SetThresholds(float[] thresholds)
     {
         this.thresholds = thresholds;
+
+        foreach (float t in thresholds)
+        {
+            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
+            GameObject tObj = Instantiate(thresBar, transform);
+            RectTransform tRect = (RectTransform)tObj.transform;
+
+            tRect.anchoredPosition = new Vector2(x, 0);
+        }
+
+        foreach (float t in thresholds)
+        {
+            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
+            GameObject tObj = Instantiate(thresBar, transform);
+            RectTransform tRect = (RectTransform)tObj.transform;
+
+            tRect.anchoredPosition = new Vector2(x, 0);
+        }
     }
 
     void Awake()
     {
         Instance = this;
-        scoreText = GetComponent<Text>();
+        bg = GetComponent<RectTransform>();
+        fg = transform.Find("curPoints").GetComponent<RectTransform>();
     }
 
-    void Start()
+    public void LoadMission(int missionId)
     {
+        mission = SaveSystem.GetMission(missionId);
         curMaxPoint = initMaxPoint;
-        points = curMaxPoint;
+        _points = initMaxPoint;
+        // the drop from full lowers curMaxPoint to match the saved points
+        points = mission.points;
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (paused) SavePoints();
+    }
+
+    void OnDestroy()
+    {
+        SavePoints();
+    }
+
+    private void SavePoints()
+    {
+        if (mission == null) return;
+        mission.points = _points;
+        SaveSystem.Save();
+    }
+
+    private void LowerMaxPoint()
+    {
+        if (thresholds == null) return;
+
+        // thresholds must be in ascending order
+        foreach (float t in thresholds)
+        {
+            if (t >= curMaxPoint) return;
+            if (_points <= t)
+            {
+                curMaxPoint = t;
+                return;
+            }
+        }
     }
 
     public void EnterDanger()
@@ -84,26 +151,8 @@ public class PointSystem : MonoBehaviour
     }
 
     public void DeductPoints(float amt)
-    /**
-        rate is points per second!!
-    */
     {
         points -= amt;
-    }
-
-    void LateUpdate()
-    {
-        if (danger >= 0 && thresholds != null)
-        {
-            for (int i = 0, n = thresholds.Length; i < n; i++)
-            {
-                if (_points <= thresholds[i])
-                {
-                    curMaxPoint = thresholds[i];
-                    break;
-                }
-            }
-        }
     }
 
     private void OnDepleted()
