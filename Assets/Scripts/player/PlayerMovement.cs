@@ -421,7 +421,8 @@ public partial class PlayerMovement : MonoBehaviour
 
             if (controller.isGrounded)
             {
-                xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
+                float walkCap = isOpenCam ? mvmtParams.maxRecordWalkSpeed : mvmtParams.maxWalkSpeed;
+                xVel = Mathf.Clamp(xVel, -walkCap, walkCap);
             }
             else
             {
