@@ -13,6 +13,8 @@ public class PlayerModeController : MonoBehaviour
     private GameObject dummy;
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
+    [SerializeField] cameraFrame cameraFrame; // contains the camera frame script, calls the changeState() function when player mode changes
+    private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
 
     private void CacheActions()
     {
@@ -27,6 +29,7 @@ public class PlayerModeController : MonoBehaviour
 
     void Awake()
     {
+        openCam = GetComponent<OpenCam>();
         CacheActions();
         droid = transform.Find("droid").gameObject;
         spider = transform.Find("spider").gameObject;
@@ -71,8 +74,8 @@ public class PlayerModeController : MonoBehaviour
         dummy.SetActive(true);
         spider.transform.position = droid.transform.position;
         spider.SetActive(true);
-
-
+        openCam.changeState(true);
+        cameraFrame.changeMode(true);
     }
     public void ReturnToDroid()
     {
@@ -81,6 +84,9 @@ public class PlayerModeController : MonoBehaviour
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
+        openCam.changeState(false);
+        cameraFrame.changeMode(false);
+
 
     }
 }

@@ -4496,10 +4496,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5054807be4ef742b4b4329bdd55ce9, type: 2}
-    - target: {fileID: 5110735383493480519, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: TargetOffset.x
-      value: 0.59
-      objectReference: {fileID: 0}
     - target: {fileID: 6603251629096034967, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_Camera
       value: 
@@ -4523,14 +4519,6 @@ PrefabInstance:
     - target: {fileID: 8924663584559705786, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalPosition.z
       value: -35.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924663584559705786, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -11.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 9081545664537108889, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -7,24 +7,36 @@ public class cameraFrame : MonoBehaviour
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
     [Range(0f, 0.3f)] public float YMaxRatio = 0.1f;
 
-    public float ratioOnScreen = 0.3f;
+    public float ratioOnScreen = 0.15f;
     public float Xratio = 16f;
     public float Yratio = 9f;
-    [SerializeField] CinemachineCamera viewCamera;//drag the shotting camera here
+
+    [SerializeField] CinemachineCamera DroidviewCamera;//drag the camera that is used for viewing here
+    [SerializeField] CinemachineCamera BotviewCamera;//drag the shotting camera here
     //this script should not do any changes to the camera, only refer to its variables
+
 
     private RectTransform rectTransform;
     [SerializeField] private PlayerInput playerInput;
     private InputAction camToggleAction;
     private bool isOpenCam;
     private Vector2 screenSize;
+    private CinemachineCamera viewCamera;
+
 
     void Awake()
     {
+        viewCamera = BotviewCamera; // Set the viewCamera to botviewCamera by default
+        isOpenCam = false;
         rectTransform = GetComponent<RectTransform>();
-        camToggleAction = playerInput.actions.FindAction("CamToggle");
+        camToggleAction = playerInput.actions.FindAction("Camera");
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
+    }
+
+    public void cameraToggle(bool state)
+    {
+        isOpenCam = state;
     }
 
     private void AdjustFrameSize()
@@ -53,12 +65,6 @@ public class cameraFrame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //When camera is toggled, display a frame that follows cursor and initiate raycastring
-        if (camToggleAction.WasPressedThisFrame())
-        {
-            isOpenCam = !isOpenCam;
-        }
-
         Vector2 currentScreenSize = new Vector2(Screen.width, Screen.height);
         if (currentScreenSize != screenSize)
         {
@@ -134,8 +140,12 @@ public class cameraFrame : MonoBehaviour
         float lowerBoundary = Mathf.Atan(bottomViewport * verticalFovLimit);
         float upperBoundary = Mathf.Atan(topViewport * verticalFovLimit);
 
-        
-        //loop through all of the evidences
+
+        //loop through all of the evidences\
+        Camera outputCamera = Camera.main;
+        GameObject closestEvidence = null;
+        float closestDistance = float.PositiveInfinity;
+
         GameObject[] evidenceObjects = GameObject.FindGameObjectsWithTag("Evidence");
         foreach (GameObject evidenceObject in evidenceObjects)
         {
@@ -146,14 +156,55 @@ public class cameraFrame : MonoBehaviour
                 && evidenceLocalPosition.y / evidenceLocalPosition.z >= Mathf.Tan(lowerBoundary)
                 && evidenceLocalPosition.y / evidenceLocalPosition.z <= Mathf.Tan(upperBoundary))
             {
-                evidenceObject.GetComponent<SpriteRenderer>().color = Color.green; // Change color to green if within frame
+                //Color the sprite green if it's inside the scanning area, for demo use
+                evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
+                Vector2 frameCenter = RectTransformUtility.WorldToScreenPoint(
+                    uiCamera,
+                    rectTransform.TransformPoint(rectTransform.rect.center)
+                );
+
+                Vector3 screenPos = outputCamera.WorldToScreenPoint(evidenceObject.transform.position);
+                float distanceToCursor = Vector2.Distance(screenPos, frameCenter);
+                if (distanceToCursor < closestDistance)
+                {
+                    closestDistance = distanceToCursor;
+                    closestEvidence = evidenceObject;
+                }
             }
             else
             {
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
-                print($"Evidence {evidenceObject.name} is outside the camera frame.");
             }
         }
-        
-     }
+        //Read the evidence data that are closetest to the camera area's center
+        if (closestEvidence == null)
+        {
+            return;
+        }
+        scanned(closestEvidence);
+
+
+    }
+
+    void scanned(GameObject evidenceObject)
+    {
+        //implement waht you want to do when the evidence is scanned
+        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        print("Scanned evidence: " + evidenceData.objectName + " - " + evidenceData.description + " - " + evidenceData.systemResponse);
+    }
+
+    public void changeMode(bool isBot)
+    {
+        if (!isBot)
+        {
+            viewCamera = BotviewCamera;
+        }
+        else
+        {
+            viewCamera = DroidviewCamera;
+        }
+    }
+
+
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   airDecel: 12
   maxWalkSpeed: 2
   maxAirSpeed: 2.5
-  jumpHeight: 0.5
+  jumpHeight: 0.8
   jumpGravity: 20
   fallGravity: 15
   jumpBufferTime: 6
