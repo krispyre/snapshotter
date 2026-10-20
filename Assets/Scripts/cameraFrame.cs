@@ -146,9 +146,10 @@ public class cameraFrame : MonoBehaviour
         GameObject closestEvidence = null;
         float closestDistance = float.PositiveInfinity;
 
-        GameObject[] evidenceObjects = GameObject.FindGameObjectsWithTag("Evidence");
-        foreach (GameObject evidenceObject in evidenceObjects)
+        EvidenceDataContainer[] evidenceObjects = FindObjectsByType<EvidenceDataContainer>(FindObjectsSortMode.None);
+        foreach (EvidenceDataContainer evidence in evidenceObjects)
         {
+            GameObject evidenceObject = evidence.gameObject;
             Vector3 evidenceLocalPosition = viewCamera.transform.InverseTransformPoint(evidenceObject.transform.position);
             if (evidenceLocalPosition.z > 0f
                 && evidenceLocalPosition.x / evidenceLocalPosition.z >= Mathf.Tan(leftBoundary)
@@ -196,7 +197,7 @@ public class cameraFrame : MonoBehaviour
 
     public void changeMode(bool isBot)
     {
-        if (!isBot)
+        if (isBot)
         {
             viewCamera = BotviewCamera;
         }
