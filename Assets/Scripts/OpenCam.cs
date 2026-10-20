@@ -8,13 +8,15 @@ public class OpenCam : MonoBehaviour
     public CinemachineCamera driodRecordCam;
     public CinemachineCamera botCam;
     public CinemachineCamera botRecordCam;
+    [SerializeField] private cameraFrame cameraFrame;
+    [SerializeField] public GameObject EvidenceDataPage;
+    [SerializeField] public GameObject frameMask;
     public float MaxZoomLens = 10f;
     public float zoomSpeed = 1f;
 
     public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
-    [SerializeField] private cameraFrame cameraFrame;
 
     private CinemachineRotationComposer driodComposer;
     private CinemachineRotationComposer botComposer;
@@ -22,7 +24,7 @@ public class OpenCam : MonoBehaviour
     private Vector3 BotinitialTargetOffset;
     private Vector3 DriodinitialTargetOffset;
     private bool botMode;
-    [SerializeField] bool isOpenCam;
+    [SerializeField, ReadOnlyInspector] public bool isOpenCam;
     private float currentZoomLens = 0f;
     private float initialBotLens;
 
@@ -32,11 +34,12 @@ public class OpenCam : MonoBehaviour
 
     void Start()
     {
+        EvidenceDataPage.SetActive(isOpenCam);
+        frameMask.SetActive(isOpenCam);
         driodComposer = driodRecordCam.GetComponent<CinemachineRotationComposer>();
         botComposer = botRecordCam.GetComponent<CinemachineRotationComposer>();
         DriodinitialTargetOffset = driodComposer.TargetOffset;
         BotinitialTargetOffset = botComposer.TargetOffset;
-        botMode = true;
     }
     void Awake()
     {
@@ -77,6 +80,8 @@ public class OpenCam : MonoBehaviour
         {
             isOpenCam = !isOpenCam;
             cameraFrame.cameraToggle(isOpenCam);
+            EvidenceDataPage.SetActive(isOpenCam);
+            frameMask.SetActive(isOpenCam);
 
             // When [camera] key is pressed, call the toggleCamera function
             if (botRecordCam != null && driodRecordCam != null)
@@ -161,6 +166,8 @@ public class OpenCam : MonoBehaviour
         botMode = isBotMode;
         isOpenCam = false;
         cameraFrame.cameraToggle(false);
+        EvidenceDataPage.SetActive(isOpenCam);
+        frameMask.SetActive(isOpenCam);
 
         if (botMode)
         {
