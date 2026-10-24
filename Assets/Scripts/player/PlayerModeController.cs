@@ -44,7 +44,7 @@ public class PlayerModeController : MonoBehaviour
     void Start()
     {
         // Sync camera priorities with the starting mode (droid by default).
-        openCam.changeState(!isDroid);
+        openCam.ChangeState(!isDroid);
         if (cameraFrame != null)
             cameraFrame.changeMode(!isDroid);
     }
@@ -81,7 +81,7 @@ public class PlayerModeController : MonoBehaviour
         dummy.SetActive(true);
         spider.transform.position = droid.transform.position;
         spider.SetActive(true);
-        openCam.changeState(true);
+        openCam.ChangeState(true);
         cameraFrame.changeMode(true);
     }
     public void ReturnToDroid()
@@ -91,7 +91,7 @@ public class PlayerModeController : MonoBehaviour
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
-        openCam.changeState(false);
+        openCam.ChangeState(false);
         cameraFrame.changeMode(false);
 
 

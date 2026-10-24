@@ -549,9 +549,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3650889508185647368}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.01442847, y: -0, z: -0, w: 0.99989593}
-  m_LocalPosition: {x: -0.00039, y: -0.81991, z: -4.84332}
-  m_LocalRotation: {x: 0.045221563, y: 2.8832667e-15, z: -3.6084189e-16, w: 0.998977}
+  m_LocalRotation: {x: 0.045221575, y: 0.00000003000353, z: -0.0000000013581964, w: 0.998977}
   m_LocalPosition: {x: -0.00039, y: -0.23991, z: -4.84332}
   m_LocalScale: {x: 0.38906404, y: 0.3890641, z: 0.3890641}
   m_ConstrainProportionsScale: 0
@@ -747,16 +745,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8973631213e4c8644b0d483039fd9d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenCam
-  driodCam: {fileID: 4879191824857016296}
-  driodRecordCam: {fileID: 8352411781285810227}
-  botCam: {fileID: 7506497384477509428}
-  botRecordCam: {fileID: 2709902558335876310}
+  gameEvent: {fileID: 0}
+  DriodCam: {fileID: 4879191824857016296}
+  DriodRecordCam: {fileID: 8352411781285810227}
+  SpiderCam: {fileID: 7506497384477509428}
+  SpiderRecordCam: {fileID: 2709902558335876310}
+  cameraFrame: {fileID: 0}
+  EvidenceDataPage: {fileID: 0}
+  frameMask: {fileID: 0}
   MaxZoomLens: 10
   zoomSpeed: 1
   maxTurningAngle: 10
   verticalRotateScale: 0.15
   horizontalRotateScale: 0.5
-  cameraFrame: {fileID: 0}
   isOpenCam: 0
   playerInput: {fileID: 1004637472431722812}
 --- !u!1 &5046266589489488917

@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using System;
+using UnityEngine.Events;
 
-[CreateAssetMenu(menuName = "Game/GameEvent")]
+[CreateAssetMenu(fileName = "GameEvent", menuName = "Scriptable Objects/GameEvent")]
 public class GameEvent : ScriptableObject
 {
     public UnityEvent OnOpenCam;
@@ -14,12 +13,13 @@ public class GameEvent : ScriptableObject
     private bool openCam;
     public bool CamMode => openCam;
     private bool spiderMode;
-    public bool PlayerMode => isSpider;
+    public bool PlayerModeIsSpider => spiderMode;
 
     public void Changemode(bool isSpider)
     {
         if(isSpider == spiderMode) return;
         spiderMode = isSpider;
+        ToggleCamera(false); // Close the camera when switching modes
 
         if (isSpider)
         {
@@ -38,11 +38,11 @@ public class GameEvent : ScriptableObject
 
         if (isOpenCam)
         {
-            OnOpenCam?.Invoke;
+            OnOpenCam?.Invoke();
         }
         else
         {
-            OnShutCam?.Invoke;
+            OnShutCam?.Invoke();
         }
     }
     
