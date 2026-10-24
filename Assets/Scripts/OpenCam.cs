@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 
 public class OpenCam : MonoBehaviour
 {
+    public GameEvent gameEvent;
     public CinemachineCamera driodCam;
     public CinemachineCamera driodRecordCam;
     public CinemachineCamera botCam;
@@ -41,36 +42,17 @@ public class OpenCam : MonoBehaviour
         DriodinitialTargetOffset = driodComposer.TargetOffset;
         BotinitialTargetOffset = botComposer.TargetOffset;
     }
+
+    void OnEnable(){
+         gameEvent.OnOpenCam.AddListener(HandleOpenCamera);
+         gameEvent.OnShutCam.AddListener(HandleCloseCamera);
+    }
     void Awake()
     {
         camToggleAction = playerInput.actions.FindAction("Camera");
         if (botRecordCam != null)
         {
             initialBotLens = botRecordCam.Lens.FieldOfView;
-        }
-    }
-
-    void toggleCamera()
-    {
-        currentZoomLens = 0f;
-        if (botRecordCam != null)
-        {
-            var lens = botRecordCam.Lens;
-            lens.FieldOfView = initialBotLens;
-            botRecordCam.Lens = lens;
-        }
-
-        if (botMode)
-        {
-            int tmp = botCam.Priority;
-            botCam.Priority = botRecordCam.Priority;
-            botRecordCam.Priority = tmp;
-        }
-        else
-        {
-            int tmp = driodCam.Priority;
-            driodCam.Priority = driodRecordCam.Priority;
-            driodRecordCam.Priority = tmp;
         }
     }
 
@@ -105,9 +87,9 @@ public class OpenCam : MonoBehaviour
             }
         }
     }
-    void BotRecording()
+    void Recording(CinemachineRotationComposer Composer,CinemachineCamera Camera)
     {
-        if (botComposer == null || botRecordCam == null)
+        if (Composer == null || Camera == null)
         {
             return;
         }
@@ -131,14 +113,26 @@ public class OpenCam : MonoBehaviour
                 -MaxZoomLens,
                 MaxZoomLens);
 
-            var lens = botRecordCam.Lens;
+            var lens = Camera.Lens;
             lens.FieldOfView = initialBotLens - currentZoomLens;
-            botRecordCam.Lens = lens;
+           Camera.Lens = lens;
         }
 
-        botComposer.TargetOffset = targetOffset;
+        Composer.TargetOffset = targetOffset;
 
     }
+
+    void HandleOpenCamera()
+    {
+        ToggleCamera();
+    }
+
+    void HandleCloseCamera()
+    {
+        ToggleCamera();
+    }
+
+
     void DroidRecording()
     {
         if (driodComposer == null || driodRecordCam == null)
@@ -185,4 +179,30 @@ public class OpenCam : MonoBehaviour
         }
 
     }
+
+    void ToggleCamera()
+    {
+        currentZoomLens = 0f;
+        if (botRecordCam != null)
+        {
+            var lens = botRecordCam.Lens;
+            lens.FieldOfView = initialBotLens;
+            botRecordCam.Lens = lens;
+        }
+
+        if (gameEvent.PlayerMode)
+        {
+            int tmp = botCam.Priority;
+            botCam.Priority = botRecordCam.Priority;
+            botRecordCam.Priority = tmp;
+        }
+        else
+        {
+            int tmp = driodCam.Priority;
+            driodCam.Priority = driodRecordCam.Priority;
+            driodRecordCam.Priority = tmp;
+        }
+    }
+
+
 }
