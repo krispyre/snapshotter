@@ -60,6 +60,7 @@ public class OneWayTeleport : MonoBehaviour
         stairAnimator.Play(EnterFromRightState, 0, 0f);
         float length = stairAnimator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(length);
+        yield return new WaitForSeconds(0.2f);// wait for more so the camera doesnt show through
 
         cc.enabled = false;
         player.position = dest.position;
