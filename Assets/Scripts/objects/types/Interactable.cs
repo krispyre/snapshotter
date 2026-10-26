@@ -7,8 +7,10 @@ public class Interactable : MonoBehaviour
     [SerializeField, ReadOnlyInspector] protected bool engaged;
     public string prompt;
     [SerializeField] protected TextMeshProUGUI promptText;
+    [SerializeField] private float promptYOffset = 10f;
     protected Collider trigger;
     private MeshRenderer meshRenderer;
+    private Camera mainCamera;
 
     private PlayerInput playerInput;
     private InputAction interactAction;
@@ -32,6 +34,7 @@ public class Interactable : MonoBehaviour
         interactAction = playerInput.actions.FindAction("Interact");
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
+        mainCamera = Camera.main;
 
         if (promptText != null)
         {
@@ -58,6 +61,16 @@ public class Interactable : MonoBehaviour
         {
             OnInteract();
         }
+
+        if (engaged && promptText != null && trigger != null && mainCamera != null)
+        {
+            Rect screenRect = trigger.GetScreenRect(mainCamera);
+            promptText.rectTransform.position = new Vector3(
+                screenRect.center.x,
+                screenRect.yMax + promptYOffset,
+                0f);
+        }
+
         OnUpdate();
     }
 

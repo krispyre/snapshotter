@@ -372,6 +372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   engaged: 0
   prompt: Call Elevator
+  promptText: {fileID: 0}
   elevator: {fileID: 7317995455244012161}
 --- !u!1 &4306309673736741127
 GameObject:
@@ -500,6 +501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Elevator
   engaged: 0
   prompt: 
+  promptText: {fileID: 0}
   waitTimeMax: 2
   waitTimer: 0
   waitTimerTimeout: 0
