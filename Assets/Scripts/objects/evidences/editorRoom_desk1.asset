@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
   m_Name: editorRoom_desk1
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
-  objectName: 
-  description: 
-  systemResponse: 
+  objectName: Desk note
+  description: "Tidy and clean desk uncharacteristic of a reporter at a reputable
+    news company. A note reads \u201Cplease talk to me before it\u2019s too late!\u201D
+    at the side of the desk. Stuck onto a pack of snacks."
+  systemResponse: Looks like the subject has a friend. Search for the friend's desk.
