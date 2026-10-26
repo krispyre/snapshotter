@@ -48,6 +48,7 @@ public class Elevator : Interactable
         if (doorOpen)
         {
             Debug.Log("open elevator ui");
+            promptText.gameObject.SetActive(false);
             lockedPlayerInput = player.GetComponentInParent<PlayerInput>();
             if (lockedPlayerInput != null)
                 lockedPlayerInput.actions.FindActionMap("Player").Disable();
@@ -103,6 +104,8 @@ public class Elevator : Interactable
     public void ClosePanelUi()
     {
         panelUi_anim.SetBool("IsOpen", false);
+        promptText.gameObject.SetActive(true);
+
         if (lockedPlayerInput != null)
         {
             lockedPlayerInput.actions.FindActionMap("Player").Enable();

@@ -28,7 +28,7 @@ public class LevelController : MonoBehaviour
     {
 
         transition.SetTrigger("enterElevator");
-        yield return new WaitForSeconds(transition.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+        yield return new WaitForSeconds(1); // todo hardcode
         SceneManager.LoadScene(levelName);
 
     }
