@@ -33,7 +33,7 @@ public sealed class ClawReady : ClawState
 
     public override void FixedUpdate()
     {
-        if (p.shootPressed)
+        if (p.shootPressed && !p.isOpenCam)
             p.clawFsm.SetState(p.clawFsm.clawShooting);
     }
 

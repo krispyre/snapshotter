@@ -39,13 +39,20 @@ public class PlayerModeController : MonoBehaviour
         droid.SetActive(isDroid);
         dummy.SetActive(!isDroid);
         spider.SetActive(!isDroid);
-
-
     }
+
+    void Start()
+    {
+        // Sync camera priorities with the starting mode (droid by default).
+        openCam.changeState(!isDroid);
+        if (cameraFrame != null)
+            cameraFrame.changeMode(!isDroid);
+    }
+
     private void OnEnable() => CacheActions();
     void Update()
     {
-        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle) //todo change to held tgt
+        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle && !openCam.isOpenCam) //todo change to held tgt
         {
             holdTimer += Time.deltaTime;
         }
