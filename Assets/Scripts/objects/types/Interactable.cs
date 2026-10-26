@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class Interactable : MonoBehaviour
 {
     [SerializeField, ReadOnlyInspector] protected bool engaged;
     public string prompt;
+    [SerializeField] protected TextMeshProUGUI promptText;
+    [SerializeField] private float promptYOffset = 10f;
     protected Collider trigger;
+    protected Collider engagedPlayer;
     private MeshRenderer meshRenderer;
+    private Camera mainCamera;
 
     private PlayerInput playerInput;
     private InputAction interactAction;
@@ -30,6 +35,14 @@ public class Interactable : MonoBehaviour
         interactAction = playerInput.actions.FindAction("Interact");
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
+        mainCamera = Camera.main;
+
+        if (promptText != null)
+        {
+            promptText.text = prompt;
+            promptText.gameObject.SetActive(false);
+        }
+        OnStart();
     }
 
     public bool PressedLeft => PressedDirection(dirXAction, false);
@@ -48,8 +61,18 @@ public class Interactable : MonoBehaviour
     {
         if (interactAction.WasPressedThisFrame() && engaged)
         {
-            OnInteract();
+            OnInteract(engagedPlayer);
         }
+
+        if (engaged && promptText != null && trigger != null && mainCamera != null)
+        {
+            Rect screenRect = trigger.GetScreenRect(mainCamera);
+            promptText.rectTransform.position = new Vector3(
+                screenRect.center.x,
+                screenRect.yMax + promptYOffset,
+                0f);
+        }
+
         OnUpdate();
     }
 
@@ -59,6 +82,8 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("notice me");
             engaged = true;
+            engagedPlayer = other;
+            if (promptText != null) promptText.gameObject.SetActive(true);
             OnPlayerEnter(other);
             PlayerEntered?.Invoke(other);
         }
@@ -70,18 +95,22 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("unnotice me");
             engaged = false;
+            engagedPlayer = null;
+            if (promptText != null) promptText.gameObject.SetActive(false);
             OnPlayerExit(other);
             PlayerExited?.Invoke(other);
         }
     }
 
     protected virtual void OnAwake() { }
+    protected virtual void OnStart() { }
     protected virtual void OnUpdate() { }
     protected virtual void OnPlayerEnter(Collider other) { }
     protected virtual void OnPlayerExit(Collider other) { }
 
-    protected virtual void OnInteract()
+    protected virtual void OnInteract(Collider player)
     {
+        promptText.gameObject.SetActive(false);
         Debug.Log("interacted");
     }
 }

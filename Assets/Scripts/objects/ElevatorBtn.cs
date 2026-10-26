@@ -11,7 +11,7 @@ public class ElevatorBtn : Interactable
         Debug.Assert(elevator != null);
     }
 
-    protected override void OnInteract()
+    protected override void OnInteract(Collider player)
     {
         // Debug.Log("press btn");
         elevator.ButtonCall();

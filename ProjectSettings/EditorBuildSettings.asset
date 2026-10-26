@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/Scenes/templehhhh.unity
+    guid: 60a887631eb836b4387db17e0a632462
+  - enabled: 1
+    path: Assets/Scenes/ninthFloor_roof.unity
+    guid: 717d901674756024d9e1fc7fac73dc1b
+  - enabled: 1
+    path: Assets/Scenes/editorFloor.unity
+    guid: bc67414326a9c24439a8a69a70f6f01a
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: beac4348ccb32fd4c8e987b6e0db4c12, type: 2}
   m_UseUCBPForAssetBundles: 0
