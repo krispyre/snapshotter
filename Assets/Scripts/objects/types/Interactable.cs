@@ -9,6 +9,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI promptText;
     [SerializeField] private float promptYOffset = 10f;
     protected Collider trigger;
+    protected Collider engagedPlayer;
     private MeshRenderer meshRenderer;
     private Camera mainCamera;
 
@@ -41,6 +42,7 @@ public class Interactable : MonoBehaviour
             promptText.text = prompt;
             promptText.gameObject.SetActive(false);
         }
+        OnStart();
     }
 
     public bool PressedLeft => PressedDirection(dirXAction, false);
@@ -59,7 +61,7 @@ public class Interactable : MonoBehaviour
     {
         if (interactAction.WasPressedThisFrame() && engaged)
         {
-            OnInteract();
+            OnInteract(engagedPlayer);
         }
 
         if (engaged && promptText != null && trigger != null && mainCamera != null)
@@ -80,6 +82,7 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("notice me");
             engaged = true;
+            engagedPlayer = other;
             if (promptText != null) promptText.gameObject.SetActive(true);
             OnPlayerEnter(other);
             PlayerEntered?.Invoke(other);
@@ -92,6 +95,7 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("unnotice me");
             engaged = false;
+            engagedPlayer = null;
             if (promptText != null) promptText.gameObject.SetActive(false);
             OnPlayerExit(other);
             PlayerExited?.Invoke(other);
@@ -99,11 +103,12 @@ public class Interactable : MonoBehaviour
     }
 
     protected virtual void OnAwake() { }
+    protected virtual void OnStart() { }
     protected virtual void OnUpdate() { }
     protected virtual void OnPlayerEnter(Collider other) { }
     protected virtual void OnPlayerExit(Collider other) { }
 
-    protected virtual void OnInteract()
+    protected virtual void OnInteract(Collider player)
     {
         promptText.gameObject.SetActive(false);
         Debug.Log("interacted");
