@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class Interactable : MonoBehaviour
 {
     [SerializeField, ReadOnlyInspector] protected bool engaged;
     public string prompt;
+    [SerializeField] protected TextMeshProUGUI promptText;
     protected Collider trigger;
     private MeshRenderer meshRenderer;
 
@@ -30,6 +32,12 @@ public class Interactable : MonoBehaviour
         interactAction = playerInput.actions.FindAction("Interact");
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
+
+        if (promptText != null)
+        {
+            promptText.text = prompt;
+            promptText.gameObject.SetActive(false);
+        }
     }
 
     public bool PressedLeft => PressedDirection(dirXAction, false);
@@ -59,6 +67,7 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("notice me");
             engaged = true;
+            if (promptText != null) promptText.gameObject.SetActive(true);
             OnPlayerEnter(other);
             PlayerEntered?.Invoke(other);
         }
@@ -70,6 +79,7 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("unnotice me");
             engaged = false;
+            if (promptText != null) promptText.gameObject.SetActive(false);
             OnPlayerExit(other);
             PlayerExited?.Invoke(other);
         }
@@ -82,6 +92,7 @@ public class Interactable : MonoBehaviour
 
     protected virtual void OnInteract()
     {
+        promptText.gameObject.SetActive(false);
         Debug.Log("interacted");
     }
 }
