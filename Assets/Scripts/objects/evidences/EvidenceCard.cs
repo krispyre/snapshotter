@@ -9,6 +9,7 @@ public class EvidenceCard : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI descriptionText;
     [SerializeField] TextMeshProUGUI systemResponseText;
+    [SerializeField] GameObject systemResponsePlaceholder;
 
     void Awake()
     {
@@ -17,7 +18,9 @@ public class EvidenceCard : MonoBehaviour
         if (descriptionText == null)
             descriptionText = transform.Find("info/selfDesc").GetComponent<TextMeshProUGUI>();
         if (systemResponseText == null)
-            systemResponseText = transform.Find("info/sysRes").GetComponent<TextMeshProUGUI>();
+            systemResponseText = transform.Find("info/sysResSlot/sysRes").GetComponent<TextMeshProUGUI>();
+        if (systemResponsePlaceholder == null)
+            systemResponsePlaceholder = transform.Find("info/sysResSlot/sysRes_placeholder").gameObject;
     }
 
     void Start()
@@ -33,6 +36,8 @@ public class EvidenceCard : MonoBehaviour
         nameText.text = data.objectName;
         descriptionText.text = data.description;
         systemResponseText.text = data.systemResponse;
-        systemResponseText.gameObject.SetActive(sendProgress > 0);
+        bool showResponse = sendProgress > 0;
+        systemResponseText.gameObject.SetActive(showResponse);
+        systemResponsePlaceholder.SetActive(!showResponse);
     }
 }
