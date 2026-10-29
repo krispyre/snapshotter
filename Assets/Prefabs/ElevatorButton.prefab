@@ -980,7 +980,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f138d6d49f4e7254289c9e21c486ecca, type: 2}
+  - {fileID: 2100000, guid: c3207d8302bae8342a45085285858b0d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1388,7 +1388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9d8a34fe217537c47be11150254f6a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d59c5f845c1793a4f9f80d12573cde4f, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1750,6 +1750,10 @@ PrefabInstance:
     - target: {fileID: 7079064599391908316, guid: fdfdd4ef71d91784b8f82430b7029a38, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717771296465114869, guid: fdfdd4ef71d91784b8f82430b7029a38, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3198691433596241862, guid: fdfdd4ef71d91784b8f82430b7029a38, type: 3}
