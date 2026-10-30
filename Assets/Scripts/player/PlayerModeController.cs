@@ -10,12 +10,13 @@ public class PlayerModeController : MonoBehaviour
     private InputAction dirYAction;
     private InputAction interactAction;
     [SerializeField] private bool isDroid = true;
+    [SerializeField] private bool isOpenCam = false;
+
     private GameObject droid;
     private GameObject spider;
     private GameObject dummy;
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
-    private OpenCam openCam;
 
     private void CacheActions()
     {
@@ -32,7 +33,6 @@ public class PlayerModeController : MonoBehaviour
     {
         gameReferences = GameReferences.Instance;
         gameEvent = gameReferences.gameEvent;
-        openCam = GetComponent<OpenCam>();
         CacheActions();
         droid = transform.Find("droid").gameObject;
         spider = transform.Find("spider").gameObject;
@@ -48,6 +48,7 @@ public class PlayerModeController : MonoBehaviour
     {
         // Sync camera priorities with the starting mode (droid by default).
         gameEvent.Changemode(!isDroid);
+        gameEvent.ToggleCamera(isOpenCam);
     }
 
     private void OnEnable() => CacheActions();
