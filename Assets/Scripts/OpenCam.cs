@@ -4,88 +4,102 @@ using Unity.Cinemachine;
 
 public class OpenCam : MonoBehaviour
 {
-    public GameEvent gameEvent;
-    public CinemachineCamera DriodCam;
-    public CinemachineCamera DriodRecordCam;
-    public CinemachineCamera SpiderCam;
-    public CinemachineCamera SpiderRecordCam;
-    [SerializeField] private cameraFrame cameraFrame;
-    [SerializeField] public GameObject EvidenceDataPage;
-    [SerializeField] public GameObject frameMask;
     public float MaxZoomLens = 10f;
     public float zoomSpeed = 1f;
-
     public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
 
-    private CinemachineRotationComposer DriodComposer;
-    private CinemachineRotationComposer SpiderComposer;
-
-    private Vector3 SpiderinitialTargetOffset;
-    private Vector3 DriodinitialTargetOffset;
-    private bool botMode;
-    [SerializeField, ReadOnlyInspector] public bool isOpenCam;
-    private float currentZoomLens = 0f;
+    private GameReferences gameReferences;
+    private GameEvent gameEvent;
+    private CinemachineCamera droidCamera;
+    private CinemachineCamera spiderCamera;
+    private CinemachineCamera droidRecordCamera;
+    private CinemachineCamera spiderRecordCamera;
+    private CinemachineRotationComposer droidComposer;
+    private CinemachineRotationComposer spiderComposer;
+    private InputAction camToggleAction;
+    private Vector3 spiderInitialTargetOffset;
+    private Vector3 droidInitialTargetOffset;
+    private float currentZoomLens;
     private float initialSpiderLens;
 
-
-    [SerializeField] PlayerInput playerInput; // drag the player here
-    private InputAction camToggleAction;
-
-    void Start()
+    private void Awake()
     {
-        EvidenceDataPage.SetActive(isOpenCam);
-        frameMask.SetActive(isOpenCam);
-        DriodComposer = DriodRecordCam.GetComponent<CinemachineRotationComposer>();
-        SpiderComposer = SpiderRecordCam.GetComponent<CinemachineRotationComposer>();
-        DriodinitialTargetOffset = DriodComposer.TargetOffset;
-        SpiderinitialTargetOffset = SpiderComposer.TargetOffset;
-    }
-
-    void OnEnable(){
-         gameEvent.OnOpenCam.AddListener(HandleOpenCamera);
-         gameEvent.OnShutCam.AddListener(HandleCloseCamera);
-    }
-    void OnDisable(){
-         gameEvent.OnOpenCam.RemoveListener(HandleOpenCamera);
-         gameEvent.OnShutCam.RemoveListener(HandleCloseCamera);
-    }
-    void Awake()
-    {
-        camToggleAction = playerInput.actions.FindAction("Camera");
-        if (SpiderRecordCam != null)
+        gameReferences = GameReferences.Instance;
+        gameEvent = gameReferences.gameEvent;
+        droidCamera = gameReferences.droidCamera;
+        spiderCamera = gameReferences.spiderCamera;
+        droidRecordCamera = gameReferences.droidRecordCamera;
+        spiderRecordCamera = gameReferences.spiderRecordCamera;
+        camToggleAction = gameReferences.playerInput.actions.FindAction("Camera");
+        if (camToggleAction == null)
         {
-            initialSpiderLens = SpiderRecordCam.Lens.FieldOfView;
+            Debug.LogError("The PlayerInput action asset does not contain a 'Camera' action.", this);
+            enabled = false;
+            return;
         }
+        droidComposer = droidRecordCamera != null
+            ? droidRecordCamera.GetComponent<CinemachineRotationComposer>()
+            : null;
+        spiderComposer = spiderRecordCamera != null
+            ? spiderRecordCamera.GetComponent<CinemachineRotationComposer>()
+            : null;
+        droidInitialTargetOffset = droidComposer.TargetOffset;
+        spiderInitialTargetOffset = spiderComposer.TargetOffset;
+        initialSpiderLens = spiderRecordCamera.Lens.FieldOfView;
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        gameEvent.OnOpenCam.AddListener(HandleOpenCamera);
+        gameEvent.OnShutCam.AddListener(HandleCloseCamera);
+        gameEvent.SwitchToDroid.AddListener(HandlePlayerModeChanged);
+        gameEvent.SwitchToSpider.AddListener(HandlePlayerModeChanged);
+    }
+
+    private void Start()
+    {
+        ApplyCameraPriorities();
+        SetCameraUiVisible(gameEvent.CamMode);
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnOpenCam.RemoveListener(HandleOpenCamera);
+        gameEvent.OnShutCam.RemoveListener(HandleCloseCamera);
+        gameEvent.SwitchToDroid.RemoveListener(HandlePlayerModeChanged);
+        gameEvent.SwitchToSpider.RemoveListener(HandlePlayerModeChanged);
+    }
+
+    private void Update()
     {
         if (camToggleAction.WasPressedThisFrame())
         {
-            gameEvent.ToggleCamera(!gameEvent.CamMode);// broadcast the signal of camera toggle
-
-            cameraFrame.cameraToggle(gameEvent.CamMode);
-            EvidenceDataPage.SetActive(gameEvent.CamMode);
-            frameMask.SetActive(gameEvent.CamMode);
+            gameEvent.ToggleCamera(!gameEvent.CamMode);
         }
 
-        if (gameEvent.CamMode)
+        if (!gameEvent.CamMode)
         {
-            if (gameEvent.PlayerModeIsSpider)
-            {
-                Recording(SpiderComposer, SpiderRecordCam, SpiderinitialTargetOffset);
-            }
-            else
-            {
-                Recording(DriodComposer, DriodRecordCam, DriodinitialTargetOffset);
-            }
+            return;
+        }
+
+        if (gameEvent.PlayerModeIsSpider)
+        {
+            Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
+        }
+        else
+        {
+            Recording(droidComposer, droidRecordCamera, droidInitialTargetOffset);
         }
     }
-    void Recording(CinemachineRotationComposer Composer,CinemachineCamera Camera, Vector3 initialTargetOffset)
+
+    private void Recording(
+        CinemachineRotationComposer composer,
+        CinemachineCamera camera,
+        Vector3 initialTargetOffset)
     {
-        if (Composer == null || Camera == null)
+        if (composer == null || camera == null)
         {
             return;
         }
@@ -94,12 +108,11 @@ public class OpenCam : MonoBehaviour
         Vector2 mousePosition = Mouse.current != null
             ? Mouse.current.position.ReadValue()
             : screenSize * 0.5f;
-
         Vector2 mouseOffset = (mousePosition / screenSize - Vector2.one * 0.5f) * 2f;
 
         Vector3 targetOffset = initialTargetOffset;
-        targetOffset.x = initialTargetOffset.x + mouseOffset.x * maxTurningAngle * horizontalRotateScale;
-        targetOffset.y = initialTargetOffset.y + mouseOffset.y * maxTurningAngle * verticalRotateScale;
+        targetOffset.x += mouseOffset.x * maxTurningAngle * horizontalRotateScale;
+        targetOffset.y += mouseOffset.y * maxTurningAngle * verticalRotateScale;
 
         if (Mouse.current != null && gameEvent.PlayerModeIsSpider)
         {
@@ -109,73 +122,80 @@ public class OpenCam : MonoBehaviour
                 -MaxZoomLens,
                 MaxZoomLens);
 
-            var lens = Camera.Lens;
+            var lens = camera.Lens;
             lens.FieldOfView = initialSpiderLens - currentZoomLens;
-           Camera.Lens = lens;
+            camera.Lens = lens;
         }
 
-        Composer.TargetOffset = targetOffset;
-
+        composer.TargetOffset = targetOffset;
     }
 
-    void HandleOpenCamera()
+    private void HandleOpenCamera()
     {
         Mouse.current?.WarpCursorPosition(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
-        ToggleCamera();
+        ResetZoom();
+        ApplyCameraPriorities();
+        SetCameraUiVisible(true);
     }
 
-    void HandleCloseCamera()
+    private void HandleCloseCamera()
     {
-        ToggleCamera();
+        ResetZoom();
+        ApplyCameraPriorities();
+        SetCameraUiVisible(false);
     }
-    //This function is going to be called by PlayerModeController.cs
-    public void ChangeState(bool isSpiderMode)
+
+    private void HandlePlayerModeChanged()
     {
-        gameEvent.Changemode(isSpiderMode);
-        cameraFrame.cameraToggle(false);
-        EvidenceDataPage.SetActive(gameEvent.CamMode);
-        frameMask.SetActive(gameEvent.CamMode);
-
-        if (gameEvent.PlayerModeIsSpider)
-        {
-            SpiderCam.Priority = 11;
-            SpiderRecordCam.Priority = 10;
-            DriodCam.Priority = 0;
-            DriodRecordCam.Priority = 0;
-        }
-        else
-        {
-            SpiderCam.Priority = 0;
-            SpiderRecordCam.Priority = 0;
-            DriodCam.Priority = 11;
-            DriodRecordCam.Priority = 10;
-        }
-
+        ApplyCameraPriorities();
+        SetCameraUiVisible(false);
     }
 
-    void ToggleCamera()
+    private void ApplyCameraPriorities()
+    {
+        SetPriorities(spiderCamera, spiderRecordCamera, gameEvent.PlayerModeIsSpider);
+        SetPriorities(droidCamera, droidRecordCamera, !gameEvent.PlayerModeIsSpider);
+    }
+
+    private void SetPriorities(
+        CinemachineCamera viewCamera,
+        CinemachineCamera recordCamera,
+        bool isActiveMode)
+    {
+
+        if (!isActiveMode)
+        {
+            viewCamera.Priority = 0;
+            recordCamera.Priority = 0;
+            return;
+        }
+
+        viewCamera.Priority = gameEvent.CamMode ? 10 : 11;
+        recordCamera.Priority = gameEvent.CamMode ? 11 : 10;
+    }
+
+    private void ResetZoom()
     {
         currentZoomLens = 0f;
-        if (SpiderRecordCam != null)
+        if (spiderRecordCamera == null)
         {
-            var lens = SpiderRecordCam.Lens;
-            lens.FieldOfView = initialSpiderLens;
-            SpiderRecordCam.Lens = lens;
+            return;
         }
 
-        if (gameEvent.PlayerModeIsSpider)
-        {
-            int tmp = SpiderCam.Priority;
-            SpiderCam.Priority = SpiderRecordCam.Priority;
-            SpiderRecordCam.Priority = tmp;
-        }
-        else
-        {
-            int tmp = DriodCam.Priority;
-            DriodCam.Priority = DriodRecordCam.Priority;
-            DriodRecordCam.Priority = tmp;
-        }
+        var lens = spiderRecordCamera.Lens;
+        lens.FieldOfView = initialSpiderLens;
+        spiderRecordCamera.Lens = lens;
     }
 
-
+    private void SetCameraUiVisible(bool visible)
+    {
+        if (gameReferences.evidencePage != null)
+        {
+            gameReferences.evidencePage.SetActive(visible);
+        }
+        if (gameReferences.cameraFrame != null)
+        {
+            gameReferences.cameraFrame.SetActive(visible);
+        }
+    }
 }

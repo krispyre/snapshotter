@@ -1,14 +1,13 @@
 using UnityEngine;
-using System;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Scriptable Objects/GameEvent")]
 public class GameEvent : ScriptableObject
 {
-    public UnityEvent OnOpenCam;
-    public UnityEvent OnShutCam;
-    public UnityEvent SwitchToSpider;
-    public UnityEvent SwitchToDroid;
+    public UnityEvent OnOpenCam = new UnityEvent();
+    public UnityEvent OnShutCam = new UnityEvent();
+    public UnityEvent SwitchToSpider = new UnityEvent();
+    public UnityEvent SwitchToDroid = new UnityEvent();
 
     private bool openCam;
     public bool CamMode => openCam;

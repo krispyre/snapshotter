@@ -36,7 +36,7 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction interactAction;
     private Camera mainCamera; // each scene will have a main camera so i GameObject.Find("Main Camera");
     private OpenCam openCam;
-    public bool isOpenCam => openCam != null && openCam.isOpenCam;
+    public bool isOpenCam => GameReferences.Instance.gameEvent.CamMode;
 
     //movement vars
     private float jumpSpeed;

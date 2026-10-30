@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.Cinemachine;
 using TMPro;
 
 public class cameraFrame : MonoBehaviour
@@ -12,44 +11,25 @@ public class cameraFrame : MonoBehaviour
     public float Xratio = 16f;
     public float Yratio = 9f;
 
-    [SerializeField] CinemachineCamera DroidviewCamera;//drag the camera that is used for viewing here
-    [SerializeField] CinemachineCamera BotviewCamera;//drag the shotting camera here
-    //this script should not do any changes to the camera, only refer to its variables
-    [SerializeField] private PlayerInput playerInput;
-    public TextMeshProUGUI EvidenceName;
-    public TextMeshProUGUI EvidenceDescription;
-    public TextMeshProUGUI Systemprompt;
+    private TextMeshProUGUI EvidenceName;
+    private TextMeshProUGUI EvidenceDescription;
+    private TextMeshProUGUI Systemprompt;
 
-
-
+    private GameReferences gameReferences;
+    private GameEvent gameEvent;
     private RectTransform rectTransform;
-    private InputAction camToggleAction;
-    private bool isOpenCam;
     private Vector2 screenSize;
-    private CinemachineCamera viewCamera;
 
-
-    void Awake()
+    private void Awake()
     {
-        viewCamera = BotviewCamera; // Set the viewCamera to botviewCamera by default
-        isOpenCam = false;
+        gameReferences = GameReferences.Instance;
+        gameEvent = gameReferences.gameEvent;
+        EvidenceName = gameReferences.EvidenceName;
+        EvidenceDescription = gameReferences.EvidenceDescription;
+        Systemprompt = gameReferences.Systemprompt;
         rectTransform = GetComponent<RectTransform>();
-        camToggleAction = playerInput.actions.FindAction("Camera");
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
-        SetUiVisible(false);
-    }
-
-    public void cameraToggle(bool state)
-    {
-        isOpenCam = state;
-        SetUiVisible(state);
-    }
-
-    void SetUiVisible(bool visible)
-    {
-        foreach (UnityEngine.UI.Graphic graphic in GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
-            graphic.enabled = visible;
     }
 
     private void AdjustFrameSize()
@@ -74,20 +54,18 @@ public class cameraFrame : MonoBehaviour
 
         rectTransform.sizeDelta = new Vector2(width * fitScale, height * fitScale);
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        if (!gameEvent.CamMode || rectTransform == null)
+        {
+            return;
+        }
+
         Vector2 currentScreenSize = new Vector2(Screen.width, Screen.height);
         if (currentScreenSize != screenSize)
         {
             screenSize = currentScreenSize;
             AdjustFrameSize();
-        }
-
-        if (!isOpenCam || rectTransform == null)
-        {
-            return;
         }
 
         Vector2 mousePosition = Mouse.current != null
@@ -110,17 +88,12 @@ public class cameraFrame : MonoBehaviour
             screenSize.y * Mathf.Clamp01(YMaxRatio)) / canvasScaleFactor;
         rectTransform.anchoredPosition = Vector2.Scale(normalizedMouse, maxOffset);
 
-        // Cinemachine reports the vertical FOV in degrees; derive the horizontal FOV for this aspect ratio.
-        if (viewCamera == null)
+        Camera outputCamera = Camera.main;
+        if (outputCamera == null)
         {
-            print("viewCamera is not assigned.");
+            Debug.LogError("No MainCamera is available for camera-frame evidence detection.", this);
             return;
         }
-
-        //obtain FOV in angle form for later calculation
-        float verticalFov = viewCamera.Lens.FieldOfView;
-        float horizontalFov = 2f * Mathf.Atan(
-            Mathf.Tan(verticalFov * 0.5f * Mathf.Deg2Rad) * (Xratio / Yratio)) * Mathf.Rad2Deg;
 
         Vector3[] frameCorners = new Vector3[4];
         rectTransform.GetWorldCorners(frameCorners);
@@ -128,34 +101,21 @@ public class cameraFrame : MonoBehaviour
             ? canvas.worldCamera
             : null;
 
-        float frameLeft = screenSize.x;
-        float frameRight = 0f;
-        float frameBottom = screenSize.y;
-        float frameTop = 0f;
+        float frameLeft = float.PositiveInfinity;
+        float frameRight = float.NegativeInfinity;
+        float frameBottom = float.PositiveInfinity;
+        float frameTop = float.NegativeInfinity;
         foreach (Vector3 frameCorner in frameCorners)
         {
             Vector2 screenCorner = RectTransformUtility.WorldToScreenPoint(uiCamera, frameCorner);
-            frameLeft = Mathf.Min(frameLeft, screenCorner.x);
-            frameRight = Mathf.Max(frameRight, screenCorner.x);
-            frameBottom = Mathf.Min(frameBottom, screenCorner.y);
-            frameTop = Mathf.Max(frameTop, screenCorner.y);
+            Vector3 viewportCorner = outputCamera.ScreenToViewportPoint(screenCorner);
+            frameLeft = Mathf.Min(frameLeft, viewportCorner.x);
+            frameRight = Mathf.Max(frameRight, viewportCorner.x);
+            frameBottom = Mathf.Min(frameBottom, viewportCorner.y);
+            frameTop = Mathf.Max(frameTop, viewportCorner.y);
         }
 
-        float horizontalFovLimit = Mathf.Tan(horizontalFov * 0.5f * Mathf.Deg2Rad);
-        float verticalFovLimit = Mathf.Tan(verticalFov * 0.5f * Mathf.Deg2Rad);
-        float leftViewport = Mathf.Clamp(frameLeft / screenSize.x * 2f - 1f, -1f, 1f);
-        float rightViewport = Mathf.Clamp(frameRight / screenSize.x * 2f - 1f, -1f, 1f);
-        float bottomViewport = Mathf.Clamp(frameBottom / screenSize.y * 2f - 1f, -1f, 1f);
-        float topViewport = Mathf.Clamp(frameTop / screenSize.y * 2f - 1f, -1f, 1f);
-
-        float leftBoundary = Mathf.Atan(leftViewport * horizontalFovLimit);
-        float rightBoundary = Mathf.Atan(rightViewport * horizontalFovLimit);
-        float lowerBoundary = Mathf.Atan(bottomViewport * verticalFovLimit);
-        float upperBoundary = Mathf.Atan(topViewport * verticalFovLimit);
-
-
-        //loop through all of the evidences\
-        Camera outputCamera = Camera.main;
+        // Loop through all evidence objects.
         GameObject closestEvidence = null;
         float closestDistance = float.PositiveInfinity;
 
@@ -163,12 +123,12 @@ public class cameraFrame : MonoBehaviour
         foreach (EvidenceDataContainer evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
-            Vector3 evidenceLocalPosition = viewCamera.transform.InverseTransformPoint(evidenceObject.transform.position);
-            if (evidenceLocalPosition.z > 0f
-                && evidenceLocalPosition.x / evidenceLocalPosition.z >= Mathf.Tan(leftBoundary)
-                && evidenceLocalPosition.x / evidenceLocalPosition.z <= Mathf.Tan(rightBoundary)
-                && evidenceLocalPosition.y / evidenceLocalPosition.z >= Mathf.Tan(lowerBoundary)
-                && evidenceLocalPosition.y / evidenceLocalPosition.z <= Mathf.Tan(upperBoundary))
+            Vector3 evidenceViewportPosition = outputCamera.WorldToViewportPoint(evidenceObject.transform.position);
+            if (evidenceViewportPosition.z > 0f
+                && evidenceViewportPosition.x >= frameLeft
+                && evidenceViewportPosition.x <= frameRight
+                && evidenceViewportPosition.y >= frameBottom
+                && evidenceViewportPosition.y <= frameTop)
             {
                 //Color the sprite green if it's inside the scanning area, for demo use
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
@@ -190,7 +150,7 @@ public class cameraFrame : MonoBehaviour
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
             }
         }
-        //Read the evidence data that are closetest to the camera area's center
+        // Read the evidence data closest to the camera area's center.
         if (closestEvidence == null)
         {
             EvidenceName.text = "";
@@ -201,28 +161,12 @@ public class cameraFrame : MonoBehaviour
         scanned(closestEvidence);
     }
 
-    void scanned(GameObject evidenceObject)
+    private void scanned(GameObject evidenceObject)
     {
-        //implement waht you want to do when the evidence is scanned
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
-        Systemprompt.text ="\"" + evidenceData.systemResponse +"\"";
-        print("Scanned evidence: " + evidenceData.objectName + " - " + evidenceData.description + " - " + evidenceData.systemResponse);
+        Systemprompt.text = evidenceData.systemResponse;
     }
-
-    public void changeMode(bool isBot)
-    {
-        if (isBot)
-        {
-            viewCamera = BotviewCamera;
-        }
-        else
-        {
-            viewCamera = DroidviewCamera;
-        }
-    }
-
-
 }

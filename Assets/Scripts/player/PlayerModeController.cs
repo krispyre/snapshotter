@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerModeController : MonoBehaviour
 {
     // only for switching modes
+    private GameEvent gameEvent;
+    private GameReferences gameReferences;
     private PlayerInput playerInput;
     private InputAction dirYAction;
     private InputAction interactAction;
@@ -13,8 +15,7 @@ public class PlayerModeController : MonoBehaviour
     private GameObject dummy;
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
-    [SerializeField] cameraFrame cameraFrame; // contains the camera frame script, calls the changeState() function when player mode changes
-    private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
+    private OpenCam openCam;
 
     private void CacheActions()
     {
@@ -29,6 +30,8 @@ public class PlayerModeController : MonoBehaviour
 
     void Awake()
     {
+        gameReferences = GameReferences.Instance;
+        gameEvent = gameReferences.gameEvent;
         openCam = GetComponent<OpenCam>();
         CacheActions();
         droid = transform.Find("droid").gameObject;
@@ -44,15 +47,13 @@ public class PlayerModeController : MonoBehaviour
     void Start()
     {
         // Sync camera priorities with the starting mode (droid by default).
-        openCam.ChangeState(!isDroid);
-        if (cameraFrame != null)
-            cameraFrame.changeMode(!isDroid);
+        gameEvent.Changemode(!isDroid);
     }
 
     private void OnEnable() => CacheActions();
     void Update()
     {
-        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle && !openCam.isOpenCam) //todo change to held tgt
+        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle && !gameEvent.CamMode) //todo change to held tgt
         {
             holdTimer += Time.deltaTime;
         }
@@ -75,25 +76,21 @@ public class PlayerModeController : MonoBehaviour
     public void SwitchToSpider()
     {
         //deactivate droid, spawn dummy droid, then enable spider at droid
+        gameEvent.Changemode(true);
         isDroid = false;
         droid.SetActive(false);
         dummy.transform.position = droid.transform.position;
         dummy.SetActive(true);
         spider.transform.position = droid.transform.position;
         spider.SetActive(true);
-        openCam.ChangeState(true);
-        cameraFrame.changeMode(true);
     }
     public void ReturnToDroid()
     {
         //deactivate spider, despawn dummy droid, then enable droid
+        gameEvent.Changemode(false);
         isDroid = true;
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
-        openCam.ChangeState(false);
-        cameraFrame.changeMode(false);
-
-
     }
 }

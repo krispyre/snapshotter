@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 6c721a719bce75f428429001063e6208
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gameEvent: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  - droidCamera: {instanceID: 0}
+  - spiderCamera: {instanceID: 0}
+  - droidRecordCamera: {instanceID: 0}
+  - spiderRecordCamera: {instanceID: 0}
+  - playerInput: {instanceID: 0}
+  - cameraFrame: {instanceID: 0}
+  - EvidenceName: {instanceID: 0}
+  - EvidenceDescription: {instanceID: 0}
+  - Systemprompt: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
