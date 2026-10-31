@@ -1,16 +1,29 @@
 using UnityEngine;
 
-public class VentExit : MonoBehaviour
+public class VentExit : Interactable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] string sceneName = "ninthFloor_roof";
+    [SerializeField] string transitionTrigger;
+    [SerializeField] string spawnId;
+
+    protected override void OnAwake()
     {
-        
+        prompt = "Exit";
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnInteract(Collider player)
     {
-        
+        if (promptText != null)
+            promptText.gameObject.SetActive(false);
+
+        LevelController levelController = FindAnyObjectByType<LevelController>();
+        if (levelController == null)
+        {
+            Debug.LogError("VentExit: no LevelController in the scene.");
+            return;
+        }
+
+        SceneHandoff.Set(spawnId);
+        levelController.LoadLevelWithTransition(sceneName, transitionTrigger);
     }
 }
