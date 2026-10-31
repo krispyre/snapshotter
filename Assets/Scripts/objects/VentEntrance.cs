@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class VentEntrance : Interactable
 {
-    [SerializeField] GameObject vent;
-    [SerializeField] GameObject level;
+    [SerializeField] GameObject ventLayer;
+    [SerializeField] GameObject foregroundLayer;
     [SerializeField] float playerZ = 5f;
 
     protected override void OnAwake()
@@ -16,8 +16,8 @@ public class VentEntrance : Interactable
         if (promptText != null)
             promptText.gameObject.SetActive(false);
 
-        if (vent != null)
-            vent.SetActive(true);
+        if (ventLayer != null)
+            ventLayer.SetActive(true);
 
         CharacterController cc = player.GetComponent<CharacterController>();
         if (cc == null)
@@ -32,7 +32,7 @@ public class VentEntrance : Interactable
         if (cc != null)
             cc.enabled = true;
 
-        if (level != null)
-            level.SetActive(false);
+        if (foregroundLayer != null)
+            foregroundLayer.SetActive(false);
     }
 }
