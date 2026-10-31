@@ -53,22 +53,5 @@ public class GameEvent : ScriptableObject
             OnShutCam?.Invoke();
         }
     }
-    public void SeeEvidence(EvidenceData evidence)
-    {
-        OnEvidenceSeen?.Invoke(evidence);
-        evidence.SetState(1);
-
-    }
-
-    public void TakeEvidence(EvidenceData evidence)
-    {
-        OnEvidenceTaken?.Invoke(evidence);
-        evidence.SetState(2);
-    }
-    public void SendEvidence(EvidenceData evidence)
-    {
-        OnEvidenceSent?.Invoke(evidence);
-        evidence.SetState(3);
-    }
     
 }

@@ -171,7 +171,8 @@ public class cameraFrame : MonoBehaviour
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
         if (evidenceData.state == 0)
         {
-            gameEvent.SeeEvidence(evidenceData);
+            gameEvent.OnEvidenceSeen?.Invoke(evidenceData);
+            evidenceData.SetState(1);
         }
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
         EvidenceName.text = evidenceData.objectName;
@@ -181,7 +182,12 @@ public class cameraFrame : MonoBehaviour
     private void Take(GameObject evidenceObject)
     {
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
-        gameEvent.TakeEvidence(evidenceData);
+        if(evidenceData.state <= 1)
+        {
+            gameEvent.OnEvidenceTaken?.Invoke(evidenceData);
+            evidenceData.SetState(2);
+        }
+        
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;
