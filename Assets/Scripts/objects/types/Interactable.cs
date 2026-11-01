@@ -119,7 +119,7 @@ public class Interactable : MonoBehaviour
 
     protected virtual void OnInteract(Collider player)
     {
-        promptText.gameObject.SetActive(false);
-        Debug.Log("interacted");
+        if (promptText != null)
+            promptText.gameObject.SetActive(false);
     }
 }
