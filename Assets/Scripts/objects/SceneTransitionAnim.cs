@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-//ts is crazy
+//ts is crazy unused
 public class SceneTransitionAnim : MonoBehaviour
 {
     [SerializeField] Animator animator;
@@ -10,6 +10,9 @@ public class SceneTransitionAnim : MonoBehaviour
 
     void OnEnable()
     {
+        if (animator == null || clip == null)
+            return;
+
         AnimationPlayableUtilities.PlayClip(animator, clip, out _);
     }
 }
