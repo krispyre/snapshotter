@@ -63,7 +63,10 @@ public class Elevator : MonoBehaviour
     public void Ride(string sceneName)
     {
         if (riding == null || string.IsNullOrEmpty(sceneName))
+        {
+            Debug.Log("no player or no valid dest scene name?");
             return;
+        }
 
         RoomTransitionMgr manager = riding.GetComponentInParent<RoomTransitionMgr>();
         Collider body = riding;
