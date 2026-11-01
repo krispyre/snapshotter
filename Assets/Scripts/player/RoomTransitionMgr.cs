@@ -28,6 +28,14 @@ public class RoomTransitionMgr : MonoBehaviour
             currentRoomName = sceneName;
         }
 
+        // move the pointer at active to the new scene
+        Scene newScene = SceneManager.GetSceneByName(sceneName);
+
+        if (newScene.IsValid())
+        {
+            SceneManager.SetActiveScene(newScene);
+        }
+
         currentRoomName = SceneManager.GetActiveScene().name;
         SetupRoom(spawnID, body);
     }
