@@ -2280,6 +2280,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 753975927964338838, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: isDroid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 753975927964338838, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: isOpenCam
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 753975927964338838, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: cameraFrame
       value: 
       objectReference: {fileID: 541068326}
@@ -2302,6 +2310,10 @@ PrefabInstance:
     - target: {fileID: 1509770914371368196, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.0000000013581964
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615205732341945419, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
+      propertyPath: IsOpenCam
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4615205732341945419, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: frameMask
