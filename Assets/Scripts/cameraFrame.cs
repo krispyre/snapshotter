@@ -158,13 +158,36 @@ public class cameraFrame : MonoBehaviour
             Systemprompt.text = "";
             return;
         }
-        scanned(closestEvidence);
+        LookAt(closestEvidence);
+
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Take(closestEvidence);
+        }
     }
 
-    private void scanned(GameObject evidenceObject)
+    private void LookAt(GameObject evidenceObject)
     {
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        gameEvent.OnEvidenceSeen?.Invoke(evidenceObject);
+        if (evidenceData.state == 0)
+        {
+            evidenceData.SetState(1);
+        }
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        EvidenceName.text = evidenceData.objectName;
+
+    }
+
+    private void Take(GameObject evidenceObject)
+    {
+        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        if(evidenceData.state <= 1)
+        {
+            gameEvent.OnEvidenceTaken?.Invoke(evidenceObject);
+            evidenceData.SetState(2);
+        }
+        
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;

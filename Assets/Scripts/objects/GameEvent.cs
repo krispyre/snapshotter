@@ -1,6 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[System.Serializable]
+public class EvidenceDataEvent : UnityEvent<GameObject>
+{
+}
+
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Scriptable Objects/GameEvent")]
 public class GameEvent : ScriptableObject
 {
@@ -8,6 +13,10 @@ public class GameEvent : ScriptableObject
     public UnityEvent OnShutCam = new UnityEvent();
     public UnityEvent SwitchToSpider = new UnityEvent();
     public UnityEvent SwitchToDroid = new UnityEvent();
+    public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
+    public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
+    public EvidenceDataEvent OnEvidenceSent = new EvidenceDataEvent();
+
 
     private bool openCam;
     public bool CamMode => openCam;

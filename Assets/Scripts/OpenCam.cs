@@ -189,6 +189,7 @@ public class OpenCam : MonoBehaviour
 
     private void SetCameraUiVisible(bool visible)
     {
+
         if (gameReferences.evidencePage != null)
         {
             gameReferences.evidencePage.SetActive(visible);
