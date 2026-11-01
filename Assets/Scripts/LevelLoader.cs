@@ -9,7 +9,8 @@ public class LevelLoader : MonoBehaviour
     [SerializeField, ReadOnlyInspector] string arrivalSpawnId;
 
     void Start()
-    {   PointSystem.Instance.SetThresholds(levelData.pointThresholds);
+    {
+        PointSystem.Instance.SetThresholds(levelData.pointThresholds);
         PointSystem.Instance.LoadMission(levelData.missionId);
         PointSystem.Instance.onPointsDepleted.AddListener(OnPlayerDeath);
     }
@@ -38,7 +39,7 @@ public class LevelLoader : MonoBehaviour
         SceneManager.LoadSceneAsync(levelName);
     }
 
-    
+
 
     bool HasTrigger(string triggerName)
     {

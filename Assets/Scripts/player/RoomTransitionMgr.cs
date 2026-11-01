@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.Cinemachine;
 
 public class RoomTransitionMgr : MonoBehaviour
 {
@@ -82,6 +83,10 @@ public class RoomTransitionMgr : MonoBehaviour
             dummy.gameObject.SetActive(home);
             if (home)
                 dummy.position = droidLocation.lastPosition;
+        }
+        if (spawnToUse.TryGetComponent<LayerSwitcher>(out LayerSwitcher ls))
+        {
+            ls.Apply();
         }
     }
 }
