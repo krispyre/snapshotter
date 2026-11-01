@@ -1,23 +1,14 @@
 using UnityEngine;
 
-public class VentExitLower : Interactable
+public class VentExitLower : MonoBehaviour
 {
-    [SerializeField] GameObject ventLayer;
-    [SerializeField] GameObject foregroundLayer;
+    [SerializeField] LayerSwitcher layerSwitcher;
     [SerializeField] float playerZ = 0;
 
-    protected override void OnAwake()
+    public void ExitVent(Collider player)
     {
-        prompt = "Exit";
-    }
-
-    protected override void OnInteract(Collider player)
-    {
-        if (promptText != null)
-            promptText.gameObject.SetActive(false);
-
-        if (foregroundLayer != null)
-            foregroundLayer.SetActive(true);
+        if (layerSwitcher != null)
+            layerSwitcher.Apply();
 
         CharacterController cc = player.GetComponent<CharacterController>();
 
@@ -28,8 +19,5 @@ public class VentExitLower : Interactable
         newPos.z = playerZ;
         body.position = newPos;
         cc.enabled = true;
-
-        if (ventLayer != null)
-            ventLayer.SetActive(false);
     }
 }

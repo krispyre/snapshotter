@@ -122,4 +122,11 @@ public class Interactable : MonoBehaviour
         if (promptText != null)
             promptText.gameObject.SetActive(false);
     }
+
+    public void ShowPrompt()
+    {
+        //todo prompttext is moved to player hud
+        if (promptText != null)
+            promptText.gameObject.SetActive(true);
+    }
 }

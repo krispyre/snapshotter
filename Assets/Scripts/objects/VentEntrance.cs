@@ -1,38 +1,32 @@
 using UnityEngine;
 
-public class VentEntrance : Interactable
+public class VentEntrance : MonoBehaviour
 {
-    [SerializeField] GameObject ventLayer;
-    [SerializeField] GameObject foregroundLayer;
+    [SerializeField, ReadOnlyInspector] LayerSwitcher layerSwitcher;
     [SerializeField] float playerZ = 5f;
 
-    protected override void OnAwake()
+    void Awake()
     {
-        prompt = "Enter";
+        layerSwitcher = GetComponentInParent<LayerSwitcher>();
     }
 
-    protected override void OnInteract(Collider player)
+    public void EnterVent(Collider player)
     {
-        if (promptText != null)
-            promptText.gameObject.SetActive(false);
+        if (layerSwitcher != null)
+            layerSwitcher.Apply();
 
-        if (ventLayer != null)
-            ventLayer.SetActive(true);
+        if (player.TryGetComponent(out CharacterController cc))
+        {
+            Transform body = cc != null ? cc.transform : player.transform;
+            if (cc != null)
+                cc.enabled = false;
+            Vector3 position = body.position;
+            position.z = playerZ;
+            body.position = position;
+            if (cc != null)
+                cc.enabled = true;
+        }
 
-        CharacterController cc = player.GetComponent<CharacterController>();
-        if (cc == null)
-            cc = player.GetComponentInParent<CharacterController>();
 
-        Transform body = cc != null ? cc.transform : player.transform;
-        if (cc != null)
-            cc.enabled = false;
-        Vector3 position = body.position;
-        position.z = playerZ;
-        body.position = position;
-        if (cc != null)
-            cc.enabled = true;
-
-        if (foregroundLayer != null)
-            foregroundLayer.SetActive(false);
     }
 }
