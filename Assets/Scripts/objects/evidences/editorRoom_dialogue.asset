@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
+  m_Name: editorRoom_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
+  objectName: Recorded dialogue
+  description: "Recognized dialogue:\r\n+ I think I left my ID outside the gate\u2026
+    I didn\u2019t realize we\u2019ve been talking all day!\r\n- Gotta wait until
+    the investigation\u2019s over. We can\u2019t leave here until then\u2026 Who
+    is that one that died anyway?\r\n+ Right. We\u2019re supposed to meet her right
+    now. She told us it\u2019s a corporate secret nobody else has right now. It\u2019s
+    so mysterious she had to send us the encrypted files THEN bring the password
+    in person\u2026\r\n-Oh, no\u2026 This might mean something worse is behind her\u2026\r\n+Great,
+    I haven\u2019t even heard her voice! What stupid prank is this?!\r\n"
+  systemResponse: '<No response> '
