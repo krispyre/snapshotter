@@ -50,6 +50,7 @@ public sealed class ClawShooting : ClawState
     public ClawShooting(PlayerMovement p) : base(p) { }
     public override void Enter()
     {
+        Debug.Log("shoot ");
         p.xVel = 0;
         p.yVel = 0;
         Vector3 origin = p.armOrigin.position;

@@ -16,14 +16,14 @@ public class VentExit : Interactable
         if (promptText != null)
             promptText.gameObject.SetActive(false);
 
-        LevelController levelController = FindAnyObjectByType<LevelController>();
-        if (levelController == null)
+        LevelLoader levelLoader = FindAnyObjectByType<LevelLoader>();
+        if (levelLoader == null)
         {
-            Debug.LogError("VentExit: no LevelController in the scene.");
+            Debug.LogError("VentExit: no LevelLoader in the scene.");
             return;
         }
 
         SceneHandoff.Set(spawnId);
-        levelController.LoadLevelWithTransition(sceneName, transitionTrigger);
+        // LevelLoader.LoadLevelWithTransition(sceneName, transitionTrigger);
     }
 }

@@ -1033,7 +1033,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5664620844383898951, guid: 665f3493795476140aa381f7bfc45ea4, type: 3}
       propertyPath: m_Name
-      value: LevelController
+      value: LevelLoader
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

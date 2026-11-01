@@ -1,4 +1,6 @@
 // One pending arrival across a scene load. Add a field here when another fact has to come with the player.
+
+//This class sucks
 public class SceneHandoff
 {
     public string spawnId;

@@ -2,31 +2,21 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelController : MonoBehaviour
+public class LevelLoader : MonoBehaviour
 {
     [SerializeField] LevelData levelData;
     public Animator transition;
     [SerializeField, ReadOnlyInspector] string arrivalSpawnId;
 
     void Start()
-    {
-        SceneHandoff arrival = SceneHandoff.Take();
-        arrivalSpawnId = arrival != null ? arrival.spawnId : null;
-
-        PointSystem.Instance.SetThresholds(levelData.pointThresholds);
+    {   PointSystem.Instance.SetThresholds(levelData.pointThresholds);
         PointSystem.Instance.LoadMission(levelData.missionId);
         PointSystem.Instance.onPointsDepleted.AddListener(OnPlayerDeath);
     }
 
     void OnPlayerDeath()
     {
-        Debug.LogWarning("U die");
-    }
-
-    public void LoadLevel(string levelName)
-    {
-        SceneHandoff.Clear();
-        StartCoroutine(LoadLevelCoro(levelName, "enterElevator"));
+        Debug.LogWarning("U die but this isn't my problem");
     }
 
     public void LoadLevelWithTransition(string levelName, string transitionTrigger)
@@ -45,8 +35,10 @@ public class LevelController : MonoBehaviour
             yield return new WaitForSeconds(1); // todo hardcode
         }
 
-        SceneManager.LoadScene(levelName);
+        SceneManager.LoadSceneAsync(levelName);
     }
+
+    
 
     bool HasTrigger(string triggerName)
     {
@@ -59,5 +51,18 @@ public class LevelController : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+
+
+     public void EnterRoom(string sceneName, string spawnID)
+    {
+        StartCoroutine(Transition(sceneName, spawnID));
+    }
+
+    private IEnumerator Transition(string sceneName, string spawnID)
+    {
+        yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
     }
 }
