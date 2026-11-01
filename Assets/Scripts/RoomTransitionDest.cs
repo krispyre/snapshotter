@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnPoint : MonoBehaviour
+public class RoomTransitionDest : MonoBehaviour
 {
     public string spawnID;
 }

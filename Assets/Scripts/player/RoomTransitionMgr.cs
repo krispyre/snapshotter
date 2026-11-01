@@ -125,15 +125,15 @@ public class RoomTransitionMgr : MonoBehaviour
         if (body == null)
             return;
 
-        SpawnPoint[] spawns = FindObjectsByType<SpawnPoint>(FindObjectsSortMode.None);
+        RoomTransitionDest[] spawns = FindObjectsByType<RoomTransitionDest>(FindObjectsSortMode.None);
         if (spawns.Length == 0)
             return;
 
-        SpawnPoint spawnToUse = spawns[0];
+        RoomTransitionDest spawnToUse = spawns[0];
 
         if (!string.IsNullOrEmpty(spawnID))
         {
-            foreach (SpawnPoint sp in spawns)
+            foreach (RoomTransitionDest sp in spawns)
             {
                 if (sp.spawnID == spawnID)
                 {

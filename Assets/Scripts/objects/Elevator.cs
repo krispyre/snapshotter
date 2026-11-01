@@ -59,7 +59,7 @@ public class Elevator : MonoBehaviour
     }
 
     // Floor button OnClick → Ride, string arg is the destination scene name.
-    // Lands on the ElevatorButton child named "spawn" (SpawnPoint id "elevator").
+    // Lands on the ElevatorButton child named "spawn" (RoomTransitionDest id "elevator").
     public void Ride(string sceneName)
     {
         if (riding == null || string.IsNullOrEmpty(sceneName))
