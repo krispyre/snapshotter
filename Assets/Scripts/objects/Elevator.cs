@@ -11,6 +11,7 @@ public class Elevator : MonoBehaviour
     [SerializeField] private Animator panelUi_anim;
     [SerializeField] private Interactable interactable;
     private PlayerInput lockedPlayerInput;
+    private Collider riding;
     private MeshRenderer meshRenderer;
 
 
@@ -49,11 +50,27 @@ public class Elevator : MonoBehaviour
         if (doorOpen)
         {
             Debug.Log("open elevator ui");
+            riding = player;
             lockedPlayerInput = player.GetComponentInParent<PlayerInput>();
             if (lockedPlayerInput != null)
                 lockedPlayerInput.actions.FindActionMap("Player").Disable();
             panelUi_anim.SetBool("IsOpen", true);
         }
+    }
+
+    // Floor button OnClick → Ride, string arg is the destination scene name.
+    // Lands on the ElevatorButton child named "spawn" (SpawnPoint id "elevator").
+    public void Ride(string sceneName)
+    {
+        if (riding == null || string.IsNullOrEmpty(sceneName))
+            return;
+
+        RoomTransitionMgr manager = riding.GetComponentInParent<RoomTransitionMgr>();
+        Collider body = riding;
+        ClosePanelUi();
+
+        if (manager)
+            manager.EnterRoom(sceneName, "elevator", body);
     }
 
     void Update()
@@ -106,6 +123,8 @@ public class Elevator : MonoBehaviour
         panelUi_anim.SetBool("IsOpen", false);
         if (interactable != null)
             interactable.ShowPrompt();
+
+        riding = null;
 
         if (lockedPlayerInput != null)
         {

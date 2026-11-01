@@ -274,6 +274,51 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1845253434600604700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5429830768883686007}
+  - component: {fileID: 8664785001090387888}
+  m_Layer: 0
+  m_Name: spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5429830768883686007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845253434600604700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.75, y: 0, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 204385754265590660}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8664785001090387888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845253434600604700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2060425709d2f84db89e285103b9e93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
+  spawnID: elevator
 --- !u!1 &2042704687989727021
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,11 +572,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 4637100910661424894}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2261844915478502551}
+        m_TargetAssemblyTypeName: Elevator, Assembly-CSharp
+        m_MethodName: Ride
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Where tf is ground floor.
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3788151237634365706
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,7 +709,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3838052322695237128}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2261844915478502551}
+        m_TargetAssemblyTypeName: Elevator, Assembly-CSharp
+        m_MethodName: Ride
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: editorFloor
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3839278141737550288
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,7 +1116,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7473843551572469388}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2261844915478502551}
+        m_TargetAssemblyTypeName: Elevator, Assembly-CSharp
+        m_MethodName: Ride
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ninthFloor_roof
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4696696110801532689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,6 +1143,7 @@ GameObject:
   - component: {fileID: 2554348903145669118}
   - component: {fileID: 2261844915478502551}
   - component: {fileID: 6454611397991852915}
+  - component: {fileID: 8021838957742433147}
   m_Layer: 0
   m_Name: elevator
   m_TagString: Untagged
@@ -1227,6 +1309,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8021838957742433147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4696696110801532689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9e5ff3de856b4c4499b13593d67a194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTransition
+  transitonEnterPrefab: {fileID: 2266048718997398507, guid: 0d2173aae4da20544b41314e06041d5f, type: 3}
+  transitonEnterVersion: enter
+  transitonExitPrefab: {fileID: 2266048718997398507, guid: 0d2173aae4da20544b41314e06041d5f, type: 3}
+  transitonExitVersion: exit
+  targetSceneName: 
+  spawnID: elevator
 --- !u!1 &4965737292250216801
 GameObject:
   m_ObjectHideFlags: 0
@@ -1639,6 +1739,7 @@ Transform:
   - {fileID: 387199294854543102}
   - {fileID: 4153452922750590730}
   - {fileID: 8060175984513457104}
+  - {fileID: 5429830768883686007}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &214638360441920285
