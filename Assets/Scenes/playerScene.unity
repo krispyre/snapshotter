@@ -224,7 +224,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 7.4
+  field of view: 6.56
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -250,8 +250,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.021433687, y: 4.1263305e-18, z: -8.8462805e-20, w: 0.9997703}
-  m_LocalPosition: {x: 12.75, y: 21.59, z: -30.900002}
+  m_LocalRotation: {x: 0.014181425, y: 0, z: 0, w: 0.99989945}
+  m_LocalPosition: {x: 0, y: 2.34, z: -46.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -382,11 +382,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 898714054878986449, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.49961
+      value: -0.00039
       objectReference: {fileID: 0}
     - target: {fileID: 898714054878986449, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 21.16009
+      value: 1.66009
       objectReference: {fileID: 0}
     - target: {fileID: 898714054878986449, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.z
@@ -410,15 +410,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1798549134019716491, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1798549134019716491, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1798549134019716491, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1798549134019716491, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalRotation.w
@@ -454,27 +454,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.49961
+      value: -0.00039
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.26009
+      value: -0.23991
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.z
       value: -4.84332
-      objectReference: {fileID: 0}
-    - target: {fileID: 6047277144642718116, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
-      propertyPath: isDroid
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319200951310929542, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319200951310929542, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 19.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
