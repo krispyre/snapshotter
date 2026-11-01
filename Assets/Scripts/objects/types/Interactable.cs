@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
@@ -19,8 +20,12 @@ public class Interactable : MonoBehaviour
     private InputAction dirYAction;
 
     public bool Engaged => engaged;
-    public event System.Action<Collider> PlayerEntered;
-    public event System.Action<Collider> PlayerExited;
+    [SerializeField] protected UnityEvent onAwake = new UnityEvent();
+    [SerializeField] protected UnityEvent onStart = new UnityEvent();
+    [SerializeField] protected UnityEvent onUpdate = new UnityEvent();
+    [SerializeField] protected UnityEvent<Collider> onPlayerEnter = new UnityEvent<Collider>();
+    [SerializeField] protected UnityEvent<Collider> onPlayerExit = new UnityEvent<Collider>();
+    [SerializeField] protected UnityEvent<Collider> onInteract = new UnityEvent<Collider>();
 
     // GetComponent<MeshRenderer>().material = Material1;
     protected void Awake()
@@ -28,6 +33,7 @@ public class Interactable : MonoBehaviour
         trigger = GetComponent<Collider>();
         meshRenderer = GetComponent<MeshRenderer>();
         OnAwake();
+        onAwake.Invoke();
     }
     protected void Start()
     {
@@ -43,6 +49,7 @@ public class Interactable : MonoBehaviour
             promptText.gameObject.SetActive(false);
         }
         OnStart();
+        onStart.Invoke();
     }
 
     public bool PressedLeft => PressedDirection(dirXAction, false);
@@ -62,6 +69,7 @@ public class Interactable : MonoBehaviour
         if (interactAction.WasPressedThisFrame() && engaged)
         {
             OnInteract(engagedPlayer);
+            onInteract.Invoke(engagedPlayer);
         }
 
         if (engaged && promptText != null && trigger != null && mainCamera != null)
@@ -74,6 +82,7 @@ public class Interactable : MonoBehaviour
         }
 
         OnUpdate();
+        onUpdate.Invoke();
     }
 
     protected void OnTriggerEnter(Collider other)
@@ -85,7 +94,7 @@ public class Interactable : MonoBehaviour
             engagedPlayer = other;
             if (promptText != null) promptText.gameObject.SetActive(true);
             OnPlayerEnter(other);
-            PlayerEntered?.Invoke(other);
+            onPlayerEnter.Invoke(other);
         }
     }
 
@@ -98,7 +107,7 @@ public class Interactable : MonoBehaviour
             engagedPlayer = null;
             if (promptText != null) promptText.gameObject.SetActive(false);
             OnPlayerExit(other);
-            PlayerExited?.Invoke(other);
+            onPlayerExit.Invoke(other);
         }
     }
 
@@ -110,7 +119,14 @@ public class Interactable : MonoBehaviour
 
     protected virtual void OnInteract(Collider player)
     {
-        promptText.gameObject.SetActive(false);
-        Debug.Log("interacted");
+        if (promptText != null)
+            promptText.gameObject.SetActive(false);
+    }
+
+    public void ShowPrompt()
+    {
+        //todo prompttext is moved to player hud
+        if (promptText != null)
+            promptText.gameObject.SetActive(true);
     }
 }

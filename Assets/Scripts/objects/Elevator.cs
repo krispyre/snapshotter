@@ -2,25 +2,27 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Elevator : Interactable
+public class Elevator : MonoBehaviour
 {
     [SerializeField] private float waitTimeMax = 2; // wait till open or wait till close
     [SerializeField, ReadOnlyInspector] private float waitTimer;
     [SerializeField] private bool waitTimerTimeout = false;
     [SerializeField] private bool doorOpen = false;
     [SerializeField] private Animator panelUi_anim;
+    [SerializeField] private Interactable interactable;
     private PlayerInput lockedPlayerInput;
+    private Collider riding;
     private MeshRenderer meshRenderer;
 
 
-    protected override void OnAwake()
+    void Awake()
     {
-        prompt = "Enter";
+        interactable = GetComponentInParent<Interactable>();
         meshRenderer = GetComponent<MeshRenderer>();
         SetDoorVisual(doorOpen);
     }
 
-    protected override void OnStart()
+    void Start()
     {
         panelUi_anim.SetBool("IsOpen", false);
         panelUi_anim.Play("elevatorPanel_exit", 0, 1f); //hide the panel first, then show using animns
@@ -43,12 +45,12 @@ public class Elevator : Interactable
         }
     }
 
-    protected override void OnInteract(Collider player)
+    public void OpenPanel(Collider player)
     {
         if (doorOpen)
         {
             Debug.Log("open elevator ui");
-            promptText.gameObject.SetActive(false);
+            riding = player;
             lockedPlayerInput = player.GetComponentInParent<PlayerInput>();
             if (lockedPlayerInput != null)
                 lockedPlayerInput.actions.FindActionMap("Player").Disable();
@@ -56,7 +58,25 @@ public class Elevator : Interactable
         }
     }
 
-    protected override void OnUpdate()
+    // Floor button OnClick → Ride, string arg is the destination scene name.
+    // Lands on the ElevatorButton child named "spawn" (RoomTransitionDest id "elevator").
+    public void Ride(string sceneName)
+    {
+        if (riding == null || string.IsNullOrEmpty(sceneName))
+        {
+            Debug.Log("no player or no valid dest scene name?");
+            return;
+        }
+
+        RoomTransitionMgr manager = riding.GetComponentInParent<RoomTransitionMgr>();
+        Collider body = riding;
+        ClosePanelUi();
+
+        if (manager)
+            manager.EnterRoom(sceneName, "elevator", body);
+    }
+
+    void Update()
     {
         if (waitTimer > 0)
         {
@@ -93,7 +113,7 @@ public class Elevator : Interactable
             }
         }
 
-        if (engaged && doorOpen)
+        if (interactable != null && interactable.Engaged && doorOpen)
         {
             waitTimer = 5f;
             // Debug.Log("occupied, do not decrement");
@@ -104,7 +124,10 @@ public class Elevator : Interactable
     public void ClosePanelUi()
     {
         panelUi_anim.SetBool("IsOpen", false);
-        promptText.gameObject.SetActive(true);
+        if (interactable != null)
+            interactable.ShowPrompt();
+
+        riding = null;
 
         if (lockedPlayerInput != null)
         {
@@ -112,6 +135,4 @@ public class Elevator : Interactable
             lockedPlayerInput = null;
         }
     }
-
 }
-

@@ -14,6 +14,7 @@ public class PlayerModeController : MonoBehaviour
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
     [SerializeField] cameraFrame cameraFrame; // contains the camera frame script, calls the changeState() function when player mode changes
+    [SerializeField] DroidLocation droidLocation;
     private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
 
     private void CacheActions()
@@ -76,6 +77,12 @@ public class PlayerModeController : MonoBehaviour
     {
         //deactivate droid, spawn dummy droid, then enable spider at droid
         isDroid = false;
+        if (droidLocation != null)
+        {
+            RoomTransitionMgr rooms = GetComponent<RoomTransitionMgr>();
+            droidLocation.sceneName = rooms != null ? rooms.currentRoomName : "";
+            droidLocation.lastPosition = droid.transform.position;
+        }
         droid.SetActive(false);
         dummy.transform.position = droid.transform.position;
         dummy.SetActive(true);

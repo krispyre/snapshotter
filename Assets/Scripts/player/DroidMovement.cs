@@ -25,6 +25,7 @@ public class DroidMovement : MonoBehaviour
     private InputAction dirXAction;
     private InputAction dirYAction;
     private InputAction jumpAction;
+    private InputAction runAction;
 
     private float jumpSpeed;
     [SerializeField, ReadOnlyInspector] private float jumpBuf;
@@ -34,6 +35,7 @@ public class DroidMovement : MonoBehaviour
     public float inputDirY;
     public bool jumpPressed;
     public bool jumpHeld;
+    public bool runHeld;
 
     public enum PlayerState { Idle, Walk, Jump, Fall, WallPush }
 
@@ -58,6 +60,7 @@ public class DroidMovement : MonoBehaviour
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
         jumpAction = playerInput.actions.FindAction("Jump");
+        runAction = playerInput.actions.FindAction("Run");
     }
 
     void Update()
@@ -75,6 +78,7 @@ public class DroidMovement : MonoBehaviour
         inputDirY = dirYAction.ReadValue<float>();
         if (jumpAction.WasPressedThisFrame()) jumpPressed = true;
         jumpHeld = jumpAction.IsPressed();
+        runHeld = runAction != null && runAction.IsPressed();
 
         DebugTime(IS_DEBUG);
     }
@@ -250,7 +254,12 @@ public class DroidMovement : MonoBehaviour
         xVel += curXAccel * Time.deltaTime;
 
         if (controller.isGrounded)
-            xVel = Mathf.Clamp(xVel, -mvmtParams.maxWalkSpeed, mvmtParams.maxWalkSpeed);
+        {
+            float walkCap = mvmtParams.maxWalkSpeed;
+            if (runHeld)
+                walkCap *= mvmtParams.runSpeedMult;
+            xVel = Mathf.Clamp(xVel, -walkCap, walkCap);
+        }
         else
             xVel = Mathf.Clamp(xVel, -mvmtParams.maxAirSpeed, mvmtParams.maxAirSpeed);
 
