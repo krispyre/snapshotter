@@ -12,7 +12,7 @@ public class RoomTransition : MonoBehaviour
         Debug.Log("triger rom transiton");
         RoomTransitionMgr manager = player.GetComponentInParent<RoomTransitionMgr>();
         if  (manager != null){
-            manager.EnterRoom(targetSceneName, spawnID);
+            manager.EnterRoom(targetSceneName, spawnID, player);
         }
 
     }
