@@ -153,6 +153,7 @@ public class cameraFrame : MonoBehaviour
         // Read the evidence data closest to the camera area's center.
         if (closestEvidence == null)
         {
+            gameEvent.EmptyCamera?.Invoke();
             EvidenceName.text = "";
             EvidenceDescription.text = "";
             Systemprompt.text = "";

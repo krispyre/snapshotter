@@ -13,6 +13,7 @@ public class GameEvent : ScriptableObject
     public UnityEvent OnShutCam = new UnityEvent();
     public UnityEvent SwitchToSpider = new UnityEvent();
     public UnityEvent SwitchToDroid = new UnityEvent();
+    public UnityEvent EmptyCamera = new UnityEvent();
     public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
     public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
     public EvidenceDataEvent OnEvidenceSent = new EvidenceDataEvent();
