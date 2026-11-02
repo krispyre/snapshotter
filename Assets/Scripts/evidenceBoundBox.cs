@@ -6,7 +6,10 @@ public class evidenceBoundBox : MonoBehaviour
     [SerializeField] private GameEvent gameEvent;
     [SerializeField] private GameObject frameMask;
     [Min(0f)]
-    public float speed = 0.1f;
+    public float speed = 1.6f;
+    [Min(0f)]
+    public float sizingSpeed = 0.7f;
+    public float trackingAccuracy = 0.5f;
 
     private Camera worldCamera;
     private Camera uicamera;
@@ -14,12 +17,15 @@ public class evidenceBoundBox : MonoBehaviour
     private Image boxImage;
 
     private GameObject evidenceObject;
+    private SpriteRenderer evidenceRenderer;
     private RectTransform aimCentreData;
     private Canvas canvas;
+    private Vector2 defaultSize;
 
     private void Awake()
     {
         box = GetComponent<RectTransform>();
+        defaultSize = box.sizeDelta;
         boxImage = GetComponent<Image>();
         aimCentreData = frameMask != null ? frameMask.GetComponent<RectTransform>() : null;
         canvas = GetComponentInParent<Canvas>();
@@ -65,6 +71,14 @@ public class evidenceBoundBox : MonoBehaviour
         }
 
         evidenceObject = seenEvidence;
+        evidenceRenderer = seenEvidence.GetComponent<SpriteRenderer>();
+        if (evidenceRenderer == null)
+        {
+            Debug.LogError("Evidence object is missing a SpriteRenderer.", seenEvidence);
+            HideBoundBox();
+            return;
+        }
+
         if (boxImage != null)
         {
             boxImage.enabled = true;
@@ -75,7 +89,8 @@ public class evidenceBoundBox : MonoBehaviour
 
     private void UpdateBoundBox()
     {
-        if (evidenceObject == null || worldCamera == null || box == null || aimCentreData == null)
+        if (evidenceObject == null || evidenceRenderer == null
+            || worldCamera == null || box == null || aimCentreData == null)
         {
             return;
         }
@@ -101,7 +116,15 @@ public class evidenceBoundBox : MonoBehaviour
         box.anchoredPosition = Vector2.MoveTowards(
             box.anchoredPosition,
             evidenceUIPosition,
-            Time.deltaTime * (distanceToCentre > 0f ? distanceToCentre * speed : 0f));
+            Time.deltaTime * Mathf.Max(0f, distanceToCentre * speed));
+
+        if (TryGetEvidenceUISize(boxParent, out Vector2 targetSize))
+        {
+            float sizeLerp = 1f - Mathf.Exp(-Mathf.Max(0f, sizingSpeed) * Time.deltaTime);
+            Vector2 smoothedSize = Vector2.Lerp(box.rect.size, targetSize, sizeLerp);
+            box.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, smoothedSize.x);
+            box.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, smoothedSize.y);
+        }
     }
 
     private void SetBoxToFrameCentre()
@@ -111,6 +134,7 @@ public class evidenceBoundBox : MonoBehaviour
             return;
         }
 
+        box.sizeDelta = defaultSize;
         RectTransform boxParent = box.parent as RectTransform;
         if (boxParent == null)
         {
@@ -124,6 +148,36 @@ public class evidenceBoundBox : MonoBehaviour
         {
             box.anchoredPosition = centreUIPosition;
         }
+    }
+
+    private bool TryGetEvidenceUISize(RectTransform parent, out Vector2 size)
+    {
+        size = Vector2.zero;
+        Bounds bounds = evidenceRenderer.bounds;
+        Vector3 min = bounds.min;
+        Vector3 max = bounds.max;
+        Vector2 screenMin = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 screenMax = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+
+        for (int corner = 0; corner < 8; corner++)
+        {
+            Vector3 worldCorner = new Vector3(
+                (corner & 1) == 0 ? min.x : max.x,
+                (corner & 2) == 0 ? min.y : max.y,
+                (corner & 4) == 0 ? min.z : max.z);
+            Vector3 screenCorner = worldCamera.WorldToScreenPoint(worldCorner);
+            if (screenCorner.z <= 0f
+                || !TryGetAnchoredPosition(parent, screenCorner, out Vector2 uiCorner))
+            {
+                return false;
+            }
+
+            screenMin = Vector2.Min(screenMin, uiCorner);
+            screenMax = Vector2.Max(screenMax, uiCorner);
+        }
+
+        size = screenMax - screenMin;
+        return size.x > 0f && size.y > 0f;
     }
 
     private bool TryGetAnchoredPosition(
@@ -151,6 +205,7 @@ public class evidenceBoundBox : MonoBehaviour
     private void HideBoundBox()
     {
         evidenceObject = null;
+        evidenceRenderer = null;
         if (boxImage != null)
         {
             boxImage.enabled = false;
