@@ -41,14 +41,15 @@ public class commsMenu : MonoBehaviour
 
     public void ShowTab(int index)
     {
-        if (tabs == null || tabs.Length == 0)
-            return;
+        //todo disable tabs
+        // if (tabs == null || tabs.Length == 0)
+        //     return;
 
-        activeTabIndex = Mathf.Clamp(index, 0, tabs.Length - 1);
-        for (int i = 0; i < tabs.Length; i++)
-        {
-            if (tabs[i].page != null)
-                tabs[i].page.SetActive(i == activeTabIndex);
-        }
+        // activeTabIndex = Mathf.Clamp(index, 0, tabs.Length - 1);
+        // for (int i = 0; i < tabs.Length; i++)
+        // {
+        //     if (tabs[i].page != null)
+        //         tabs[i].page.SetActive(i == activeTabIndex);
+        // }
     }
 }

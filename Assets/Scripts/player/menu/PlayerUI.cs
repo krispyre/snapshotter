@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,7 +51,7 @@ public class PlayerUI : MonoBehaviour
         isOpen = open;
 
         if (commLogCanvas != null)
-            commLogCanvas.enabled = open;
+            commLogCanvas.gameObject.SetActive(open);
 
         if (open)
         {

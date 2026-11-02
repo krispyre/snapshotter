@@ -7,11 +7,6 @@ public class EvidenceLog : MonoBehaviour
     [SerializeField] private GameObject listParent;
     [SerializeField] private EvidenceCard cardPrefab;
 
-    void Awake()
-    {
-        gameObject.SetActive(false);
-    }
-
     void OnEnable()
     {
         // Unity looks inside any "Resources" folder for the subfolder "collectibles"
@@ -27,8 +22,12 @@ public class EvidenceLog : MonoBehaviour
         foreach (EvidenceData ed in allEvidences)
         {
             Debug.Log($"Found: {ed.name}: state={ed.state}");
-            EvidenceCard card = Instantiate(cardPrefab, listParent.transform);
-            card.evidenceData = ed;
+
+            if (ed.state >= 2)
+            {
+                EvidenceCard card = Instantiate(cardPrefab, listParent.transform);
+                card.evidenceData = ed;
+            }
         }
     }
 }
