@@ -127,8 +127,8 @@ public class cameraFrame : MonoBehaviour
         GameObject closestEvidence = null;
         float closestDistance = float.PositiveInfinity;
 
-        EvidenceDataContainer[] evidenceObjects = FindObjectsByType<EvidenceDataContainer>(FindObjectsSortMode.None);
-        foreach (EvidenceDataContainer evidence in evidenceObjects)
+        Evidence[] evidenceObjects = FindObjectsByType<Evidence>(FindObjectsSortMode.None);
+        foreach (Evidence evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
             Vector3 evidenceViewportPosition = outputCamera.WorldToViewportPoint(evidenceObject.transform.position);
@@ -176,7 +176,7 @@ public class cameraFrame : MonoBehaviour
 
     private void LookAt(GameObject evidenceObject)
     {
-        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
         if (evidenceData.state == 0)
         {
             OnEvidenceSeen.Invoke(evidenceData);
@@ -190,12 +190,12 @@ public class cameraFrame : MonoBehaviour
     private void Take(GameObject evidenceObject)
     {
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
-        if(evidenceData.state <= 1)
+        if (evidenceData.state <= 1)
         {
             OnEvidenceTaken.Invoke(evidenceData);
             evidenceData.SetState(2);
         }
-        
+
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;

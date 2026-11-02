@@ -1,12 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
     [SerializeField, ReadOnlyInspector] protected bool engaged;
     public string prompt;
+    [SerializeField] protected TextMeshProUGUI promptText;
+    [SerializeField] private float promptYOffset = 10f;
     protected Collider trigger;
+    protected Collider engagedPlayer;
     private MeshRenderer meshRenderer;
+    private Camera mainCamera;
 
     private PlayerInput playerInput;
     private InputAction interactAction;
@@ -14,8 +20,12 @@ public class Interactable : MonoBehaviour
     private InputAction dirYAction;
 
     public bool Engaged => engaged;
-    public event System.Action<Collider> PlayerEntered;
-    public event System.Action<Collider> PlayerExited;
+    [SerializeField] protected UnityEvent onAwake = new UnityEvent();
+    [SerializeField] protected UnityEvent onStart = new UnityEvent();
+    [SerializeField] protected UnityEvent onUpdate = new UnityEvent();
+    [SerializeField] protected UnityEvent<Collider> onPlayerEnter = new UnityEvent<Collider>();
+    [SerializeField] protected UnityEvent<Collider> onPlayerExit = new UnityEvent<Collider>();
+    [SerializeField] protected UnityEvent<Collider> onInteract = new UnityEvent<Collider>();
 
     // GetComponent<MeshRenderer>().material = Material1;
     protected void Awake()
@@ -23,6 +33,7 @@ public class Interactable : MonoBehaviour
         trigger = GetComponent<Collider>();
         meshRenderer = GetComponent<MeshRenderer>();
         OnAwake();
+        onAwake.Invoke();
     }
     protected void Start()
     {
@@ -30,6 +41,15 @@ public class Interactable : MonoBehaviour
         interactAction = playerInput.actions.FindAction("Interact");
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
+        mainCamera = Camera.main;
+
+        if (promptText != null)
+        {
+            promptText.text = prompt;
+            promptText.gameObject.SetActive(false);
+        }
+        OnStart();
+        onStart.Invoke();
     }
 
     public bool PressedLeft => PressedDirection(dirXAction, false);
@@ -48,9 +68,21 @@ public class Interactable : MonoBehaviour
     {
         if (interactAction.WasPressedThisFrame() && engaged)
         {
-            OnInteract();
+            OnInteract(engagedPlayer);
+            onInteract.Invoke(engagedPlayer);
         }
+
+        if (engaged && promptText != null && trigger != null && mainCamera != null)
+        {
+            Rect screenRect = trigger.GetScreenRect(mainCamera);
+            promptText.rectTransform.position = new Vector3(
+                screenRect.center.x,
+                screenRect.yMax + promptYOffset,
+                0f);
+        }
+
         OnUpdate();
+        onUpdate.Invoke();
     }
 
     protected void OnTriggerEnter(Collider other)
@@ -59,8 +91,10 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("notice me");
             engaged = true;
+            engagedPlayer = other;
+            if (promptText != null) promptText.gameObject.SetActive(true);
             OnPlayerEnter(other);
-            PlayerEntered?.Invoke(other);
+            onPlayerEnter.Invoke(other);
         }
     }
 
@@ -70,18 +104,29 @@ public class Interactable : MonoBehaviour
         {
             // Debug.Log("unnotice me");
             engaged = false;
+            engagedPlayer = null;
+            if (promptText != null) promptText.gameObject.SetActive(false);
             OnPlayerExit(other);
-            PlayerExited?.Invoke(other);
+            onPlayerExit.Invoke(other);
         }
     }
 
     protected virtual void OnAwake() { }
+    protected virtual void OnStart() { }
     protected virtual void OnUpdate() { }
     protected virtual void OnPlayerEnter(Collider other) { }
     protected virtual void OnPlayerExit(Collider other) { }
 
-    protected virtual void OnInteract()
+    protected virtual void OnInteract(Collider player)
     {
-        Debug.Log("interacted");
+        if (promptText != null)
+            promptText.gameObject.SetActive(false);
+    }
+
+    public void ShowPrompt()
+    {
+        //todo prompttext is moved to player hud
+        if (promptText != null)
+            promptText.gameObject.SetActive(true);
     }
 }
