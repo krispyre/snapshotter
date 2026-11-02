@@ -6,7 +6,7 @@ using Unity.Cinemachine;
 public class RoomTransitionMgr : MonoBehaviour
 {
     // on the plaeyr,.,sa;dfalksdfjakdsjflksajlfj
-    [SerializeField] DroidLocation droidLocation;
+    [SerializeField] GameStates gameStates;
     public string currentRoomName = "";
 
     void Start()
@@ -158,10 +158,10 @@ public class RoomTransitionMgr : MonoBehaviour
             Transform dummy = transform.Find("droidDummy");
 
             // check if droid is in current scene )
-            bool home = droidLocation.sceneName == currentRoomName;
+            bool home = gameStates != null && gameStates.DroidSceneName == currentRoomName;
             dummy.gameObject.SetActive(home);
             if (home)
-                dummy.position = droidLocation.lastPosition;
+                dummy.position = gameStates.DroidLastPosition;
         }
         if (spawnToUse.TryGetComponent<LayerSwitcher>(out LayerSwitcher ls))
         {

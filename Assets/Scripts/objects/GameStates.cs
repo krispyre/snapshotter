@@ -3,13 +3,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameStates", menuName = "Scriptable Objects/GameStates")]
 public class GameStates : ScriptableObject
 {
-    // When main is merged, move the droid-dummy location asset into here.
-    // Keep values only, such as a position. Do not store scene object references.
-
     [SerializeField, ReadOnlyInspector] private bool openCam;
     public bool CamMode => openCam;
     [SerializeField, ReadOnlyInspector] private bool isDroid = true;
     public bool IsDroid => isDroid;
+
+    [Header("DroidLocation")]
+    [SerializeField, ReadOnlyInspector] private string droidSceneName = "";
+    public string DroidSceneName => droidSceneName;
+    [SerializeField, ReadOnlyInspector] private Vector3 droidLastPosition;
+    public Vector3 DroidLastPosition => droidLastPosition;
 
     public bool SetCamMode(bool isOpenCam)
     {
@@ -27,5 +30,11 @@ public class GameStates : ScriptableObject
 
         this.isDroid = isDroid;
         return true;
+    }
+
+    public void SetDroidLocation(string sceneName, Vector3 position)
+    {
+        droidSceneName = sceneName ?? "";
+        droidLastPosition = position;
     }
 }
