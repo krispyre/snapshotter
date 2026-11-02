@@ -245,13 +245,10 @@ MonoBehaviour:
   ratioOnScreen: 0.15
   Xratio: 16
   Yratio: 9
-<<<<<<< HEAD:Assets/Prefabs/frameMask.prefab
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
-=======
   DroidviewCamera: {fileID: 0}
   BotviewCamera: {fileID: 0}
   playerInput: {fileID: 0}
->>>>>>> ec167eb3c63f78e106849ee3cd31548a20f2c44f:Assets/Prefabs/playerUI/frameMask.prefab
   EvidenceName: {fileID: 0}
   EvidenceDescription: {fileID: 0}
   Systemprompt: {fileID: 0}
