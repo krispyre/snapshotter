@@ -3,9 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerModeController : MonoBehaviour
 {
-    // only for switching modes
-    private GameEvent gameEvent;
-    private GameReferences gameReferences;
+    [SerializeField] private GameEvent gameEvent;
     private PlayerInput playerInput;
     private InputAction dirYAction;
     private InputAction interactAction;
@@ -31,8 +29,13 @@ public class PlayerModeController : MonoBehaviour
 
     void Awake()
     {
-        gameReferences = GameReferences.Instance;
-        gameEvent = gameReferences.gameEvent;
+        if (gameEvent == null)
+        {
+            Debug.LogError("PlayerModeController requires a GameEvent.", this);
+            enabled = false;
+            return;
+        }
+
         CacheActions();
         droid = transform.Find("droid").gameObject;
         spider = transform.Find("spider").gameObject;

@@ -10,12 +10,15 @@ public class OpenCam : MonoBehaviour
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
 
-    private GameReferences gameReferences;
-    private GameEvent gameEvent;
-    private CinemachineCamera droidCamera;
-    private CinemachineCamera spiderCamera;
-    private CinemachineCamera droidRecordCamera;
-    private CinemachineCamera spiderRecordCamera;
+    [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private CinemachineCamera droidCamera;
+    [SerializeField] private CinemachineCamera spiderCamera;
+    [SerializeField] private CinemachineCamera droidRecordCamera;
+    [SerializeField] private CinemachineCamera spiderRecordCamera;
+    [SerializeField] private GameObject frameMask;
+    [SerializeField] private GameObject evidencePage;
+    [SerializeField] private PlayerInput playerInput;
+
     private CinemachineRotationComposer droidComposer;
     private CinemachineRotationComposer spiderComposer;
     private InputAction camToggleAction;
@@ -26,13 +29,17 @@ public class OpenCam : MonoBehaviour
 
     private void Awake()
     {
-        gameReferences = GameReferences.Instance;
-        gameEvent = gameReferences.gameEvent;
-        droidCamera = gameReferences.droidCamera;
-        spiderCamera = gameReferences.spiderCamera;
-        droidRecordCamera = gameReferences.droidRecordCamera;
-        spiderRecordCamera = gameReferences.spiderRecordCamera;
-        camToggleAction = gameReferences.playerInput.actions.FindAction("Camera");
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (gameEvent == null || playerInput == null || playerInput.actions == null)
+        {
+            Debug.LogError("OpenCam requires a GameEvent and a PlayerInput.", this);
+            enabled = false;
+            return;
+        }
+
+        camToggleAction = playerInput.actions.FindAction("Camera");
         if (camToggleAction == null)
         {
             Debug.LogError("The PlayerInput action asset does not contain a 'Camera' action.", this);
@@ -52,6 +59,9 @@ public class OpenCam : MonoBehaviour
 
     private void OnEnable()
     {
+        if (gameEvent == null)
+            return;
+
         gameEvent.OnOpenCam.AddListener(HandleOpenCamera);
         gameEvent.OnShutCam.AddListener(HandleCloseCamera);
         gameEvent.SwitchToDroid.AddListener(HandlePlayerModeChanged);
@@ -66,6 +76,9 @@ public class OpenCam : MonoBehaviour
 
     private void OnDisable()
     {
+        if (gameEvent == null)
+            return;
+
         gameEvent.OnOpenCam.RemoveListener(HandleOpenCamera);
         gameEvent.OnShutCam.RemoveListener(HandleCloseCamera);
         gameEvent.SwitchToDroid.RemoveListener(HandlePlayerModeChanged);
@@ -190,13 +203,13 @@ public class OpenCam : MonoBehaviour
     private void SetCameraUiVisible(bool visible)
     {
 
-        if (gameReferences.evidencePage != null)
+        if (evidencePage != null)
         {
-            gameReferences.evidencePage.SetActive(visible);
+            evidencePage.SetActive(visible);
         }
-        if (gameReferences.cameraFrame != null)
+        if (frameMask != null)
         {
-            gameReferences.cameraFrame.SetActive(visible);
+            frameMask.SetActive(visible);
         }
     }
 }

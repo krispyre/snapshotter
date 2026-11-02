@@ -11,22 +11,23 @@ public class cameraFrame : MonoBehaviour
     public float Xratio = 16f;
     public float Yratio = 9f;
 
-    private TextMeshProUGUI EvidenceName;
-    private TextMeshProUGUI EvidenceDescription;
-    private TextMeshProUGUI Systemprompt;
+    [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private TextMeshProUGUI EvidenceName;
+    [SerializeField] private TextMeshProUGUI EvidenceDescription;
+    [SerializeField] private TextMeshProUGUI Systemprompt;
 
-    private GameReferences gameReferences;
-    private GameEvent gameEvent;
     private RectTransform rectTransform;
     private Vector2 screenSize;
 
     private void Awake()
     {
-        gameReferences = GameReferences.Instance;
-        gameEvent = gameReferences.gameEvent;
-        EvidenceName = gameReferences.EvidenceName;
-        EvidenceDescription = gameReferences.EvidenceDescription;
-        Systemprompt = gameReferences.Systemprompt;
+        if (gameEvent == null)
+        {
+            Debug.LogError("cameraFrame requires a GameEvent.", this);
+            enabled = false;
+            return;
+        }
+
         rectTransform = GetComponent<RectTransform>();
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();

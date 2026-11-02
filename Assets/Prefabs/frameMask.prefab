@@ -245,6 +245,7 @@ MonoBehaviour:
   ratioOnScreen: 0.15
   Xratio: 16
   Yratio: 9
-  DroidviewCamera: {fileID: 0}
-  BotviewCamera: {fileID: 0}
-  playerInput: {fileID: 0}
+  gameEvent: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  EvidenceName: {fileID: 0}
+  EvidenceDescription: {fileID: 0}
+  Systemprompt: {fileID: 0}

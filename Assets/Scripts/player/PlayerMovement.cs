@@ -35,8 +35,8 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction shootAction;
     private InputAction interactAction;
     private Camera mainCamera; // each scene will have a main camera so i GameObject.Find("Main Camera");
-    private OpenCam openCam;
-    public bool isOpenCam => GameReferences.Instance.gameEvent.CamMode;
+    [SerializeField] private GameEvent gameEvent;
+    public bool isOpenCam => gameEvent != null && gameEvent.CamMode;
 
     //movement vars
     private float jumpSpeed;
@@ -61,7 +61,8 @@ public partial class PlayerMovement : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
-        openCam = GetComponentInParent<OpenCam>();
+        if (gameEvent == null)
+            Debug.LogError("PlayerMovement requires a GameEvent.", this);
         CacheActions();
     }
 
