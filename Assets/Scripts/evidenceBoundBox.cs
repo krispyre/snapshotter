@@ -9,7 +9,6 @@ public class evidenceBoundBox : MonoBehaviour
     public float speed = 1.6f;
     [Min(0f)]
     public float sizingSpeed = 0.7f;
-    public float trackingAccuracy = 0.5f;
 
     private Camera worldCamera;
     private Camera uicamera;
