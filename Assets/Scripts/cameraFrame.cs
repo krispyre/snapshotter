@@ -189,7 +189,7 @@ public class cameraFrame : MonoBehaviour
 
     private void Take(GameObject evidenceObject)
     {
-        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
         if (evidenceData.state <= 1)
         {
             OnEvidenceTaken.Invoke(evidenceData);

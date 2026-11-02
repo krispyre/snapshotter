@@ -3,15 +3,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameStates", menuName = "Scriptable Objects/GameStates")]
 public class GameStates : ScriptableObject
 {
-    [SerializeField, ReadOnlyInspector] private bool openCam;
-    public bool CamMode => openCam;
-    [SerializeField, ReadOnlyInspector] private bool isDroid = true;
+    public bool openCam;
+    public bool CamMode => openCam; // dupplication minor
+    public bool isDroid = true;
     public bool IsDroid => isDroid;
 
     [Header("DroidLocation")]
-    [SerializeField, ReadOnlyInspector] private string droidSceneName = "";
+    public string droidSceneName = "";
     public string DroidSceneName => droidSceneName;
-    [SerializeField, ReadOnlyInspector] private Vector3 droidLastPosition;
+    public Vector3 droidLastPosition;
     public Vector3 DroidLastPosition => droidLastPosition;
 
     public bool SetCamMode(bool isOpenCam)
