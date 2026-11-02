@@ -73,8 +73,10 @@ public class OpenCam : MonoBehaviour
 
     private void Start()
     {
-        ApplyCameraPriorities();
-        SetCameraUiVisible(gameStates.CamMode);
+        if (gameStates.CamMode)
+            HandleOpenCamera();
+        else
+            HandleCloseCamera();
     }
 
     private void OnDisable()
