@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EvidenceCard : MonoBehaviour
 {
-    public Evidence evidence;
+    public EvidenceData evidenceData;
     public int sendProgress;
 
     [SerializeField] TextMeshProUGUI nameText;
@@ -30,9 +30,9 @@ public class EvidenceCard : MonoBehaviour
 
     public void Apply()
     {
-        if (evidence == null || evidence.evidenceData == null) return;
+        if (evidenceData == null) return;
 
-        EvidenceData data = evidence.evidenceData;
+        EvidenceData data = evidenceData; //idk icl ts pmo abcdefg
         nameText.text = data.objectName;
         descriptionText.text = data.description;
         systemResponseText.text = data.systemResponse;

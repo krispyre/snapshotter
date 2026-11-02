@@ -1,19 +1,34 @@
+using System;
 using UnityEngine;
 
 public class EvidenceLog : MonoBehaviour
 {
-    private EvidenceData[] allCollectibles;
+    private EvidenceData[] allEvidences;
+    [SerializeField] private GameObject listParent;
+    [SerializeField] private EvidenceCard cardPrefab;
 
-    void Start()
+    void Awake()
+    {
+        gameObject.SetActive(false);
+    }
+
+    void OnEnable()
     {
         // Unity looks inside any "Resources" folder for the subfolder "collectibles"
-        allCollectibles = Resources.LoadAll<EvidenceData>("evidences");
+        allEvidences = Resources.LoadAll<EvidenceData>("evidences");
 
-        Debug.Log($"[Resources] Loaded {allCollectibles.Length} collectibles!");
+        Debug.Log($"[Resources] Loaded {allEvidences.Length} collectibles!");
 
-        foreach (var item in allCollectibles)
+        for (int i = listParent.transform.childCount - 1; i >= 0; i--)
         {
-            Debug.Log($"Found: {item.name}");
+            Destroy(listParent.transform.GetChild(i).gameObject);
+        }
+
+        foreach (EvidenceData ed in allEvidences)
+        {
+            Debug.Log($"Found: {ed.name}: state={ed.state}");
+            EvidenceCard card = Instantiate(cardPrefab, listParent.transform);
+            card.evidenceData = ed;
         }
     }
 }
