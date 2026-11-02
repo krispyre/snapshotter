@@ -53,12 +53,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a052645cdcaa0154eb39dff6ce46bed9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  isDroid: 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerModeController
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   holdDuration: 1
   holdTimer: 0
   cameraFrame: {fileID: 62229562875460576}
-  droidLocation: {fileID: 11400000, guid: b7e3a91c4d2f4e6a8c0b1d5f7a9e3c21, type: 2}
 --- !u!114 &5031452821313589794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,19 +70,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8973631213e4c8644b0d483039fd9d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenCam
-  driodCam: {fileID: 4789446656772617033}
-  driodRecordCam: {fileID: 8129483990372443656}
-  botCam: {fileID: 8175189826105449792}
-  botRecordCam: {fileID: 3795126722973127209}
-  cameraFrame: {fileID: 62229562875460576}
-  EvidenceDataPage: {fileID: 9011381104378101226}
-  frameMask: {fileID: 7476140729669501940}
   MaxZoomLens: 10
   zoomSpeed: 1
   maxTurningAngle: 10
   verticalRotateScale: 0.15
   horizontalRotateScale: 0.5
-  isOpenCam: 0
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  droidCamera: {fileID: 4789446656772617033}
+  spiderCamera: {fileID: 8175189826105449792}
+  droidRecordCamera: {fileID: 8129483990372443656}
+  spiderRecordCamera: {fileID: 3795126722973127209}
+  frameMask: {fileID: 7476140729669501940}
+  evidencePage: {fileID: 9011381104378101226}
   playerInput: {fileID: 6062549200355175145}
 --- !u!114 &6062549200355175145
 MonoBehaviour:
@@ -265,6 +263,7 @@ MonoBehaviour:
   clawState: 
   clawTimer: 0
   mvmtParams: {fileID: 11400000, guid: a4b236ffb11661e43a2803a596201c49, type: 2}
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   pos: {x: 0, y: 0, z: 0}
   claw_pos: {x: 0, y: 0, z: 0}
   state: 1
@@ -343,7 +342,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3925522207831156327}
-  m_LocalEulerAnglesHint: {x: -1.7, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8129483990372443656
 MonoBehaviour:
   m_ObjectHideFlags: 0

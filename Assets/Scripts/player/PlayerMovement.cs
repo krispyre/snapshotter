@@ -35,8 +35,8 @@ public partial class PlayerMovement : MonoBehaviour
     private InputAction shootAction;
     private InputAction interactAction;
     private Camera mainCamera; // each scene will have a main camera so i GameObject.Find("Main Camera");
-    private OpenCam openCam;
-    public bool isOpenCam => openCam != null && openCam.isOpenCam;
+    [SerializeField] private GameStates gameStates;
+    public bool isOpenCam => gameStates != null && gameStates.CamMode;
 
     //movement vars
     private float jumpSpeed;
@@ -61,7 +61,8 @@ public partial class PlayerMovement : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
-        openCam = GetComponentInParent<OpenCam>();
+        if (gameStates == null)
+            Debug.LogError("PlayerMovement requires a GameStates asset.", this);
         CacheActions();
     }
 
