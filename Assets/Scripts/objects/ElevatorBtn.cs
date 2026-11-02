@@ -1,21 +1,16 @@
 using UnityEngine;
 
-public class ElevatorBtn : Interactable
+public class ElevatorBtn : MonoBehaviour
 {
-    [SerializeField, ReadOnlyInspector] private Elevator elevator;
+    [SerializeField] private Elevator elevator;
 
-    protected override void OnAwake()
+    void Awake()
     {
-        elevator = GetComponentInChildren<Elevator>();
-        prompt = "Wait for elevator";
         Debug.Assert(elevator != null);
     }
 
-    protected override void OnInteract(Collider player)
+    public void CallElevator(Collider player)
     {
-        // Debug.Log("press btn");
         elevator.ButtonCall();
     }
-
-
 }

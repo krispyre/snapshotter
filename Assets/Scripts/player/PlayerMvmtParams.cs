@@ -8,7 +8,8 @@ public class PlayerMvmtParams : ScriptableObject
     public float walkDecel = 30f;// for forwards
     public float airAccel = 20f;//for turn around&stop
     public float airDecel = 30f;
-    public float maxWalkSpeed = 1.5f;//run is different
+    public float maxWalkSpeed = 1.5f;
+    public float runSpeedMult = 1.5f;
     public float maxRecordWalkSpeed = 1.5f;
     public float maxAirSpeed = 3;//no wavedashing
 

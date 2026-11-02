@@ -1,20 +1,28 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+
+[System.Serializable]
+public class SwitchModeEvent : UnityEvent<bool> { }
 
 public class PlayerModeController : MonoBehaviour
 {
-    // only for switching modes
+    public SwitchModeEvent switchMode = new SwitchModeEvent();
+
+    [SerializeField] private GameStates gameStates;
     private PlayerInput playerInput;
     private InputAction dirYAction;
     private InputAction interactAction;
-    [SerializeField] private bool isDroid = true;
+    private bool isDroid = true;
+
+    private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
     private GameObject droid;
     private GameObject spider;
     private GameObject dummy;
     [SerializeField] public float holdDuration = 2;
     [SerializeField, ReadOnlyInspector] private float holdTimer = 0;
     [SerializeField] cameraFrame cameraFrame; // contains the camera frame script, calls the changeState() function when player mode changes
-    private OpenCam openCam;// contains the opencam controller script, calls the changestate() function when player mode changes
+
 
     private void CacheActions()
     {
@@ -29,30 +37,35 @@ public class PlayerModeController : MonoBehaviour
 
     void Awake()
     {
-        openCam = GetComponent<OpenCam>();
+        if (gameStates == null)
+        {
+            Debug.LogError("PlayerModeController requires a GameStates asset.", this);
+            enabled = false;
+            return;
+        }
+
         CacheActions();
+        openCam = GetComponent<OpenCam>();
         droid = transform.Find("droid").gameObject;
         spider = transform.Find("spider").gameObject;
         dummy = transform.Find("droidDummy").gameObject;
-
-
-        droid.SetActive(isDroid);
-        dummy.SetActive(!isDroid);
-        spider.SetActive(!isDroid);
     }
 
     void Start()
     {
-        // Sync camera priorities with the starting mode (droid by default).
-        openCam.changeState(!isDroid);
-        if (cameraFrame != null)
-            cameraFrame.changeMode(!isDroid);
+        isDroid = gameStates.IsDroid;
+        droid.SetActive(isDroid);
+        dummy.SetActive(!isDroid);
+        spider.SetActive(!isDroid);
+
+        if (openCam != null)
+            openCam.SetCameraOpen(gameStates.CamMode);
     }
 
     private void OnEnable() => CacheActions();
     void Update()
     {
-        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle && !openCam.isOpenCam) //todo change to held tgt
+        if (interactAction.IsPressed() && dirYAction.ReadValue<float>() > 0 && droid.GetComponent<DroidMovement>().state == DroidMovement.PlayerState.Idle && !gameStates.CamMode) //todo change to held tgt
         {
             holdTimer += Time.deltaTime;
         }
@@ -75,25 +88,30 @@ public class PlayerModeController : MonoBehaviour
     public void SwitchToSpider()
     {
         //deactivate droid, spawn dummy droid, then enable spider at droid
-        isDroid = false;
+        SwitchMode(false);
+        RoomTransitionMgr rooms = GetComponent<RoomTransitionMgr>();
+        gameStates.SetDroidLocation(rooms != null ? rooms.currentRoomName : "", droid.transform.position);
         droid.SetActive(false);
         dummy.transform.position = droid.transform.position;
         dummy.SetActive(true);
         spider.transform.position = droid.transform.position;
         spider.SetActive(true);
-        openCam.changeState(true);
-        cameraFrame.changeMode(true);
     }
     public void ReturnToDroid()
     {
         //deactivate spider, despawn dummy droid, then enable droid
-        isDroid = true;
+        SwitchMode(true);
         droid.SetActive(true);
         dummy.SetActive(false);
         spider.SetActive(false);
-        openCam.changeState(false);
-        cameraFrame.changeMode(false);
+    }
 
+    public void SwitchMode(bool isDroid)
+    {
+        this.isDroid = isDroid;
+        if (!gameStates.SetIsDroid(isDroid))
+            return;
 
+        switchMode.Invoke(isDroid);
     }
 }

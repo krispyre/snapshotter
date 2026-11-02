@@ -67,6 +67,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "b252ffbc-1e76-4fa7-b949-2145e8bd76e3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Comms",
                     "type": "Button",
                     "id": "3a56c51e-23a0-41fc-b4cf-82843fc7bb4a",
@@ -196,6 +206,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Comms",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6936ced5-f431-495c-ba0d-052344a292cb",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
