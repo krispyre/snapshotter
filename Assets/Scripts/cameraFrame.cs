@@ -1,9 +1,16 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using TMPro;
 
+[System.Serializable]
+public class EvidenceDataEvent : UnityEvent<EvidenceData> { }
+
 public class cameraFrame : MonoBehaviour
 {
+    public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
+    public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
+
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
     [Range(0f, 0.3f)] public float YMaxRatio = 0.1f;
 
@@ -11,7 +18,7 @@ public class cameraFrame : MonoBehaviour
     public float Xratio = 16f;
     public float Yratio = 9f;
 
-    [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private GameStates gameStates;
     [SerializeField] private TextMeshProUGUI EvidenceName;
     [SerializeField] private TextMeshProUGUI EvidenceDescription;
     [SerializeField] private TextMeshProUGUI Systemprompt;
@@ -21,9 +28,9 @@ public class cameraFrame : MonoBehaviour
 
     private void Awake()
     {
-        if (gameEvent == null)
+        if (gameStates == null)
         {
-            Debug.LogError("cameraFrame requires a GameEvent.", this);
+            Debug.LogError("cameraFrame requires a GameStates asset.", this);
             enabled = false;
             return;
         }
@@ -57,7 +64,7 @@ public class cameraFrame : MonoBehaviour
     }
     private void Update()
     {
-        if (!gameEvent.CamMode || rectTransform == null)
+        if (!gameStates.CamMode || rectTransform == null)
         {
             return;
         }
@@ -172,7 +179,7 @@ public class cameraFrame : MonoBehaviour
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
         if (evidenceData.state == 0)
         {
-            gameEvent.OnEvidenceSeen?.Invoke(evidenceData);
+            OnEvidenceSeen.Invoke(evidenceData);
             evidenceData.SetState(1);
         }
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -185,7 +192,7 @@ public class cameraFrame : MonoBehaviour
         EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
         if(evidenceData.state <= 1)
         {
-            gameEvent.OnEvidenceTaken?.Invoke(evidenceData);
+            OnEvidenceTaken.Invoke(evidenceData);
             evidenceData.SetState(2);
         }
         

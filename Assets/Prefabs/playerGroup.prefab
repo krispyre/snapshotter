@@ -384,7 +384,7 @@ MonoBehaviour:
   clawState: 
   clawTimer: 0
   mvmtParams: {fileID: 11400000, guid: a4b236ffb11661e43a2803a596201c49, type: 2}
-  gameEvent: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   pos: {x: 0, y: 0, z: 0}
   claw_pos: {x: 0, y: 0, z: 0}
   state: 1
@@ -730,9 +730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a052645cdcaa0154eb39dff6ce46bed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerModeController
-  gameEvent: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
-  isDroid: 1
-  isOpenCam: 0
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   holdDuration: 1
   holdTimer: 0
 --- !u!114 &4615205732341945419
@@ -752,7 +750,7 @@ MonoBehaviour:
   maxTurningAngle: 10
   verticalRotateScale: 0.15
   horizontalRotateScale: 0.5
-  gameEvent: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   droidCamera: {fileID: 4879191824857016296}
   spiderCamera: {fileID: 7506497384477509428}
   droidRecordCamera: {fileID: 8352411781285810227}

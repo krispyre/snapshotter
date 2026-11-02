@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 
 public class OpenCam : MonoBehaviour
 {
+    public UnityEvent OnOpenCam = new UnityEvent();
+    public UnityEvent OnCloseCam = new UnityEvent();
+
     public float MaxZoomLens = 10f;
     public float zoomSpeed = 1f;
     public float maxTurningAngle = 10f;
     public float verticalRotateScale = 0.15f;
     public float horizontalRotateScale = 0.5f;
 
-    [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private GameStates gameStates;
     [SerializeField] private CinemachineCamera droidCamera;
     [SerializeField] private CinemachineCamera spiderCamera;
     [SerializeField] private CinemachineCamera droidRecordCamera;
@@ -19,6 +23,7 @@ public class OpenCam : MonoBehaviour
     [SerializeField] private GameObject evidencePage;
     [SerializeField] private PlayerInput playerInput;
 
+    private PlayerModeController playerMode;
     private CinemachineRotationComposer droidComposer;
     private CinemachineRotationComposer spiderComposer;
     private InputAction camToggleAction;
@@ -29,12 +34,13 @@ public class OpenCam : MonoBehaviour
 
     private void Awake()
     {
+        playerMode = GetComponent<PlayerModeController>();
         if (playerInput == null)
             playerInput = GetComponent<PlayerInput>();
 
-        if (gameEvent == null || playerInput == null || playerInput.actions == null)
+        if (gameStates == null || playerInput == null || playerInput.actions == null)
         {
-            Debug.LogError("OpenCam requires a GameEvent and a PlayerInput.", this);
+            Debug.LogError("OpenCam requires a GameStates asset and a PlayerInput.", this);
             enabled = false;
             return;
         }
@@ -59,51 +65,45 @@ public class OpenCam : MonoBehaviour
 
     private void OnEnable()
     {
-        if (gameEvent == null)
+        if (playerMode == null)
             return;
 
-        gameEvent.OnOpenCam.AddListener(HandleOpenCamera);
-        gameEvent.OnShutCam.AddListener(HandleCloseCamera);
-        gameEvent.SwitchToDroid.AddListener(HandlePlayerModeChanged);
-        gameEvent.SwitchToSpider.AddListener(HandlePlayerModeChanged);
+        playerMode.switchMode.AddListener(HandlePlayerModeChanged);
     }
 
     private void Start()
     {
         ApplyCameraPriorities();
-        SetCameraUiVisible(gameEvent.CamMode);
+        SetCameraUiVisible(gameStates.CamMode);
     }
 
     private void OnDisable()
     {
-        if (gameEvent == null)
+        if (playerMode == null)
             return;
 
-        gameEvent.OnOpenCam.RemoveListener(HandleOpenCamera);
-        gameEvent.OnShutCam.RemoveListener(HandleCloseCamera);
-        gameEvent.SwitchToDroid.RemoveListener(HandlePlayerModeChanged);
-        gameEvent.SwitchToSpider.RemoveListener(HandlePlayerModeChanged);
+        playerMode.switchMode.RemoveListener(HandlePlayerModeChanged);
     }
 
     private void Update()
     {
         if (camToggleAction.WasPressedThisFrame())
         {
-            gameEvent.ToggleCamera(!gameEvent.CamMode);
+            SetCameraOpen(!gameStates.CamMode);
         }
 
-        if (!gameEvent.CamMode)
+        if (!gameStates.CamMode)
         {
             return;
         }
 
-        if (gameEvent.PlayerModeIsSpider)
+        if (gameStates.IsDroid)
         {
-            Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
+            Recording(droidComposer, droidRecordCamera, droidInitialTargetOffset);
         }
         else
         {
-            Recording(droidComposer, droidRecordCamera, droidInitialTargetOffset);
+            Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
         }
     }
 
@@ -127,7 +127,7 @@ public class OpenCam : MonoBehaviour
         targetOffset.x += mouseOffset.x * maxTurningAngle * horizontalRotateScale;
         targetOffset.y += mouseOffset.y * maxTurningAngle * verticalRotateScale;
 
-        if (Mouse.current != null && gameEvent.PlayerModeIsSpider)
+        if (Mouse.current != null && !gameStates.IsDroid)
         {
             float scrollDelta = Mouse.current.scroll.ReadValue().y;
             currentZoomLens = Mathf.Clamp(
@@ -141,6 +141,23 @@ public class OpenCam : MonoBehaviour
         }
 
         composer.TargetOffset = targetOffset;
+    }
+
+    public void SetCameraOpen(bool open)
+    {
+        if (!gameStates.SetCamMode(open))
+            return;
+
+        if (open)
+        {
+            HandleOpenCamera();
+            OnOpenCam.Invoke();
+        }
+        else
+        {
+            HandleCloseCamera();
+            OnCloseCam.Invoke();
+        }
     }
 
     private void HandleOpenCamera()
@@ -158,16 +175,19 @@ public class OpenCam : MonoBehaviour
         SetCameraUiVisible(false);
     }
 
-    private void HandlePlayerModeChanged()
+    private void HandlePlayerModeChanged(bool isDroid)
     {
+        if (gameStates.CamMode)
+            SetCameraOpen(false);
+
         ApplyCameraPriorities();
         SetCameraUiVisible(false);
     }
 
     private void ApplyCameraPriorities()
     {
-        SetPriorities(spiderCamera, spiderRecordCamera, gameEvent.PlayerModeIsSpider);
-        SetPriorities(droidCamera, droidRecordCamera, !gameEvent.PlayerModeIsSpider);
+        SetPriorities(droidCamera, droidRecordCamera, gameStates.IsDroid);
+        SetPriorities(spiderCamera, spiderRecordCamera, !gameStates.IsDroid);
     }
 
     private void SetPriorities(
@@ -183,8 +203,8 @@ public class OpenCam : MonoBehaviour
             return;
         }
 
-        viewCamera.Priority = gameEvent.CamMode ? 10 : 11;
-        recordCamera.Priority = gameEvent.CamMode ? 11 : 10;
+        viewCamera.Priority = gameStates.CamMode ? 10 : 11;
+        recordCamera.Priority = gameStates.CamMode ? 11 : 10;
     }
 
     private void ResetZoom()
