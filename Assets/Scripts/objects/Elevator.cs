@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Elevator : Interactable
 {
@@ -7,11 +8,29 @@ public class Elevator : Interactable
     [SerializeField, ReadOnlyInspector] private float waitTimer;
     [SerializeField] private bool waitTimerTimeout = false;
     [SerializeField] private bool doorOpen = false;
+    [SerializeField] private Animator panelUi_anim;
+    private PlayerInput lockedPlayerInput;
+    private MeshRenderer meshRenderer;
 
 
     protected override void OnAwake()
     {
         prompt = "Enter";
+        meshRenderer = GetComponent<MeshRenderer>();
+        SetDoorVisual(doorOpen);
+    }
+
+    protected override void OnStart()
+    {
+        panelUi_anim.SetBool("IsOpen", false);
+        panelUi_anim.Play("elevatorPanel_exit", 0, 1f); //hide the panel first, then show using animns
+        panelUi_anim.Update(0f);
+    }
+
+    void SetDoorVisual(bool open)
+    {
+        if (meshRenderer != null)
+            meshRenderer.enabled = open;
     }
 
     // wait 0.5s to open the door
@@ -24,9 +43,17 @@ public class Elevator : Interactable
         }
     }
 
-    protected override void OnInteract()
+    protected override void OnInteract(Collider player)
     {
-        if (doorOpen) Debug.Log("open elevator ui");
+        if (doorOpen)
+        {
+            Debug.Log("open elevator ui");
+            promptText.gameObject.SetActive(false);
+            lockedPlayerInput = player.GetComponentInParent<PlayerInput>();
+            if (lockedPlayerInput != null)
+                lockedPlayerInput.actions.FindActionMap("Player").Disable();
+            panelUi_anim.SetBool("IsOpen", true);
+        }
     }
 
     protected override void OnUpdate()
@@ -51,7 +78,7 @@ public class Elevator : Interactable
                 // close the door
                 Debug.Log("close door");
                 doorOpen = false;
-                //fade out ui
+                SetDoorVisual(false);
             }
             else
             {
@@ -59,7 +86,7 @@ public class Elevator : Interactable
                 Debug.Log("open door");
 
                 doorOpen = true;
-                // add in ui
+                SetDoorVisual(true);
 
                 // begin timer decrement
                 waitTimer = 5;
@@ -69,8 +96,22 @@ public class Elevator : Interactable
         if (engaged && doorOpen)
         {
             waitTimer = 5f;
-            Debug.Log("occupied, do not decrement");
+            // Debug.Log("occupied, do not decrement");
+        }
+    }
+
+    // Wire Exit Button OnClick → this Elevator (prefab-local), no scene player ref needed
+    public void ClosePanelUi()
+    {
+        panelUi_anim.SetBool("IsOpen", false);
+        promptText.gameObject.SetActive(true);
+
+        if (lockedPlayerInput != null)
+        {
+            lockedPlayerInput.actions.FindActionMap("Player").Enable();
+            lockedPlayerInput = null;
         }
     }
 
 }
+

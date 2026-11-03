@@ -159,8 +159,8 @@ public class cameraFrame : MonoBehaviour
         GameObject closestEvidence = null;
         float closestDistance = float.PositiveInfinity;
 
-        EvidenceDataContainer[] evidenceObjects = FindObjectsByType<EvidenceDataContainer>(FindObjectsSortMode.None);
-        foreach (EvidenceDataContainer evidence in evidenceObjects)
+        Evidence[] evidenceObjects = FindObjectsByType<Evidence>(FindObjectsSortMode.None);
+        foreach (Evidence evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
             Vector3 evidenceLocalPosition = viewCamera.transform.InverseTransformPoint(evidenceObject.transform.position);
@@ -204,7 +204,7 @@ public class cameraFrame : MonoBehaviour
     void scanned(GameObject evidenceObject)
     {
         //implement waht you want to do when the evidence is scanned
-        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
+        EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
