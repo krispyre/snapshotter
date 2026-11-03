@@ -24695,6 +24695,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 4715276659569861276, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4965737292250216801, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -24721,7 +24725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7576963918570484883, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
       propertyPath: spawnID
-      value: editorFloor_elevator
+      value: floor_editor_elevator
       objectReference: {fileID: 0}
     - target: {fileID: 8028763778098347333, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
       propertyPath: m_Mesh
@@ -51306,7 +51310,7 @@ MonoBehaviour:
   transitonEnterVersion: enter
   transitonExitPrefab: {fileID: 3107819971993054591, guid: 1855f93353b13d549b1c1a9acb853a16, type: 3}
   transitonExitVersion: exit
-  targetSceneName: ninthFloor_roof
+  targetSceneName: floor_storageRoof
   spawnID: storageVent
 --- !u!114 &2078563387
 MonoBehaviour:
