@@ -24695,6 +24695,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 4715276659569861276, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4965737292250216801, guid: e39c80e69ab098641bcdcee619975bd9, type: 3}
       propertyPath: m_IsActive
       value: 1
