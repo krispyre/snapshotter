@@ -586,7 +586,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Where tf is ground floor.
+          m_StringArgument: floor_ground
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &3788151237634365706
@@ -719,7 +719,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: editorFloor
+          m_StringArgument: floor_editor
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &3839278141737550288
@@ -1126,7 +1126,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: ninthFloor_roof
+          m_StringArgument: floor_storageRoof
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4696696110801532689

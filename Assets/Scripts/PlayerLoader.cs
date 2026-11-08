@@ -12,6 +12,7 @@ public static class PlayerLoader
 
     private static bool playerLoadRequested;
 
+    //todo wtf is this??
 #if UNITY_EDITOR
     internal const string OpenBeforePlayKey = "snapshotter.playerScene.openBeforePlay";
     internal const string SnapshotTakenKey = "snapshotter.playerScene.snapshotTaken";
@@ -22,7 +23,8 @@ public static class PlayerLoader
 #endif
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void Init(){
+    private static void Init()
+    {
         playerLoadRequested = false;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -30,7 +32,8 @@ public static class PlayerLoader
 #if UNITY_EDITOR
         waitingForEditorScenes = false;
         int settleId = ++editorSettleId;
-        if (SessionState.GetBool(OpenBeforePlayKey, false)){
+        if (SessionState.GetBool(OpenBeforePlayKey, false))
+        {
             waitingForEditorScenes = true;
             EditorApplication.delayCall += () => OnEditorScenesSettled(settleId);
             return;
@@ -39,14 +42,16 @@ public static class PlayerLoader
         EnsurePlayerLoaded(SceneManager.GetActiveScene());
     }
 
-    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode){
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
         if (scene.name == PlayerSceneName)
             playerLoadRequested = false;
 
         EnsurePlayerLoaded(SceneManager.GetActiveScene());
     }
 
-    private static void EnsurePlayerLoaded(Scene scene){
+    private static void EnsurePlayerLoaded(Scene scene)
+    {
 #if UNITY_EDITOR
         if (waitingForEditorScenes) return;
 #endif
@@ -59,8 +64,10 @@ public static class PlayerLoader
             playerLoadRequested = false;
     }
 
-    private static bool IsSceneLoaded(string sceneName){
-        for (int i = 0; i < SceneManager.sceneCount; i++){
+    private static bool IsSceneLoaded(string sceneName)
+    {
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
             Scene loaded = SceneManager.GetSceneAt(i);
             if (loaded.name == sceneName && loaded.isLoaded)
                 return true;
@@ -69,7 +76,8 @@ public static class PlayerLoader
     }
 
 #if UNITY_EDITOR
-    private static void OnEditorScenesSettled(int settleId){
+    private static void OnEditorScenesSettled(int settleId)
+    {
         if (settleId != editorSettleId) return;
         waitingForEditorScenes = false;
         if (!Application.isPlaying) return;
@@ -82,7 +90,8 @@ public static class PlayerLoader
 [InitializeOnLoad]
 static class PlayerLoaderEditorHook
 {
-    static PlayerLoaderEditorHook(){
+    static PlayerLoaderEditorHook()
+    {
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
@@ -90,8 +99,10 @@ static class PlayerLoaderEditorHook
     // ExitingEditMode runs before the play-mode domain reload, while every
     // hierarchy scene is still open. SessionState survives that reload, so
     // AfterSceneLoad can see the list even though SceneManager cannot yet.
-    private static void OnPlayModeStateChanged(PlayModeStateChange state){
-        if (state == PlayModeStateChange.EnteredEditMode){
+    private static void OnPlayModeStateChanged(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.EnteredEditMode)
+        {
             SessionState.SetBool(PlayerLoader.SnapshotTakenKey, false);
             return;
         }
@@ -103,8 +114,10 @@ static class PlayerLoaderEditorHook
         SessionState.SetBool(PlayerLoader.OpenBeforePlayKey, IsPlayerSceneOpen());
     }
 
-    private static bool IsPlayerSceneOpen(){
-        for (int i = 0; i < EditorSceneManager.sceneCount; i++){
+    private static bool IsPlayerSceneOpen()
+    {
+        for (int i = 0; i < EditorSceneManager.sceneCount; i++)
+        {
             Scene scene = EditorSceneManager.GetSceneAt(i);
             if (scene.isLoaded && scene.name == PlayerLoader.PlayerSceneName)
                 return true;
