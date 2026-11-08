@@ -67,8 +67,6 @@ public class OpenCam : MonoBehaviour
     {
         if (playerMode == null)
             return;
-
-        playerMode.switchMode.AddListener(HandlePlayerModeChanged);
     }
 
     private void Start()
@@ -83,8 +81,6 @@ public class OpenCam : MonoBehaviour
     {
         if (playerMode == null)
             return;
-
-        playerMode.switchMode.RemoveListener(HandlePlayerModeChanged);
     }
 
     private void Update()
@@ -98,15 +94,8 @@ public class OpenCam : MonoBehaviour
         {
             return;
         }
+        Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
 
-        if (gameStates.IsDroid)
-        {
-            Recording(droidComposer, droidRecordCamera, droidInitialTargetOffset);
-        }
-        else
-        {
-            Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
-        }
     }
 
     private void Recording(
@@ -129,7 +118,7 @@ public class OpenCam : MonoBehaviour
         targetOffset.x += mouseOffset.x * maxTurningAngle * horizontalRotateScale;
         targetOffset.y += mouseOffset.y * maxTurningAngle * verticalRotateScale;
 
-        if (Mouse.current != null && !gameStates.IsDroid)
+        if (Mouse.current != null)
         {
             float scrollDelta = Mouse.current.scroll.ReadValue().y;
             currentZoomLens = Mathf.Clamp(
@@ -166,30 +155,13 @@ public class OpenCam : MonoBehaviour
     {
         Mouse.current?.WarpCursorPosition(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
         ResetZoom();
-        ApplyCameraPriorities();
         SetCameraUiVisible(true);
     }
 
     private void HandleCloseCamera()
     {
         ResetZoom();
-        ApplyCameraPriorities();
         SetCameraUiVisible(false);
-    }
-
-    private void HandlePlayerModeChanged(bool isDroid)
-    {
-        if (gameStates.CamMode)
-            SetCameraOpen(false);
-
-        ApplyCameraPriorities();
-        SetCameraUiVisible(false);
-    }
-
-    private void ApplyCameraPriorities()
-    {
-        SetPriorities(droidCamera, droidRecordCamera, gameStates.IsDroid);
-        SetPriorities(spiderCamera, spiderRecordCamera, !gameStates.IsDroid);
     }
 
     private void SetPriorities(

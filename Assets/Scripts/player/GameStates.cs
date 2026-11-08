@@ -5,8 +5,6 @@ public class GameStates : ScriptableObject
 {
     public bool openCam;
     public bool CamMode => openCam; // dupplication minor
-    public bool isDroid = true;
-    public bool IsDroid => isDroid;
 
     [Header("DroidLocation")]
     public string droidSceneName = "";
@@ -20,15 +18,6 @@ public class GameStates : ScriptableObject
             return false;
 
         openCam = isOpenCam;
-        return true;
-    }
-
-    public bool SetIsDroid(bool isDroid)
-    {
-        if (this.isDroid == isDroid)
-            return false;
-
-        this.isDroid = isDroid;
         return true;
     }
 
