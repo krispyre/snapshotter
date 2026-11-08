@@ -4,12 +4,13 @@ using UnityEngine.InputSystem;
 using TMPro;
 
 [System.Serializable]
-public class EvidenceDataEvent : UnityEvent<EvidenceData> { }
+public class EvidenceDataEvent : UnityEvent<GameObject> { }
 
 public class cameraFrame : MonoBehaviour
 {
     public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
     public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
+    public UnityEvent EmptyScreen = new UnityEvent();
 
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
     [Range(0f, 0.3f)] public float YMaxRatio = 0.1f;
@@ -158,9 +159,11 @@ public class cameraFrame : MonoBehaviour
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
             }
         }
+        print(closestEvidence.GetType());
         // Read the evidence data closest to the camera area's center.
         if (closestEvidence == null)
         {
+            EmptyScreen.Invoke();
             EvidenceName.text = "";
             EvidenceDescription.text = "";
             Systemprompt.text = "";
@@ -172,14 +175,19 @@ public class cameraFrame : MonoBehaviour
         {
             Take(closestEvidence);
         }
-    }
+        LookAt(closestEvidence);
 
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Take(closestEvidence);
+        }
+    }
     private void LookAt(GameObject evidenceObject)
     {
         EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
+        OnEvidenceSeen.Invoke(evidenceObject);
         if (evidenceData.state == 0)
         {
-            OnEvidenceSeen.Invoke(evidenceData);
             evidenceData.SetState(1);
         }
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -190,12 +198,11 @@ public class cameraFrame : MonoBehaviour
     private void Take(GameObject evidenceObject)
     {
         EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
+        OnEvidenceTaken.Invoke(evidenceObject);
         if (evidenceData.state <= 1)
         {
-            OnEvidenceTaken.Invoke(evidenceData);
             evidenceData.SetState(2);
         }
-
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;
