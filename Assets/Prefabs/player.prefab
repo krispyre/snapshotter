@@ -3035,7 +3035,6 @@ GameObject:
   - component: {fileID: 898714054878986449}
   - component: {fileID: 8175189826105449792}
   - component: {fileID: 9126573095022735084}
-  - component: {fileID: 4615263437558988280}
   m_Layer: 0
   m_Name: SpiderCamView
   m_TagString: Untagged
@@ -3082,7 +3081,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 7.4
+    FieldOfView: 4
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -3119,36 +3118,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 2.34, z: -35.9}
---- !u!114 &4615263437558988280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5452795484238345957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
-  Composition:
-    ScreenPosition: {x: 0, y: 0}
-    DeadZone:
-      Enabled: 0
-      Size: {x: 0, y: 0}
-    HardLimits:
-      Enabled: 0
-      Size: {x: 0, y: 0}
-      Offset: {x: 0, y: 0}
-  CenterOnActivate: 1
-  TargetOffset: {x: 0, y: 0.8, z: 0}
-  Damping: {x: 0.5, y: 0.5}
-  Lookahead:
-    Enabled: 0
-    Time: 0
-    Smoothing: 0
-    IgnoreY: 0
+  FollowOffset: {x: 0, y: 2.34, z: -89.6}
 --- !u!1 &5543384404718985269
 GameObject:
   m_ObjectHideFlags: 0
@@ -3875,6 +3845,7 @@ GameObject:
   - component: {fileID: 3795126722973127209}
   - component: {fileID: 5929301098332698517}
   - component: {fileID: 5170329637143758626}
+  - component: {fileID: 8213077023432867885}
   m_Layer: 0
   m_Name: SpiderRecordingView
   m_TagString: Untagged
@@ -3988,6 +3959,20 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
+--- !u!114 &8213077023432867885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773406707904312051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df89a5d9bc3dd6409e4fa1aadc33520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamConfinerSetter
+  BoundingVolume: {fileID: 0}
+  SlowingDistance: 0
 --- !u!1 &8032249222874311734
 GameObject:
   m_ObjectHideFlags: 0
