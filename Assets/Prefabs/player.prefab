@@ -84,7 +84,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1798549134019716491}
-  - component: {fileID: 6047277144642718116}
   - component: {fileID: 5031452821313589794}
   - component: {fileID: 6062549200355175145}
   - component: {fileID: 490373235123324615}
@@ -116,25 +115,6 @@ Transform:
   - {fileID: 4882601195910636266}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6047277144642718116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489243782370064122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a052645cdcaa0154eb39dff6ce46bed9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerModeController
-  switchMode:
-    m_PersistentCalls:
-      m_Calls: []
-  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
-  holdDuration: 1
-  holdTimer: 0
-  cameraFrame: {fileID: 62229562875460576}
 --- !u!114 &5031452821313589794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,9 +139,7 @@ MonoBehaviour:
   verticalRotateScale: 0.15
   horizontalRotateScale: 0.5
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
-  droidCamera: {fileID: 0}
   spiderCamera: {fileID: 8175189826105449792}
-  droidRecordCamera: {fileID: 0}
   spiderRecordCamera: {fileID: 3795126722973127209}
   frameMask: {fileID: 7476140729669501940}
   evidencePage: {fileID: 9011381104378101226}
@@ -373,7 +351,6 @@ MonoBehaviour:
   jumpHeld: 0
   shootPressed: 0
   wasTouchingWall: 0
-  isNearDroid: 0
 --- !u!114 &4535148173495289168
 MonoBehaviour:
   m_ObjectHideFlags: 0

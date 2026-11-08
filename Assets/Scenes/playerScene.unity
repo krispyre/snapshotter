@@ -896,10 +896,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -88.380005
       objectReference: {fileID: 0}
-    - target: {fileID: 6047277144642718116, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
-      propertyPath: isDroid
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6158424149141243591, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1

@@ -13,6 +13,3 @@ MonoBehaviour:
   m_Name: GameStates
   m_EditorClassIdentifier: Assembly-CSharp::GameStates
   openCam: 0
-  isDroid: 1
-  droidSceneName: editorFloor
-  droidLastPosition: {x: -1.6194474, y: -0.086848, z: 0}

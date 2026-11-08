@@ -15,26 +15,20 @@ public class OpenCam : MonoBehaviour
     public float horizontalRotateScale = 0.5f;
 
     [SerializeField] private GameStates gameStates;
-    [SerializeField] private CinemachineCamera droidCamera;
     [SerializeField] private CinemachineCamera spiderCamera;
-    [SerializeField] private CinemachineCamera droidRecordCamera;
     [SerializeField] private CinemachineCamera spiderRecordCamera;
     [SerializeField] private GameObject frameMask;
     [SerializeField] private GameObject evidencePage;
     [SerializeField] private PlayerInput playerInput;
 
-    private PlayerModeController playerMode;
-    private CinemachineRotationComposer droidComposer;
     private CinemachineRotationComposer spiderComposer;
     private InputAction camToggleAction;
     private Vector3 spiderInitialTargetOffset;
-    private Vector3 droidInitialTargetOffset;
     private float currentZoomLens;
     private float initialSpiderLens;
 
     private void Awake()
     {
-        playerMode = GetComponent<PlayerModeController>();
         if (playerInput == null)
             playerInput = GetComponent<PlayerInput>();
 
@@ -52,21 +46,14 @@ public class OpenCam : MonoBehaviour
             enabled = false;
             return;
         }
-        droidComposer = droidRecordCamera != null
-            ? droidRecordCamera.GetComponent<CinemachineRotationComposer>()
-            : null;
+
         spiderComposer = spiderRecordCamera != null
             ? spiderRecordCamera.GetComponent<CinemachineRotationComposer>()
             : null;
-        droidInitialTargetOffset = droidComposer.TargetOffset;
-        spiderInitialTargetOffset = spiderComposer.TargetOffset;
-        initialSpiderLens = spiderRecordCamera.Lens.FieldOfView;
-    }
-
-    private void OnEnable()
-    {
-        if (playerMode == null)
-            return;
+        if (spiderComposer != null)
+            spiderInitialTargetOffset = spiderComposer.TargetOffset;
+        if (spiderRecordCamera != null)
+            initialSpiderLens = spiderRecordCamera.Lens.FieldOfView;
     }
 
     private void Start()
@@ -75,12 +62,6 @@ public class OpenCam : MonoBehaviour
             HandleOpenCamera();
         else
             HandleCloseCamera();
-    }
-
-    private void OnDisable()
-    {
-        if (playerMode == null)
-            return;
     }
 
     private void Update()
@@ -95,7 +76,6 @@ public class OpenCam : MonoBehaviour
             return;
         }
         Recording(spiderComposer, spiderRecordCamera, spiderInitialTargetOffset);
-
     }
 
     private void Recording(
@@ -155,30 +135,23 @@ public class OpenCam : MonoBehaviour
     {
         Mouse.current?.WarpCursorPosition(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
         ResetZoom();
+        ApplySpiderCameraPriorities();
         SetCameraUiVisible(true);
     }
 
     private void HandleCloseCamera()
     {
         ResetZoom();
+        ApplySpiderCameraPriorities();
         SetCameraUiVisible(false);
     }
 
-    private void SetPriorities(
-        CinemachineCamera viewCamera,
-        CinemachineCamera recordCamera,
-        bool isActiveMode)
+    private void ApplySpiderCameraPriorities()
     {
-
-        if (!isActiveMode)
-        {
-            viewCamera.Priority = 0;
-            recordCamera.Priority = 0;
-            return;
-        }
-
-        viewCamera.Priority = gameStates.CamMode ? 10 : 11;
-        recordCamera.Priority = gameStates.CamMode ? 11 : 10;
+        if (spiderCamera != null)
+            spiderCamera.Priority = gameStates.CamMode ? 10 : 11;
+        if (spiderRecordCamera != null)
+            spiderRecordCamera.Priority = gameStates.CamMode ? 11 : 10;
     }
 
     private void ResetZoom()
@@ -196,7 +169,6 @@ public class OpenCam : MonoBehaviour
 
     private void SetCameraUiVisible(bool visible)
     {
-
         if (evidencePage != null)
         {
             evidencePage.SetActive(visible);
