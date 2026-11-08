@@ -51,7 +51,6 @@ public partial class PlayerMovement : MonoBehaviour
     public bool shootPressed;
 
     public bool wasTouchingWall;
-    [SerializeField, ReadOnlyInspector] public bool isNearDroid;
 
     public enum PlayerState { Idle, Walk, Jump, Fall, WallSlide, WallCling, WallJump, Clawing, ClawFly, CeilHang, FloorGrab }
 
@@ -131,12 +130,6 @@ public partial class PlayerMovement : MonoBehaviour
         StateExecute(inputDirX, jumpHeld);
         MoveAndSlide();// todo override speed clamps after this for claw physics
         ClawMoveAndSlide();
-
-        if (isNearDroid && interactAction.WasPressedThisFrame())
-        {
-
-            GetComponentInParent<PlayerModeController>().ReturnToDroid();
-        }
 
         jumpPressed = false;
         shootPressed = false;
@@ -440,18 +433,6 @@ public partial class PlayerMovement : MonoBehaviour
     {
         if (state == PlayerState.WallJump) return float.MaxValue;
         return mvmtParams.maxAirSpeed;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("DroidDummy")) return;
-        isNearDroid = true;
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (!other.CompareTag("DroidDummy")) return;
-        isNearDroid = false;
     }
 
     private void DebugTime(bool isDebug)

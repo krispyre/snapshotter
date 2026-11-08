@@ -1631,7 +1631,6 @@ MonoBehaviour:
   ratioOnScreen: 0.15
   Xratio: 16
   Yratio: 9
-  DroidviewCamera: {fileID: 0}
   BotviewCamera: {fileID: 0}
   playerInput: {fileID: 0}
   EvidenceName: {fileID: 0}

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Unity.Cinemachine;
 
 public class RoomTransitionMgr : MonoBehaviour
 {
@@ -153,16 +152,6 @@ public class RoomTransitionMgr : MonoBehaviour
         moved.position = spawnToUse.transform.position;
         cc.enabled = wasEnabled;
 
-        if (moved.name == "spider")
-        {
-            Transform dummy = transform.Find("droidDummy");
-
-            // check if droid is in current scene )
-            bool home = gameStates != null && gameStates.DroidSceneName == currentRoomName;
-            dummy.gameObject.SetActive(home);
-            if (home)
-                dummy.position = gameStates.DroidLastPosition;
-        }
         if (spawnToUse.TryGetComponent<LayerSwitcher>(out LayerSwitcher ls))
         {
             ls.Apply();
