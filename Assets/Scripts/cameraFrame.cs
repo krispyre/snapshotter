@@ -1,9 +1,17 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using TMPro;
 
+[System.Serializable]
+public class EvidenceDataEvent : UnityEvent<GameObject> { }
+
 public class cameraFrame : MonoBehaviour
 {
+    public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
+    public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
+    public UnityEvent EmptyScreen = new UnityEvent();
+
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
     [Range(0f, 0.3f)] public float YMaxRatio = 0.1f;
 
@@ -11,22 +19,23 @@ public class cameraFrame : MonoBehaviour
     public float Xratio = 16f;
     public float Yratio = 9f;
 
-    private TextMeshProUGUI EvidenceName;
-    private TextMeshProUGUI EvidenceDescription;
-    private TextMeshProUGUI Systemprompt;
+    [SerializeField] private GameStates gameStates;
+    [SerializeField] private TextMeshProUGUI EvidenceName;
+    [SerializeField] private TextMeshProUGUI EvidenceDescription;
+    [SerializeField] private TextMeshProUGUI Systemprompt;
 
-    private GameReferences gameReferences;
-    private GameEvent gameEvent;
     private RectTransform rectTransform;
     private Vector2 screenSize;
 
     private void Awake()
     {
-        gameReferences = GameReferences.Instance;
-        gameEvent = gameReferences.gameEvent;
-        EvidenceName = gameReferences.EvidenceName;
-        EvidenceDescription = gameReferences.EvidenceDescription;
-        Systemprompt = gameReferences.Systemprompt;
+        if (gameStates == null)
+        {
+            Debug.LogError("cameraFrame requires a GameStates asset.", this);
+            enabled = false;
+            return;
+        }
+
         rectTransform = GetComponent<RectTransform>();
         screenSize = new Vector2(Screen.width, Screen.height);
         AdjustFrameSize();
@@ -56,7 +65,7 @@ public class cameraFrame : MonoBehaviour
     }
     private void Update()
     {
-        if (!gameEvent.CamMode || rectTransform == null)
+        if (!gameStates.CamMode || rectTransform == null)
         {
             return;
         }
@@ -119,8 +128,8 @@ public class cameraFrame : MonoBehaviour
         GameObject closestEvidence = null;
         float closestDistance = float.PositiveInfinity;
 
-        EvidenceDataContainer[] evidenceObjects = FindObjectsByType<EvidenceDataContainer>(FindObjectsSortMode.None);
-        foreach (EvidenceDataContainer evidence in evidenceObjects)
+        Evidence[] evidenceObjects = FindObjectsByType<Evidence>(FindObjectsSortMode.None);
+        foreach (Evidence evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
             Vector3 evidenceViewportPosition = outputCamera.WorldToViewportPoint(evidenceObject.transform.position);
@@ -150,10 +159,11 @@ public class cameraFrame : MonoBehaviour
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
             }
         }
+        print(closestEvidence.GetType());
         // Read the evidence data closest to the camera area's center.
         if (closestEvidence == null)
         {
-            gameEvent.EmptyCamera?.Invoke();
+            EmptyScreen.Invoke();
             EvidenceName.text = "";
             EvidenceDescription.text = "";
             Systemprompt.text = "";
@@ -165,12 +175,17 @@ public class cameraFrame : MonoBehaviour
         {
             Take(closestEvidence);
         }
-    }
+        LookAt(closestEvidence);
 
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Take(closestEvidence);
+        }
+    }
     private void LookAt(GameObject evidenceObject)
     {
-        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
-        gameEvent.OnEvidenceSeen?.Invoke(evidenceObject);
+        EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
+        OnEvidenceSeen.Invoke(evidenceObject);
         if (evidenceData.state == 0)
         {
             evidenceData.SetState(1);
@@ -182,13 +197,12 @@ public class cameraFrame : MonoBehaviour
 
     private void Take(GameObject evidenceObject)
     {
-        EvidenceData evidenceData = evidenceObject.GetComponent<EvidenceDataContainer>().evidenceData;
-        if(evidenceData.state <= 1)
+        EvidenceData evidenceData = evidenceObject.GetComponent<Evidence>().evidenceData;
+        OnEvidenceTaken.Invoke(evidenceObject);
+        if (evidenceData.state <= 1)
         {
-            gameEvent.OnEvidenceTaken?.Invoke(evidenceObject);
             evidenceData.SetState(2);
         }
-        
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;

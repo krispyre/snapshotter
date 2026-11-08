@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+
 
 public class evidenceBoundBox : MonoBehaviour
 {
-    [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private GameStates gameStates;
     [SerializeField] private GameObject frameMask;
     [Min(0f)]
     public float speed = 1.6f;
@@ -34,30 +36,23 @@ public class evidenceBoundBox : MonoBehaviour
             : null;
     }
 
-    private void OnEnable()
-    {
-        gameEvent.OnEvidenceSeen.AddListener(EvidenceBound);
-        gameEvent.EmptyCamera.AddListener(HideBoundBox);
-        gameEvent.OnShutCam.AddListener(HideBoundBox);
-    }
-
-    private void OnDisable()
-    {
-        gameEvent.OnEvidenceSeen.RemoveListener(EvidenceBound);
-        gameEvent.EmptyCamera.RemoveListener(HideBoundBox);
-        gameEvent.OnShutCam.RemoveListener(HideBoundBox);
-    }
-
+    // private void OnEnable()
+    // {
+    //     gameEvent.OnEvidenceSeen.AddListener(EvidenceBound);
+    //     gameEvent.EmptyCamera.AddListener(HideBoundBox);
+    //     gameEvent.OnShutCam.AddListener(HideBoundBox);
+    // }
     private void Update()
     {
-        if (evidenceObject != null && gameEvent.CamMode)
+        if (evidenceObject != null && gameStates.CamMode)
         {
             UpdateBoundBox();
         }
     }
 
-    private void EvidenceBound(GameObject seenEvidence)
+    public void EvidenceBound(GameObject seenEvidence)
     {
+        
         if (seenEvidence == null)
         {
             HideBoundBox();
@@ -201,7 +196,7 @@ public class evidenceBoundBox : MonoBehaviour
         return true;
     }
 
-    private void HideBoundBox()
+    public void HideBoundBox()
     {
         evidenceObject = null;
         evidenceRenderer = null;
