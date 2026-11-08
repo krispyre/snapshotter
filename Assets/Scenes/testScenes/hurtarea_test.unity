@@ -4543,10 +4543,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 753975927964338838, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
-      propertyPath: isDroid
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 753975927964338838, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: openCam
       value: 
       objectReference: {fileID: 0}

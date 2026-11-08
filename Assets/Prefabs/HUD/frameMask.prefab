@@ -246,7 +246,6 @@ MonoBehaviour:
   Xratio: 16
   Yratio: 9
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
-  DroidviewCamera: {fileID: 0}
   BotviewCamera: {fileID: 0}
   playerInput: {fileID: 0}
   EvidenceName: {fileID: 0}
