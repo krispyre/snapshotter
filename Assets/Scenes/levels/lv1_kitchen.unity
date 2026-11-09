@@ -6250,8 +6250,8 @@ GameObject:
   - component: {fileID: 617278904}
   - component: {fileID: 617278903}
   - component: {fileID: 617278902}
-  - component: {fileID: 617278901}
   - component: {fileID: 617278907}
+  - component: {fileID: 617278901}
   m_Layer: 6
   m_Name: exhaust
   m_TagString: Untagged
@@ -6323,7 +6323,7 @@ MonoBehaviour:
   transitonExitPrefab: {fileID: 0}
   transitonExitVersion: exit
   targetSceneName: lv1_dumpster
-  spawnID: exhaust
+  spawnID: exhaustEntrance
 --- !u!65 &617278903
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6429,7 +6429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2060425709d2f84db89e285103b9e93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomTransitionDest
-  spawnID: exhaust
+  spawnID: exhaustExit
 --- !u!1 &644858581
 GameObject:
   m_ObjectHideFlags: 0
