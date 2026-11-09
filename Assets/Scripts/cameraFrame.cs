@@ -10,6 +10,7 @@ public class cameraFrame : MonoBehaviour
 {
     public EvidenceDataEvent OnEvidenceSeen = new EvidenceDataEvent();
     public EvidenceDataEvent OnEvidenceTaken = new EvidenceDataEvent();
+    public EvidenceDataEvent OnEvidenceKnown = new EvidenceDataEvent();
     public UnityEvent EmptyScreen = new UnityEvent();
 
     [Range(0f, 0.3f)] public float XMaxRatio = 0.1f;
@@ -159,7 +160,6 @@ public class cameraFrame : MonoBehaviour
                 evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
             }
         }
-        print(closestEvidence.GetType());
         // Read the evidence data closest to the camera area's center.
         if (closestEvidence == null)
         {
@@ -189,6 +189,7 @@ public class cameraFrame : MonoBehaviour
         if (evidenceData.state == 0)
         {
             evidenceData.SetState(1);
+            OnEvidenceKnown.Invoke(evidenceObject);
         }
         evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
         EvidenceName.text = evidenceData.objectName;

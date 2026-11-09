@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 5031452821313589794}
   - component: {fileID: 6062549200355175145}
   - component: {fileID: 490373235123324615}
+  - component: {fileID: 7596414348371392324}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -112,7 +113,6 @@ Transform:
   - {fileID: 8682261276473303650}
   - {fileID: 3925522207831156327}
   - {fileID: 8898186071460492668}
-  - {fileID: 2123553467258548224}
   - {fileID: 4882601195910636266}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -201,6 +201,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomTransitionMgr
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   currentRoomName: 
+--- !u!114 &7596414348371392324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489243782370064122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869f11976065f234d99222407930dfbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreCounter
+  startScore: 0
+  startIdleTime: 0
+  timerInterval: 1
+  streamViewrs: 0
+  buffDuration: 15
+  buff: 2
 --- !u!1 &872114222577612969
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,14 +627,14 @@ RectTransform:
   m_GameObject: {fileID: 1455442143843558646}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7246377, y: 0.7246377, z: 0.7246377}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1798549134019716491}
+  m_Father: {fileID: 8898186071460492668}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 548.75, y: 271.25}
+  m_AnchoredPosition: {x: -2.3551025, y: -7.789856}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2299416193366816711
@@ -4145,6 +4163,7 @@ RectTransform:
   - {fileID: 8987017958646063946}
   - {fileID: 6216177782943497478}
   - {fileID: 5415219085710056686}
+  - {fileID: 2123553467258548224}
   m_Father: {fileID: 1798549134019716491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4676,6 +4695,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceTaken.m_PersistentCalls.m_Calls.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -4704,9 +4727,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3797930980119017860}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 7596414348371392324}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: EmptyScreen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: HideBoundBox
       objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7596414348371392324}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceTaken.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -4716,12 +4747,28 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: EvidenceBound
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: CalculateScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceTaken.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CalculateScore
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceTaken.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -4736,6 +4783,14 @@ PrefabInstance:
       value: evidenceBoundBox, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: ScoreCounter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ScoreCounter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceTaken.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: cameraFrame, Assembly-CSharp
       objectReference: {fileID: 0}
@@ -4745,6 +4800,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
       propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceSeen.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
+      propertyPath: OnEvidenceKnown.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5501275433418077052, guid: fd0a302a2d7d24944a1bb80aafdcf0b0, type: 3}
