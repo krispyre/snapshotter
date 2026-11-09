@@ -6,7 +6,6 @@ public class ScoreCounter : MonoBehaviour
 {
     public float startScore = 0f;
     public int startIdleTime = 0;
-    public int streamerNum = 0;
     public float timerInterval = 1f;
     public int streamViewrs = 0;
     public int buffDuration = 15;
@@ -36,6 +35,8 @@ public class ScoreCounter : MonoBehaviour
     {
         EvidenceData data = evidenceObj.GetComponent<Evidence>().evidenceData;
         ClearIdleTime();
+        print("calculated:" + data.name);
+        print("current score:" + currentScore);
         if (data.buffed)
         {
             currentBuffTime = buffDuration;
@@ -70,8 +71,6 @@ public class ScoreCounter : MonoBehaviour
     {
         currentIdleTime ++;
         if (currentBuffTime > 0){currentBuffTime -= 1;}
-        print("current score:" + currentScore);
-        print("current idle time" + currentIdleTime);
     }
 
     float GetIdlePenalty()
