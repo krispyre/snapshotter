@@ -11,7 +11,7 @@ public class CamConfinerSetter : CinemachineConfiner3D
     }
 
     [ExecuteAlways]
-    void SetBounds()
+    public void SetBounds()
     {
         GameObject cb = GameObject.FindGameObjectsWithTag("CameraBound")[0];
         BoundingVolume = cb.GetComponent<Collider>();

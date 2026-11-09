@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.Events;
 
 public class RoomTransitionMgr : MonoBehaviour
 {
     // on the plaeyr,.,sa;dfalksdfjakdsjflksajlfj
     [SerializeField] GameStates gameStates;
+    public UnityEvent roomUpdated= new UnityEvent();
     public string currentRoomName = "";
 
     void Start()
@@ -56,6 +58,7 @@ public class RoomTransitionMgr : MonoBehaviour
         {
             SceneManager.SetActiveScene(newScene);
         }
+        roomUpdated.Invoke();
 
         currentRoomName = SceneManager.GetActiveScene().name;
         SetupRoom(spawnID, body);

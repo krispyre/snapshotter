@@ -332,6 +332,58 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 833137703}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1936289062}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetBounds
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetBounds
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: CamConfinerSetter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: CamConfinerSetter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 609702478739302427, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -662,19 +714,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99999547
+      value: 0.98061365
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0020799744
+      value: 0.03500154
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.002185419
+      value: -0.19267736
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000004546453
+      value: 0.00687733
       objectReference: {fileID: 0}
     - target: {fileID: 6158424149141243591, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -888,6 +940,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 833137703}
   m_SourcePrefab: {fileID: 100100000, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+--- !u!114 &1936289062 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8213077023432867885, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+  m_PrefabInstance: {fileID: 1936289061}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df89a5d9bc3dd6409e4fa1aadc33520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamConfinerSetter
 --- !u!1 &1949545182
 GameObject:
   m_ObjectHideFlags: 0
