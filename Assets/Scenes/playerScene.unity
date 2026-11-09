@@ -492,6 +492,10 @@ PrefabInstance:
       propertyPath: BoundingVolume
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3181925472036398021, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 3696374304933913235, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

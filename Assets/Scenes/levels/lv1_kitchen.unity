@@ -6275,6 +6275,7 @@ MonoBehaviour:
   prompt: Enter
   promptText: {fileID: 0}
   promptYOffset: 10
+  playerInput: {fileID: 0}
   onAwake:
     m_PersistentCalls:
       m_Calls: []
@@ -6321,7 +6322,7 @@ MonoBehaviour:
   transitonEnterVersion: enter
   transitonExitPrefab: {fileID: 0}
   transitonExitVersion: exit
-  targetSceneName: lv1_kitchen
+  targetSceneName: lv1_dumpster
   spawnID: exhaust
 --- !u!65 &617278903
 BoxCollider:
