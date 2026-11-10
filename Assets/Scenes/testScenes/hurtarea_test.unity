@@ -4652,7 +4652,7 @@ PrefabInstance:
       objectReference: {fileID: 2104246108}
     - target: {fileID: 4993944587330449953, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: m_Name
-      value: playerGroup
+      value: player
       objectReference: {fileID: 0}
     - target: {fileID: 5110735383493480519, guid: 7f887693d8c6e334ca4e0e9ad1e33295, type: 3}
       propertyPath: CenterOnActivate
@@ -4744,7 +4744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 489243782370064122, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_Name
-      value: playerGroup
+      value: player
       objectReference: {fileID: 0}
     - target: {fileID: 898714054878986449, guid: 2d56f3ee2009fc74cb3f7bdcc62b2d77, type: 3}
       propertyPath: m_LocalPosition.y

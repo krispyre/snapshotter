@@ -17,9 +17,10 @@ MonoBehaviour:
   airAccel: 31.8
   airDecel: 12
   maxWalkSpeed: 2
+  runSpeedMult: 1.5
   maxRecordWalkSpeed: 1.5
   maxAirSpeed: 2.5
-  jumpHeight: 0.8
+  jumpHeight: 0.7
   jumpGravity: 20
   fallGravity: 15
   jumpBufferTime: 6

@@ -14,7 +14,7 @@ public class Interactable : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Camera mainCamera;
 
-    private PlayerInput playerInput;
+    [SerializeField, ReadOnlyInspector] private PlayerInput playerInput;
     private InputAction interactAction;
     private InputAction dirXAction;
     private InputAction dirYAction;
@@ -37,10 +37,25 @@ public class Interactable : MonoBehaviour
     }
     protected void Start()
     {
-        playerInput = GameObject.Find("playerGroup").GetComponent<PlayerInput>();
-        interactAction = playerInput.actions.FindAction("Interact");
-        dirXAction = playerInput.actions.FindAction("DirX");
-        dirYAction = playerInput.actions.FindAction("DirY");
+        // both the group parent and spider share the Player tag idk how to fix it yet just check whichever has the comp
+        foreach (GameObject playerObject in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            playerInput = playerObject.GetComponentInParent<PlayerInput>();
+            if (playerInput != null)
+                break;
+        }
+
+        if (playerInput != null && playerInput.actions != null)
+        {
+            interactAction = playerInput.actions.FindAction("Interact");
+            dirXAction = playerInput.actions.FindAction("DirX");
+            dirYAction = playerInput.actions.FindAction("DirY");
+        }
+        else
+        {
+            Debug.LogError("Interactable could not find a PlayerInput on the Player.", this);
+        }
+
         mainCamera = Camera.main;
 
         if (promptText != null)

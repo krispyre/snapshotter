@@ -67,7 +67,7 @@ public class ScoreCounter : MonoBehaviour
 
     void DoEachTime()
     {
-        gameStates.AddViewers(-(int)(gameStates.Viewers*0.05f) + UnityEngine.Random.Range(-1, 2));
+        gameStates.AddViewers(-(int)(gameStates.Viewers*0.05f) + UnityEngine.Random.Range(0, 2));
         currentIdleTime ++;
         if (currentBuffTime > 0){currentBuffTime -= 1;}
         int viewerGain = (int)(gameStates.Score*GetViewerMultiplier());
