@@ -15,6 +15,6 @@ MonoBehaviour:
   objectName: Washing Hands
   description: Nothing special here
   systemResponse: No new information, maybe we should wait for a bit longer
-  point: 0
+  point: -3
   buffed: 0
-  state: 0
+  state: 1

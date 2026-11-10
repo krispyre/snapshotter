@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PointSystem : MonoBehaviour
 {
+    [SerializeField] private GameStates gameStates;
     public UnityEvent onPointsDepleted;
     private float initMaxPoint = 100;
     private float curMaxPoint = 100;
@@ -80,6 +81,7 @@ public class PointSystem : MonoBehaviour
         Instance = this;
         bg = GetComponent<RectTransform>();
         fg = transform.Find("curPoints").GetComponent<RectTransform>();
+        GameStateSync();
     }
 
     public void LoadMission(int missionId)
@@ -89,6 +91,7 @@ public class PointSystem : MonoBehaviour
         _points = initMaxPoint;
         // the drop from full lowers curMaxPoint to match the saved points
         points = mission.points;
+        GameStateSync();
     }
 
     void OnApplicationPause(bool paused)
@@ -147,16 +150,24 @@ public class PointSystem : MonoBehaviour
         {
             points += pointsRecoverRate * Time.deltaTime;
             points = Mathf.Clamp(points, 0, curMaxPoint);
+            GameStateSync();
         }
     }
 
     public void DeductPoints(float amt)
     {
         points -= amt;
+        GameStateSync();
+
     }
 
     private void OnDepleted()
     {
         onPointsDepleted.Invoke();
+    }
+
+    void GameStateSync()
+    {
+        gameStates.SetStealth(points);
     }
 }
