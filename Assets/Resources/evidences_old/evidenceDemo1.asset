@@ -15,3 +15,6 @@ MonoBehaviour:
   objectName: banana
   description: Already stained
   systemResponse: Please don't eat this
+  point: 3
+  buffed: 0
+  state: 0

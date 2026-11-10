@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
   objectName: Apple
   description: A sweet, ordinary fruit
-  systemResponse: Eat it!
+  systemResponse: Such a nice fruit, but nothing surprised
+  point: -2
+  buffed: 0
+  state: 0

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
   m_Name: NPC001_B
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
-  objectName: 
-  description: 
+  objectName: Cooking Food
+  description: The food are obviously stained...
   systemResponse: 
-  point: 0
+  point: 3
   buffed: 0
   state: 0

@@ -1,16 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using TMPro;
 
 public class ScoreCounter : MonoBehaviour
 {
-    public float startScore = 0f;
     public int startIdleTime = 0;
     public float timerInterval = 1f;
     public int streamViewrs = 0;
     public int buffDuration = 15;
     public float buff = 2f;
-    private float currentScore;
+    [SerializeField] private GameStates gameStates;
+    [SerializeField] private GameObject streamPanel;
     private int stealthScore;
     private int currentBuffTime;
     private int currentIdleTime;
@@ -35,24 +36,20 @@ public class ScoreCounter : MonoBehaviour
     {
         EvidenceData data = evidenceObj.GetComponent<Evidence>().evidenceData;
         ClearIdleTime();
-        print("calculated:" + data.name);
-        print("current score:" + currentScore);
         if (data.buffed)
         {
             currentBuffTime = buffDuration;
         }
-        if(data.point == 0)
+        if (data.point > 0)
         {
-            return;
+            gameStates.AddScore(stealthScore * data.point * (currentBuffTime == 0 ? 1:buff) * GetIdlePenalty());
         }
-        else if(data.point > 0)
+        else if (data.point < 0)
         {
-            currentScore += stealthScore * data.point * (currentBuffTime == 0 ? 1:buff) * GetIdlePenalty();
+            gameStates.AddScore(-(130 - stealthScore) * data.point);
         }
-        else
-        {
-            currentScore -= (130 - stealthScore) * data.point;
-        }
+
+        streamPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"Score: {gameStates.Score}";
     }
 
     public void ClearIdleTime()
@@ -62,19 +59,29 @@ public class ScoreCounter : MonoBehaviour
 
     public void Reset()
     {
-        currentScore = startScore;
+        gameStates.AddScore(-gameStates.Score);
+        gameStates.AddViewers(-gameStates.Viewers);
         currentIdleTime = startIdleTime;
         stealthScore = 100;
     }
 
     void DoEachTime()
     {
+        gameStates.AddViewers(-(int)(gameStates.Viewers*0.05f) + UnityEngine.Random.Range(-1, 2));
         currentIdleTime ++;
         if (currentBuffTime > 0){currentBuffTime -= 1;}
+        int viewerGain = (int)(gameStates.Score*GetViewerMultiplier());
+        gameStates.AddViewers(UnityEngine.Random.Range(viewerGain/3, viewerGain));
+        streamPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Viewers: {gameStates.Viewers}";
     }
 
     float GetIdlePenalty()
     {
-        return (128 - Mathf.Min(stealthScore*stealthScore/25,64))/64;
+        return (128 - Mathf.Min(currentIdleTime*currentIdleTime/25,64))/64;
+    }
+
+    float GetViewerMultiplier()
+    {
+        return (64 - Mathf.Min(currentIdleTime*currentIdleTime/25,64))/64;
     }
 }
