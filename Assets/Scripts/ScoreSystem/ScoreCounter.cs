@@ -35,17 +35,24 @@ public class ScoreCounter : MonoBehaviour
     {
         EvidenceData data = evidenceObj.GetComponent<Evidence>().evidenceData;
         ClearIdleTime();
+        streamPanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{(data.point >= 0 ? "+" : "-")}{Math.Abs(data.point)}";
         if (data.buffed)
         {
             currentBuffTime = buffDuration;
         }
         if (data.point > 0)
         {
-            gameStates.AddScore(gameStates.Stealth * data.point * (currentBuffTime == 0 ? 1:buff) * GetIdlePenalty());
+            streamPanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().color = Color.green;
+            gameStates.AddScore(gameStates.Stealth * data.point * (currentBuffTime == 0 ? 1 : buff) * GetIdlePenalty());
         }
         else if (data.point < 0)
         {
+            streamPanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().color = Color.red;
             gameStates.AddScore((130 - gameStates.Stealth) * data.point);
+        }
+        else
+        {
+            streamPanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().color = Color.white;
         }
 
         streamPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"Score: {gameStates.Score}";
@@ -66,21 +73,21 @@ public class ScoreCounter : MonoBehaviour
 
     void DoEachTime()
     {
-        gameStates.AddViewers(-(int)(gameStates.Viewers*0.05f) + UnityEngine.Random.Range(0, 2));
-        currentIdleTime ++;
-        if (currentBuffTime > 0){currentBuffTime -= 1;}
-        int viewerGain = (int)(gameStates.Score*GetViewerMultiplier()*0.1f);
-        gameStates.AddViewers(UnityEngine.Random.Range(viewerGain/3, viewerGain));
+        gameStates.AddViewers(-(int)(gameStates.Viewers * 0.05f) + UnityEngine.Random.Range(0, 2));
+        currentIdleTime++;
+        if (currentBuffTime > 0) { currentBuffTime -= 1; }
+        int viewerGain = (int)(gameStates.Score * GetViewerMultiplier() * 0.1f);
+        gameStates.AddViewers(UnityEngine.Random.Range(viewerGain / 3, viewerGain));
         streamPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Viewers: {gameStates.Viewers}";
     }
 
     float GetIdlePenalty()
     {
-        return (128 - Mathf.Min(currentIdleTime*currentIdleTime/25,64))/64;
+        return (128 - Mathf.Min(currentIdleTime * currentIdleTime / 25, 64)) / 64;
     }
 
     float GetViewerMultiplier()
     {
-        return (64 - Mathf.Min(currentIdleTime*currentIdleTime/25,64))/64;
+        return (64 - Mathf.Min(currentIdleTime * currentIdleTime / 25, 64)) / 64;
     }
 }
