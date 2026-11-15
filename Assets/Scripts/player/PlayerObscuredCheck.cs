@@ -13,7 +13,6 @@ public class PlayerObscuredCheck : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 dir = mainCamera.transform.position - transform.position;
-        Debug.DrawRay(transform.position, dir, Color.darkRed, 0.5f);
 
         if (!Physics.Raycast(transform.position, dir)) // doesn't hit something, can reach camera
         {

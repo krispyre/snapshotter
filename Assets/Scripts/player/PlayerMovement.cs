@@ -138,8 +138,9 @@ public partial class PlayerMovement : MonoBehaviour
     private void UpdateSensors(float dirX, bool jumpPressed)
     {
         float dist = controller.radius + controller.skinWidth + 0.05f;
-        bool wallL = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.left, transform.rotation, dist, wallLayer);
-        bool wallR = Physics.BoxCast(transform.position, new Vector3(.05f, .05f, .05f), Vector3.right, transform.rotation, dist, wallLayer);
+        Vector3 wallHalfExtents = mvmtParams.wallCheckBoxcastSize;
+        bool wallL = Physics.BoxCast(transform.position, wallHalfExtents, Vector3.left, transform.rotation, dist, wallLayer);
+        bool wallR = Physics.BoxCast(transform.position, wallHalfExtents, Vector3.right, transform.rotation, dist, wallLayer);
 
         wasTouchingCeil = isTouchingCeil;
         isTouchingCeil = Physics.BoxCast(transform.position, new Vector3(.01f, .01f, .01f), Vector3.up, transform.rotation, dist, wallLayer);

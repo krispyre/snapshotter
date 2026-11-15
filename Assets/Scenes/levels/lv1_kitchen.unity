@@ -481,15 +481,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 841696909}
     m_Modifications:
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.599785
+      value: -30.969786
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.4973073
+      value: 10.287308
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4233,7 +4233,7 @@ GameObject:
   - component: {fileID: 113221554}
   - component: {fileID: 113221553}
   m_Layer: 0
-  m_Name: qrt
+  m_Name: wet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5533,7 +5533,7 @@ GameObject:
   - component: {fileID: 311787934}
   - component: {fileID: 311787933}
   m_Layer: 0
-  m_Name: avoidLight (2)
+  m_Name: cantPic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8374,7 +8374,7 @@ GameObject:
   - component: {fileID: 339542614}
   - component: {fileID: 339542613}
   - component: {fileID: 339542612}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bright (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8711,15 +8711,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 841696909}
     m_Modifications:
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -18.2
+      value: -19.570002
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.5
+      value: 10.29
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9058,15 +9058,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 841696909}
     m_Modifications:
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -38.995262
+      value: -40.36526
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.2468
+      value: 10.0368
       objectReference: {fileID: 0}
     - target: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9671,7 +9671,7 @@ GameObject:
   - component: {fileID: 502252896}
   - component: {fileID: 502252895}
   - component: {fileID: 502252894}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bright (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12168,6 +12168,11 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!4 &702422851 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
+  m_PrefabInstance: {fileID: 341588618}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &737091125
 Mesh:
   m_ObjectHideFlags: 0
@@ -13824,6 +13829,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &828774485 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
+  m_PrefabInstance: {fileID: 10848802}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &841696908
 GameObject:
   m_ObjectHideFlags: 0
@@ -13892,6 +13902,9 @@ Transform:
   - {fileID: 1003349642}
   - {fileID: 73792020}
   - {fileID: 617278906}
+  - {fileID: 702422851}
+  - {fileID: 1405620899}
+  - {fileID: 828774485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &865048751
@@ -16858,7 +16871,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1452334490}
+  m_Mesh: {fileID: 175613749}
 --- !u!33 &1072518302
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -17229,7 +17242,7 @@ GameObject:
   - component: {fileID: 1123785161}
   - component: {fileID: 1123785167}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20428,7 +20441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1265001097}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21522,6 +21535,11 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!4 &1405620899 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
+  m_PrefabInstance: {fileID: 377664239}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1452334490
 Mesh:
   m_ObjectHideFlags: 0
@@ -22426,7 +22444,7 @@ GameObject:
   - component: {fileID: 1513417012}
   - component: {fileID: 1513417011}
   - component: {fileID: 1513417017}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22768,7 +22786,7 @@ GameObject:
   - component: {fileID: 1594951574}
   - component: {fileID: 1594951573}
   - component: {fileID: 1594951572}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: avoidLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23483,7 +23501,7 @@ GameObject:
   - component: {fileID: 1642989966}
   - component: {fileID: 1642989965}
   - component: {fileID: 1642989964}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: avoidLight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27966,7 +27984,7 @@ GameObject:
   - component: {fileID: 2015785723}
   - component: {fileID: 2015785722}
   - component: {fileID: 2015785721}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bright2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30650,9 +30668,6 @@ SceneRoots:
   - {fileID: 1594951574}
   - {fileID: 1642989966}
   - {fileID: 311787935}
-  - {fileID: 341588618}
   - {fileID: 1123785166}
   - {fileID: 113221555}
-  - {fileID: 377664239}
-  - {fileID: 10848802}
   - {fileID: 1265001097}
