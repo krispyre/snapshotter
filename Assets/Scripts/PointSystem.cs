@@ -13,6 +13,7 @@ public class PointSystem : MonoBehaviour
     [SerializeField, ReadOnlyInspector] private int danger;
     [SerializeField, ReadOnlyInspector] private float _points = 100f;
 
+    [SerializeField] private GameStates gameStates;
     public UnityEvent onPointsDepleted;
     public event Action onChanged;
 
@@ -38,6 +39,7 @@ public class PointSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        GameStateSync();
     }
 
     void OnEnable()
@@ -63,12 +65,6 @@ public class PointSystem : MonoBehaviour
         _points = initMax;
         // the drop from full lowers curMax to match the saved points
         points = mission.points;
-    }
-
-    void OnSceneUnloaded(Scene scene)
-    {
-        if (scene.name == PlayerLoader.PlayerSceneName) return;
-        SavePoints();
     }
 
     void OnApplicationPause(bool paused)
@@ -136,10 +132,17 @@ public class PointSystem : MonoBehaviour
     public void DeductPoints(float amt)
     {
         points -= amt;
+        GameStateSync();
+
     }
 
     private void OnDepleted()
     {
         onPointsDepleted.Invoke();
+    }
+
+    void GameStateSync()
+    {
+        gameStates.SetStealth(points);
     }
 }
