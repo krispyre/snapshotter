@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1375185619242739043}
   - component: {fileID: 331926841824592845}
   - component: {fileID: 312038558172181502}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7267260763061839551}
   - component: {fileID: 1904750159678153395}
   - component: {fileID: 3446631422503795684}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: airGrab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
