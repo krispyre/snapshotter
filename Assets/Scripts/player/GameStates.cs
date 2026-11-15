@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameStates : ScriptableObject
 {
     public bool openCam;
-    public bool CamMode => openCam; // dupplication minor
+    public bool CamMode => openCam; // dupplication minor todo
 
     public bool SetCamMode(bool isOpenCam)
     {

@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class Hurtarea : MonoBehaviour
+public class HurtareaDrain : MonoBehaviour
 {
-    [SerializeField] private float hurtRate = 20f;
-    [SerializeField, ReadOnlyInspector] private bool playerInside;
-    private PointSystem points;
+    [SerializeField] protected float hurtRate = 20f;
+    [SerializeField, ReadOnlyInspector] protected bool playerInside;
+    protected PointSystem points;
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         points = other.GetComponentInParent<PointSystem>();
@@ -15,7 +15,7 @@ public class Hurtarea : MonoBehaviour
         points.EnterDanger();
     }
 
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         playerInside = false;
