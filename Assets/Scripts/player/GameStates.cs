@@ -37,10 +37,6 @@ public class GameStates : ScriptableObject
 
     public void SetStealth(float stealth)
     {
-        currentStealth = stealth;
-        if (currentStealth < 0)
-            currentStealth = 0;
-        else if (currentStealth > 100)
-            currentStealth = 100;
+        currentStealth = Mathf.Clamp(stealth, 0, 100);
     }
 }

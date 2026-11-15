@@ -44,12 +44,12 @@ public class StealthPoints : MonoBehaviour
 
     void OnEnable()
     {
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        // SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     void OnDisable()
     {
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        // SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     public void SetThresholds(float[] thresholds)
