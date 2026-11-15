@@ -27,6 +27,8 @@ public class OpenCam : MonoBehaviour
     private float currentZoomLens;
     private float initialSpiderLens;
 
+    [SerializeField] private PlayerObscuredCheck obscuredCheck;
+
     private void Awake()
     {
         if (playerInput == null)
@@ -54,6 +56,19 @@ public class OpenCam : MonoBehaviour
             spiderInitialTargetOffset = spiderComposer.TargetOffset;
         if (spiderRecordCamera != null)
             initialSpiderLens = spiderRecordCamera.Lens.FieldOfView;
+
+    }
+
+    private void OnEnable()
+    {
+        if (obscuredCheck != null)
+            obscuredCheck.OnObscuredChange += HandleObscuredChange;
+    }
+
+    private void OnDisable()
+    {
+        if (obscuredCheck != null)
+            obscuredCheck.OnObscuredChange -= HandleObscuredChange;
     }
 
     private void Start()
@@ -64,10 +79,22 @@ public class OpenCam : MonoBehaviour
             HandleCloseCamera();
     }
 
+    private void HandleObscuredChange(bool obscured)
+    {
+        if (obscured)
+            SetCameraOpen(false);
+    }
+
     private void Update()
     {
         if (camToggleAction.WasPressedThisFrame())
         {
+            if (obscuredCheck.isObscured)
+            {
+                Debug.LogWarning("you are obscured");
+                return;
+            }
+
             SetCameraOpen(!gameStates.CamMode);
         }
 

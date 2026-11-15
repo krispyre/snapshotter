@@ -1,10 +1,15 @@
+using System;
 using UnityEngine;
 
 public class PlayerObscuredCheck : MonoBehaviour
 {
     /* Idk where to put this behavior so Im making a new class*/
     private Camera mainCamera;
-    [ReadOnlyInspector] public bool isObscured { get; private set; }
+    public event Action<bool> OnObscuredChange;
+
+    // the fake one
+    [SerializeField, ReadOnlyInspector] bool _isObscured;
+    public bool isObscured { get => _isObscured; private set => _isObscured = value; }
 
     void Awake()
     {
@@ -14,15 +19,15 @@ public class PlayerObscuredCheck : MonoBehaviour
     {
         Vector3 dir = mainCamera.transform.position - transform.position;
 
-        if (!Physics.Raycast(transform.position, dir)) // doesn't hit something, can reach camera
-        {
-            Debug.Log("I can see you");
-            isObscured = false;
-        }
-        else
-        {
-            Debug.Log("Hidden");
-            isObscured = true;
-        }
+
+        bool isObscuredRn = Physics.Raycast(transform.position, dir); // if it hits something player is covered
+
+        if (isObscured == isObscuredRn)
+            return;
+
+        // signal on change from true=>false
+        isObscured = isObscuredRn;
+        OnObscuredChange?.Invoke(isObscuredRn);
+
     }
 }

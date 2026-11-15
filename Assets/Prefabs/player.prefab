@@ -158,6 +158,7 @@ MonoBehaviour:
   frameMask: {fileID: 7476140729669501940}
   evidencePage: {fileID: 9011381104378101226}
   playerInput: {fileID: 6062549200355175145}
+  obscuredCheck: {fileID: 0}
 --- !u!114 &6062549200355175145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +202,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomTransitionMgr
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
+  roomUpdated:
+    m_PersistentCalls:
+      m_Calls: []
   currentRoomName: 
 --- !u!114 &5829103746501928374
 MonoBehaviour:
@@ -237,6 +241,7 @@ GameObject:
   - component: {fileID: 7879687346997585406}
   - component: {fileID: 205497856487329557}
   - component: {fileID: 4535148173495289168}
+  - component: {fileID: 3218936442727835140}
   m_Layer: 0
   m_Name: spider
   m_TagString: Player
@@ -405,6 +410,19 @@ MonoBehaviour:
   onPlayerHit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3218936442727835140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872114222577612969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aa4bf5b18c943f47a57059b6800555d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _isObscured: 0
 --- !u!1 &877158116683427933
 GameObject:
   m_ObjectHideFlags: 0
@@ -4548,14 +4566,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7492251620527615629, guid: 0f08ca8a01c5a314ea455d58e443ac37, type: 3}
-      propertyPath: m_Name
-      value: ScoreBar
-      objectReference: {fileID: 0}
     - target: {fileID: 4634959937996171661, guid: 0f08ca8a01c5a314ea455d58e443ac37, type: 3}
       propertyPath: source
       value: 
       objectReference: {fileID: 5829103746501928374}
+    - target: {fileID: 7492251620527615629, guid: 0f08ca8a01c5a314ea455d58e443ac37, type: 3}
+      propertyPath: m_Name
+      value: ScoreBar
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
