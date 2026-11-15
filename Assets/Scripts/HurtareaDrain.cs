@@ -4,28 +4,28 @@ public class HurtareaDrain : MonoBehaviour
 {
     [SerializeField] protected float hurtRate = 20f;
     [SerializeField, ReadOnlyInspector] protected bool playerInside;
-    protected PointSystem points;
+    protected StealthPoints stealthPoints;
 
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        points = other.GetComponentInParent<PointSystem>();
-        if (points == null) return;
+        stealthPoints = other.GetComponentInParent<StealthPoints>();
+        if (stealthPoints == null) return;
         playerInside = true;
-        points.EnterDanger();
+        stealthPoints.EnterDanger();
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         playerInside = false;
-        if (points != null) points.ExitDanger();
+        if (stealthPoints != null) stealthPoints.ExitDanger();
     }
 
     void FixedUpdate()
     {
         // iframes are ignored
-        if (playerInside && points != null)
-            points.DeductPoints(hurtRate * Time.deltaTime);
+        if (playerInside && stealthPoints != null)
+            stealthPoints.DeductStealthPoints(hurtRate * Time.deltaTime);
     }
 }

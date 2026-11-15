@@ -9,13 +9,13 @@ public class HurtareaInstant : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         var hb = other.GetComponent<PlayerHitboxMgmt>();
-        var points = other.GetComponentInParent<PointSystem>();
-        if (points == null) return;
-        points.EnterDanger();
+        var stealthPoints = other.GetComponentInParent<StealthPoints>();
+        if (stealthPoints == null) return;
+        stealthPoints.EnterDanger();
 
         if (hb.iframeTimer <= 0)
         {
-            points.DeductPoints(hurtAmt);
+            stealthPoints.DeductStealthPoints(hurtAmt);
             hb.OnHit();
         }
 
@@ -24,7 +24,7 @@ public class HurtareaInstant : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        var points = other.GetComponentInParent<PointSystem>();
-        if (points != null) points.ExitDanger();
+        var stealthPoints = other.GetComponentInParent<StealthPoints>();
+        if (stealthPoints != null) stealthPoints.ExitDanger();
     }
 }

@@ -337,7 +337,7 @@ GameObject:
   - component: {fileID: 1928489139}
   - component: {fileID: 1928489138}
   m_Layer: 0
-  m_Name: PointsNoti
+  m_Name: StealthPointsNoti
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -844,6 +844,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -168.5759
       objectReference: {fileID: 0}
+    - target: {fileID: 5031452821313589794, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
+      propertyPath: obscuredCheck
+      value: 
+      objectReference: {fileID: 702422855}
     - target: {fileID: 5170329637143758626, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: TargetOffset.x
       value: -1.089032
@@ -894,23 +898,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -33.69332
+      value: -4.84332
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.97050947
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.012818739
+      value: 0.21439233
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0060475757
+      value: -0.10762047
       objectReference: {fileID: 0}
     - target: {fileID: 5662880994368523726, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000077531346
+      value: 0.023774115
       objectReference: {fileID: 0}
     - target: {fileID: 6158424149141243591, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_AnchorMax.y

@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class MissionSave
 {
-    public float points = 100;
+    public float stealthPoints = 100;
     public int checkpointId;
 }
 

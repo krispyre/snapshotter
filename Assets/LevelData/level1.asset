@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   missionId: 0
-  pointThresholds:
+  stealthPointsThresholds:
   - 10
   - 40
   - 60

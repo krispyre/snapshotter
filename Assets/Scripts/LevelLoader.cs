@@ -9,9 +9,9 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
-        PointSystem.Instance.SetThresholds(levelData.pointThresholds);
-        PointSystem.Instance.LoadMission(levelData.missionId);
-        PointSystem.Instance.onPointsDepleted.AddListener(OnPlayerDeath);
+        StealthPoints.Instance.SetThresholds(levelData.stealthPointsThresholds);
+        StealthPoints.Instance.LoadMission(levelData.missionId);
+        StealthPoints.Instance.onStealthPointsDepleted.AddListener(OnPlayerDeath);
     }
 
     void OnPlayerDeath()

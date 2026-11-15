@@ -4,5 +4,5 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     public int missionId;
-    public float[] pointThresholds;
+    public float[] stealthPointsThresholds;
 }

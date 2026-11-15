@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PointsBar : MonoBehaviour
+public class StealthPointsBar : MonoBehaviour
 {
-    [SerializeField] private PointSystem source;
+    [SerializeField] private StealthPoints source;
     [SerializeField] private RectTransform fill;
     [SerializeField] private GameObject thresholdMark;
 
@@ -13,9 +13,9 @@ public class PointsBar : MonoBehaviour
     void Awake()
     {
         if (source == null)
-            source = GetComponentInParent<PointSystem>();
+            source = GetComponentInParent<StealthPoints>();
         if (fill == null)
-            fill = transform.Find("curPoints") as RectTransform;
+            fill = transform.Find("curStealthPoints") as RectTransform;
     }
 
     void OnEnable()
@@ -36,7 +36,7 @@ public class PointsBar : MonoBehaviour
         if (fill != null && source.initMax > 0f)
         {
             float width = ((RectTransform)transform).rect.width;
-            float loss = (source.points - source.initMax) / source.initMax * width;
+            float loss = (source.stealthPoints - source.initMax) / source.initMax * width;
             Vector2 offsetMax = fill.offsetMax;
             offsetMax.x = loss;
             fill.offsetMax = offsetMax;

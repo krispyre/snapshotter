@@ -4,34 +4,34 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PointSystem : MonoBehaviour
+public class StealthPoints : MonoBehaviour
 {
     public float initMax = 100f;
     [SerializeField] private float curMax = 100f;
     [SerializeField] private float recoverRate = 0.5f;
     public float[] thresholds;
     [SerializeField, ReadOnlyInspector] private int danger;
-    [SerializeField, ReadOnlyInspector] private float _points = 100f;
+    [SerializeField, ReadOnlyInspector] private float _stealthPoints = 100f;
 
     [SerializeField] private GameStates gameStates;
-    public UnityEvent onPointsDepleted;
+    public UnityEvent onStealthPointsDepleted;
     public event Action onChanged;
 
-    public static PointSystem Instance;
+    public static StealthPoints Instance;
     private MissionSave mission;
 
-    public float points
+    public float stealthPoints
     {
-        get => _points;
+        get => _stealthPoints;
         private set
         {
-            bool dropped = value < _points;
-            _points = value;
-            if (dropped) LowerMaxPoint();
+            bool dropped = value < _stealthPoints;
+            _stealthPoints = value;
+            if (dropped) LowerMaxStealthPoints();
 
-            _points = Mathf.Clamp(_points, 0, curMax);
+            _stealthPoints = Mathf.Clamp(_stealthPoints, 0, curMax);
             onChanged?.Invoke();
-            if (_points <= 0)
+            if (_stealthPoints <= 0)
                 OnDepleted();
         }
     }
@@ -62,35 +62,35 @@ public class PointSystem : MonoBehaviour
     {
         mission = SaveSystem.GetMission(missionId);
         curMax = initMax;
-        _points = initMax;
-        // the drop from full lowers curMax to match the saved points
-        points = mission.points;
+        _stealthPoints = initMax;
+        // the drop from full lowers curMax to match the saved stealth points
+        stealthPoints = mission.stealthPoints;
     }
 
     void OnApplicationPause(bool paused)
     {
-        if (paused) SavePoints();
+        if (paused) SaveStealthPoints();
     }
 
     void OnApplicationQuit()
     {
-        SavePoints();
+        SaveStealthPoints();
     }
 
     void OnDestroy()
     {
         if (Instance == this) Instance = null;
-        SavePoints();
+        SaveStealthPoints();
     }
 
-    private void SavePoints()
+    private void SaveStealthPoints()
     {
         if (mission == null) return;
-        mission.points = _points;
+        mission.stealthPoints = _stealthPoints;
         SaveSystem.Save();
     }
 
-    private void LowerMaxPoint()
+    private void LowerMaxStealthPoints()
     {
         if (thresholds == null) return;
 
@@ -98,7 +98,7 @@ public class PointSystem : MonoBehaviour
         foreach (float t in thresholds)
         {
             if (t >= curMax) return;
-            if (_points <= t)
+            if (_stealthPoints <= t)
             {
                 curMax = t;
                 return;
@@ -122,27 +122,27 @@ public class PointSystem : MonoBehaviour
         if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
         {
             Debug.Log("deduct debug");
-            DeductPoints(10f);
+            DeductStealthPoints(10f);
         }
 
         if (danger <= 0)
-            points += recoverRate * Time.deltaTime;
+            stealthPoints += recoverRate * Time.deltaTime;
     }
 
-    public void DeductPoints(float amt)
+    public void DeductStealthPoints(float amt)
     {
-        points -= amt;
+        stealthPoints -= amt;
         GameStateSync();
 
     }
 
     private void OnDepleted()
     {
-        onPointsDepleted.Invoke();
+        onStealthPointsDepleted.Invoke();
     }
 
     void GameStateSync()
     {
-        gameStates.SetStealth(points);
+        gameStates.SetStealth(stealthPoints);
     }
 }

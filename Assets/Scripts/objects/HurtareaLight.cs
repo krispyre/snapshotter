@@ -22,7 +22,7 @@ public class HurtareaLight : HurtareaDrain
     {
         // deduct when NOT obscured lol
         if (playerInside && !player.GetComponent<PlayerObscuredCheck>().isObscured)
-            points.DeductPoints(hurtRate * Time.deltaTime);
+            stealthPoints.DeductStealthPoints(hurtRate * Time.deltaTime);
 
     }
 }
