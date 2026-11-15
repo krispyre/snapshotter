@@ -4,27 +4,28 @@ public class Hurtarea : MonoBehaviour
 {
     [SerializeField] private float hurtRate = 20f;
     [SerializeField, ReadOnlyInspector] private bool playerInside;
+    private PointSystem points;
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
+        points = other.GetComponentInParent<PointSystem>();
+        if (points == null) return;
         playerInside = true;
-        PointSystem.Instance.EnterDanger();
+        points.EnterDanger();
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         playerInside = false;
-        PointSystem.Instance.ExitDanger();
+        if (points != null) points.ExitDanger();
     }
 
     void FixedUpdate()
     {
         // iframes are ignored
-        if (playerInside)
-        {
-            PointSystem.Instance.DeductPoints(hurtRate * Time.deltaTime);
-        }
+        if (playerInside && points != null)
+            points.DeductPoints(hurtRate * Time.deltaTime);
     }
 }

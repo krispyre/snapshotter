@@ -1,26 +1,24 @@
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PointSystem : MonoBehaviour
 {
-    public UnityEvent onPointsDepleted;
-    private float initMaxPoint = 100;
-    private float curMaxPoint = 100;
-    [SerializeField] private float pointsRecoverRate = 0.5f;
+    public float initMax = 100f;
+    [SerializeField] private float curMax = 100f;
+    [SerializeField] private float recoverRate = 0.5f;
+    public float[] thresholds;
+    [SerializeField, ReadOnlyInspector] private int danger;
+    [SerializeField, ReadOnlyInspector] private float _points = 100f;
 
-    public float[] thresholds = null; //= { 20f, 40f, 60f, 80f, 100f };
-    [SerializeField, ReadOnlyInspector] private float _points;
+    public UnityEvent onPointsDepleted;
+    public event Action onChanged;
 
     public static PointSystem Instance;
-    [SerializeField, ReadOnlyInspector] private int danger;
     private MissionSave mission;
 
-
-    private RectTransform bg;
-    private RectTransform fg;
-    [SerializeField] private GameObject thresBar;
     public float points
     {
         get => _points;
@@ -29,66 +27,48 @@ public class PointSystem : MonoBehaviour
             bool dropped = value < _points;
             _points = value;
             if (dropped) LowerMaxPoint();
-            UpdateDisplay();
 
-            _points = Mathf.Clamp(_points, 0, curMaxPoint);
+            _points = Mathf.Clamp(_points, 0, curMax);
+            onChanged?.Invoke();
             if (_points <= 0)
-            {
                 OnDepleted();
-            }
-
-
-        }
-    }
-
-    private void UpdateDisplay()
-    {
-        if (fg == null || initMaxPoint <= 0f) return;
-
-        float width = ((RectTransform)transform).rect.width;
-        float loss = (points - initMaxPoint) / initMaxPoint * width; // why is it the other way around/???
-        Vector2 newOffsetMax = fg.offsetMax;
-        newOffsetMax.x = loss;
-        fg.offsetMax = newOffsetMax;
-    }
-
-    public void SetThresholds(float[] thresholds)
-    {
-        this.thresholds = thresholds;
-
-        foreach (float t in thresholds)
-        {
-            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
-            GameObject tObj = Instantiate(thresBar, transform);
-            RectTransform tRect = (RectTransform)tObj.transform;
-
-            tRect.anchoredPosition = new Vector2(x, 0);
-        }
-
-        foreach (float t in thresholds)
-        {
-            float x = t / initMaxPoint * ((RectTransform)transform).rect.width;
-            GameObject tObj = Instantiate(thresBar, transform);
-            RectTransform tRect = (RectTransform)tObj.transform;
-
-            tRect.anchoredPosition = new Vector2(x, 0);
         }
     }
 
     void Awake()
     {
         Instance = this;
-        bg = GetComponent<RectTransform>();
-        fg = transform.Find("curPoints").GetComponent<RectTransform>();
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+    }
+
+    public void SetThresholds(float[] thresholds)
+    {
+        this.thresholds = thresholds;
+        onChanged?.Invoke();
     }
 
     public void LoadMission(int missionId)
     {
         mission = SaveSystem.GetMission(missionId);
-        curMaxPoint = initMaxPoint;
-        _points = initMaxPoint;
-        // the drop from full lowers curMaxPoint to match the saved points
+        curMax = initMax;
+        _points = initMax;
+        // the drop from full lowers curMax to match the saved points
         points = mission.points;
+    }
+
+    void OnSceneUnloaded(Scene scene)
+    {
+        if (scene.name == PlayerLoader.PlayerSceneName) return;
+        SavePoints();
     }
 
     void OnApplicationPause(bool paused)
@@ -96,8 +76,14 @@ public class PointSystem : MonoBehaviour
         if (paused) SavePoints();
     }
 
+    void OnApplicationQuit()
+    {
+        SavePoints();
+    }
+
     void OnDestroy()
     {
+        if (Instance == this) Instance = null;
         SavePoints();
     }
 
@@ -115,10 +101,10 @@ public class PointSystem : MonoBehaviour
         // thresholds must be in ascending order
         foreach (float t in thresholds)
         {
-            if (t >= curMaxPoint) return;
+            if (t >= curMax) return;
             if (_points <= t)
             {
-                curMaxPoint = t;
+                curMax = t;
                 return;
             }
         }
@@ -140,14 +126,11 @@ public class PointSystem : MonoBehaviour
         if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
         {
             Debug.Log("deduct debug");
-            DeductPoints(50f);
+            DeductPoints(10f);
         }
 
         if (danger <= 0)
-        {
-            points += pointsRecoverRate * Time.deltaTime;
-            points = Mathf.Clamp(points, 0, curMaxPoint);
-        }
+            points += recoverRate * Time.deltaTime;
     }
 
     public void DeductPoints(float amt)
