@@ -3,7 +3,7 @@ using UnityEngine;
 public class HurtareaLight : HurtareaDrain
 {
 
-    private GameObject player; //cached to do raytracing
+    [SerializeField] private GameObject player; //cached to do raytracing
 
     // drains but only if you're in the light
     //only deduct if ray from obj to camera cant reach
@@ -20,7 +20,8 @@ public class HurtareaLight : HurtareaDrain
 
     void FixedUpdate()
     {
-        if (playerInside && player.GetComponent<PlayerObscuredCheck>().isObscured)
+        // deduct when NOT obscured lol
+        if (playerInside && !player.GetComponent<PlayerObscuredCheck>().isObscured)
             points.DeductPoints(hurtRate * Time.deltaTime);
 
     }

@@ -347,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 489243782370064122, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 490373235123324615, guid: e560835b264de7548830b9f82d2e59b4, type: 3}
       propertyPath: roomUpdated.m_PersistentCalls.m_Calls.Array.size
