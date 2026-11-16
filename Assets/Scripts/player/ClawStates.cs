@@ -70,8 +70,8 @@ public sealed class ClawShooting : ClawState
 
         RaycastHit hitInfo = default;
 
-        // fan from the aim, then outward: 0, -d, +d, -2d, +2d, ...
-        // d = fanAngleDeg / (rayCount - 1), so the outer pair is ±fanAngleDeg/2
+        // fan from the aim then outward: 0, -d, +d, -2d, +2d, ...
+        // d = fanAngleDeg / (rayCount - 1), so the outer pair is +-fanAngleDeg/2
         bool didHit = false;
         float fanAngleDeg = p.clawParams.fanAngleDeg;
         int rayCount = p.clawParams.rayCount;
@@ -92,7 +92,7 @@ public sealed class ClawShooting : ClawState
                                 QueryTriggerInteraction.Collide);
 
             // this only draws the rays that fail
-            Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
+            // Debug.DrawRay(origin, checkDir * p.clawParams.armLength, Color.darkRed, 0.5f);
 
             if (didHit) break;
         }
@@ -259,11 +259,11 @@ public sealed class ClawGrabbing : ClawState
 public sealed class ClawReturn : ClawState
 {
     public ClawReturn(PlayerMovement p) : base(p) { }
-    public override void Enter() => ApplyFlight();
+    public override void Enter() => Fly();
 
     public override void FixedUpdate()
     {
-        ApplyFlight();
+        Fly();
         if (Vector3.Distance(p.claw.transform.position, p.armOrigin.position) < 0.2f)
             p.clawFsm.SetState(p.clawFsm.clawReady);
     }
@@ -276,8 +276,7 @@ public sealed class ClawReturn : ClawState
         p.claw_yVel = 0;
     }
 
-    //todo horrendous name
-    void ApplyFlight()
+    void Fly()
     {
         Vector3 origin = p.armOrigin.position;
         p.claw.transform.rotation = p.LookAt(origin, p.landingTarget);

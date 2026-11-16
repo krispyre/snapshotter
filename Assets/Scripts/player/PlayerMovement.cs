@@ -79,13 +79,14 @@ public partial class PlayerMovement : MonoBehaviour
         dirXAction = playerInput.actions.FindAction("DirX");
         dirYAction = playerInput.actions.FindAction("DirY");
         jumpAction = playerInput.actions.FindAction("Jump");
-        shootAction = playerInput.actions.FindAction("ShootToggle");//todo whats the name
+        shootAction = playerInput.actions.FindAction("ShootToggle");
         interactAction = playerInput.actions.FindAction("Interact");
     }
 
     void Start()
     {
         mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        jumpSpeed = Mathf.Sqrt(2f * mvmtParams.jumpGravity * mvmtParams.jumpHeight);
     }
 
     // update check inputs, fixedupdate calc physics
@@ -98,8 +99,7 @@ public partial class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // todo put these back to start() after tweaking
-        jumpSpeed = Mathf.Sqrt(2f * mvmtParams.jumpGravity * mvmtParams.jumpHeight);
+
 
         inputDirX = dirXAction.ReadValue<float>();
         inputDirY = dirYAction.ReadValue<float>();
@@ -395,13 +395,11 @@ public partial class PlayerMovement : MonoBehaviour
         state = PlayerState.WallJump;
         curGravity = mvmtParams.jumpGravity;
         wallJumpLockTimer = mvmtParams.wallJumpLock;
-        // Debug.Log(wallJumpLockTimer + " " + wallJumpLock);
+
         jumpBuf = 0;
         coyoteTimer = 0;
 
-        yVel = jumpSpeed; //todo varied too
-
-        // vary jump dist if holding? todo
+        yVel = jumpSpeed;
         // Kick away from the wall opposite to wallDirection
         xVel += -wallDirection * mvmtParams.wallJumpKickSpeed;
     }

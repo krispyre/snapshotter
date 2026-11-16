@@ -38,7 +38,6 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
-        // TODO: check the condition under which the player is allowed to toggle the UI
         // todo distinguish double tap n single tap?
         if (!isOpen && commsAction != null && commsAction.WasPressedThisFrame())
             SetOpen(true);
