@@ -486,6 +486,7 @@ GameObject:
   - component: {fileID: 5749336}
   - component: {fileID: 5749338}
   - component: {fileID: 5749337}
+  - component: {fileID: 5749339}
   m_Layer: 3
   m_Name: roach
   m_TagString: Untagged
@@ -580,6 +581,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &5749339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5749335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!1001 &10848802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4337,6 +4351,7 @@ GameObject:
   - component: {fileID: 113221555}
   - component: {fileID: 113221554}
   - component: {fileID: 113221553}
+  - component: {fileID: 113221556}
   m_Layer: 0
   m_Name: wet
   m_TagString: Untagged
@@ -4431,6 +4446,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 197436080}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &113221556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113221552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!43 &149433300
 Mesh:
   m_ObjectHideFlags: 0
@@ -9614,6 +9642,7 @@ GameObject:
   - component: {fileID: 458271184}
   - component: {fileID: 458271183}
   - component: {fileID: 458271188}
+  - component: {fileID: 458271189}
   m_Layer: 0
   m_Name: Cube (17)
   m_TagString: Untagged
@@ -9969,6 +9998,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Evidence
   evidenceData: {fileID: 11400000, guid: ebc649271e60a0745834a83900e0021d, type: 2}
+--- !u!114 &458271189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458271181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!43 &465065764
 Mesh:
   m_ObjectHideFlags: 0
@@ -14331,6 +14373,7 @@ GameObject:
   - component: {fileID: 823640407}
   - component: {fileID: 823640409}
   - component: {fileID: 823640408}
+  - component: {fileID: 823640410}
   m_Layer: 3
   m_Name: sink
   m_TagString: Untagged
@@ -14347,7 +14390,7 @@ Transform:
   m_GameObject: {fileID: 823640406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.670002, y: 7.79, z: 0}
+  m_LocalPosition: {x: -18.27, y: 7.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14425,6 +14468,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &823640410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823640406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!4 &828774485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7267260763061839551, guid: 9bb365e20e908c94abe7475d13999eec, type: 3}
@@ -17838,6 +17894,7 @@ GameObject:
   - component: {fileID: 1123785162}
   - component: {fileID: 1123785161}
   - component: {fileID: 1123785167}
+  - component: {fileID: 1123785168}
   m_Layer: 0
   m_Name: crates
   m_TagString: Untagged
@@ -18715,6 +18772,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Evidence
   evidenceData: {fileID: 11400000, guid: ee538eb0efbdc5c4883a92cbb0834e9f, type: 2}
+--- !u!114 &1123785168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123785160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!1 &1144461860
 GameObject:
   m_ObjectHideFlags: 0
@@ -19437,6 +19507,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1182952332}
   - component: {fileID: 1182952333}
+  - component: {fileID: 1182952335}
+  - component: {fileID: 1182952334}
   m_Layer: 3
   m_Name: pot
   m_TagString: Untagged
@@ -19453,7 +19525,7 @@ Transform:
   m_GameObject: {fileID: 1182952331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.57, y: 7.19, z: 0}
+  m_LocalPosition: {x: -12.77, y: 7.29, z: 0.39999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19518,6 +19590,32 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1182952334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182952331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f48d40769d79d4b84f801c75bc70db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Evidence
+  evidenceData: {fileID: 11400000, guid: 5b1fb75ffe0ed8644aacf78ea3bc11d2, type: 2}
+--- !u!114 &1182952335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182952331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!43 &1189729415
 Mesh:
   m_ObjectHideFlags: 0
@@ -22061,6 +22159,7 @@ GameObject:
   - component: {fileID: 1365062342}
   - component: {fileID: 1365062341}
   - component: {fileID: 1365062340}
+  - component: {fileID: 1365062346}
   m_Layer: 0
   m_Name: fridge
   m_TagString: Untagged
@@ -22416,6 +22515,19 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &1365062346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365062338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!1 &1394357597
 GameObject:
   m_ObjectHideFlags: 0
@@ -31192,6 +31304,7 @@ GameObject:
   - component: {fileID: 2093327325}
   - component: {fileID: 2093327327}
   - component: {fileID: 2093327326}
+  - component: {fileID: 2093327328}
   m_Layer: 3
   m_Name: fridgeMarking
   m_TagString: Untagged
@@ -31208,7 +31321,7 @@ Transform:
   m_GameObject: {fileID: 2093327324}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.27, y: 8.29, z: 0}
+  m_LocalPosition: {x: -25.27, y: 8.29, z: -2.2}
   m_LocalScale: {x: 0.44, y: 0.44, z: 0.44}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -31286,6 +31399,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &2093327328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093327324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ec1ff9533b094a8e2a32531eca918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObscuredCheck
+  _isObscured: 0
 --- !u!43 &2095573154
 Mesh:
   m_ObjectHideFlags: 0
