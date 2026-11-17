@@ -133,6 +133,7 @@ public class cameraFrame : MonoBehaviour
         foreach (Evidence evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
+            SpriteRenderer spriteRenderer = evidenceObject.GetComponent<SpriteRenderer>();
             Vector3 evidenceViewportPosition = outputCamera.WorldToViewportPoint(evidenceObject.transform.position);
             if (evidenceViewportPosition.z > 0f
                 && evidenceViewportPosition.x >= frameLeft
@@ -140,8 +141,11 @@ public class cameraFrame : MonoBehaviour
                 && evidenceViewportPosition.y >= frameBottom
                 && evidenceViewportPosition.y <= frameTop)
             {
+                // todo make it applicable to 3d objects too
                 //Color the sprite green if it's inside the scanning area, for demo use
-                evidenceObject.GetComponent<SpriteRenderer>().color = Color.green;
+                if (spriteRenderer != null)
+                    spriteRenderer.color = Color.green;
+
                 Vector2 frameCenter = RectTransformUtility.WorldToScreenPoint(
                     uiCamera,
                     rectTransform.TransformPoint(rectTransform.rect.center)
@@ -149,15 +153,16 @@ public class cameraFrame : MonoBehaviour
 
                 Vector3 screenPos = outputCamera.WorldToScreenPoint(evidenceObject.transform.position);
                 float distanceToCursor = Vector2.Distance(screenPos, frameCenter);
-                if (distanceToCursor < closestDistance)
+                ObscuredCheck obscuredCheck = evidenceObject.GetComponent<ObscuredCheck>();
+                if (distanceToCursor < closestDistance && (obscuredCheck == null || !obscuredCheck.isObscured))
                 {
                     closestDistance = distanceToCursor;
                     closestEvidence = evidenceObject;
                 }
             }
-            else
+            else if (spriteRenderer != null)
             {
-                evidenceObject.GetComponent<SpriteRenderer>().color = Color.red; // Change color to red if outside frame
+                spriteRenderer.color = Color.red; // Change color to red if outside frame
             }
         }
         // Read the evidence data closest to the camera area's center.
@@ -191,7 +196,9 @@ public class cameraFrame : MonoBehaviour
             evidenceData.SetState(1);
             OnEvidenceKnown.Invoke(evidenceObject);
         }
-        evidenceObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        SpriteRenderer spriteRenderer = evidenceObject.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            spriteRenderer.color = Color.yellow;
         EvidenceName.text = evidenceData.objectName;
 
     }
