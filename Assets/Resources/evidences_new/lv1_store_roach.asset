@@ -15,6 +15,6 @@ MonoBehaviour:
   objectName: Roaming cockroach
   description: 'Could it have walked all over the tools and food?! '
   systemResponse: 
-  point: 0
+  point: 3
   buffed: 0
   state: 0

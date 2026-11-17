@@ -4,12 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class MissionEndTrigger : MonoBehaviour
 {
-    void OnTriggerEnter(Collider other)
+    public void EndLevel()
     {
-        StartCoroutine(EndLevel());
+        StartCoroutine(EndLevelCoro());
     }
 
-    IEnumerator EndLevel()
+    IEnumerator EndLevelCoro()
     {
         yield return new WaitForSeconds(1);
         Debug.Log("play fade to black");
