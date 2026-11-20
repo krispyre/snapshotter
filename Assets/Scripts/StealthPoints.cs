@@ -139,6 +139,7 @@ public class StealthPoints : MonoBehaviour
     private void OnDepleted()
     {
         onStealthPointsDepleted.Invoke();
+        SceneManager.LoadSceneAsync("gameOver_fail", LoadSceneMode.Additive);
     }
 
     void GameStateSync()

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameStates
   m_EditorClassIdentifier: Assembly-CSharp::GameStates
   openCam: 0
-  currentScore: 156
+  currentScore: 0
