@@ -15,6 +15,6 @@ MonoBehaviour:
   objectName: Sink
   description: 'A working sink. '
   systemResponse: 
-  point: 0
+  point: -2
   buffed: 0
   state: 0

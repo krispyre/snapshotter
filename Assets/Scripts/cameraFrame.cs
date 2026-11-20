@@ -27,6 +27,9 @@ public class cameraFrame : MonoBehaviour
 
     private RectTransform rectTransform;
     private Vector2 screenSize;
+    private MaterialPropertyBlock _propBlock;
+    // cache todo
+    private static readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
 
     private void Awake()
     {
@@ -133,7 +136,6 @@ public class cameraFrame : MonoBehaviour
         foreach (Evidence evidence in evidenceObjects)
         {
             GameObject evidenceObject = evidence.gameObject;
-            SpriteRenderer spriteRenderer = evidenceObject.GetComponent<SpriteRenderer>();
             Vector3 evidenceViewportPosition = outputCamera.WorldToViewportPoint(evidenceObject.transform.position);
             if (evidenceViewportPosition.z > 0f
                 && evidenceViewportPosition.x >= frameLeft
@@ -141,10 +143,7 @@ public class cameraFrame : MonoBehaviour
                 && evidenceViewportPosition.y >= frameBottom
                 && evidenceViewportPosition.y <= frameTop)
             {
-                // todo make it applicable to 3d objects too
-                //Color the sprite green if it's inside the scanning area, for demo use
-                if (spriteRenderer != null)
-                    spriteRenderer.color = Color.green;
+                Tint(evidenceObject, Color.green);
 
                 Vector2 frameCenter = RectTransformUtility.WorldToScreenPoint(
                     uiCamera,
@@ -160,9 +159,9 @@ public class cameraFrame : MonoBehaviour
                     closestEvidence = evidenceObject;
                 }
             }
-            else if (spriteRenderer != null)
+            else
             {
-                spriteRenderer.color = Color.red; // Change color to red if outside frame
+                Tint(evidenceObject, Color.red);
             }
         }
         // Read the evidence data closest to the camera area's center.
@@ -196,9 +195,7 @@ public class cameraFrame : MonoBehaviour
             evidenceData.SetState(1);
             OnEvidenceKnown.Invoke(evidenceObject);
         }
-        SpriteRenderer spriteRenderer = evidenceObject.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-            spriteRenderer.color = Color.yellow;
+        Tint(evidenceObject, Color.yellow);
         EvidenceName.text = evidenceData.objectName;
 
     }
@@ -214,5 +211,31 @@ public class cameraFrame : MonoBehaviour
         EvidenceName.text = evidenceData.objectName;
         EvidenceDescription.text = evidenceData.description;
         Systemprompt.text = evidenceData.systemResponse;
+    }
+
+    private void Tint(GameObject obj, Color c)
+    {
+        if (obj == null)
+        {
+            return;
+        }
+
+        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = c;
+            return;
+        }
+
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        _propBlock ??= new MaterialPropertyBlock();
+        renderer.GetPropertyBlock(_propBlock);
+        _propBlock.SetColor(BaseColorID, c);
+        renderer.SetPropertyBlock(_propBlock);
     }
 }
