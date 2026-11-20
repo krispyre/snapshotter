@@ -16,7 +16,7 @@ public class LevelLoader : MonoBehaviour
 
     void OnPlayerDeath()
     {
-        Debug.LogWarning("U die but this isn't my problem");
+        Debug.LogWarning("U die");
     }
 
     // public void LoadLevelWithTransition(string levelName, string transitionTrigger)
