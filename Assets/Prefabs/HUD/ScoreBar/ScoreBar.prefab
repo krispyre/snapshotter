@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8823434408826726412}
   - component: {fileID: 8318278088296947875}
   m_Layer: 5
-  m_Name: curPoints
+  m_Name: curStealthPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -176,14 +176,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7492251620527615629}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61a4f4eba9deabc4e9d25f2000bb9247, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c3e9a1b4d6f4e8a9b2c1d0e5f6a7b8c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PointSystem
-  onPointsDepleted:
-    m_PersistentCalls:
-      m_Calls: []
-  pointsRecoverRate: 0.5
-  thresholds: []
-  _points: 0
-  danger: 0
-  thresBar: {fileID: 7910868812298762977, guid: 2dace6bc9af7215439a08f5388e92025, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::StealthPointsBar
+  source: {fileID: 0}
+  fill: {fileID: 7860861948638239141}
+  thresholdMark: {fileID: 7910868812298762977, guid: 2dace6bc9af7215439a08f5388e92025, type: 3}

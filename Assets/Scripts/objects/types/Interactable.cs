@@ -27,7 +27,13 @@ public class Interactable : MonoBehaviour
     [SerializeField] protected UnityEvent<Collider> onPlayerExit = new UnityEvent<Collider>();
     [SerializeField] protected UnityEvent<Collider> onInteract = new UnityEvent<Collider>();
 
-    // GetComponent<MeshRenderer>().material = Material1;
+    /// <summary>
+    /// all interactables are not grabbable by default
+    /// </summary>
+    void OnValidate()
+    {
+        gameObject.layer = 6;
+    }
     protected void Awake()
     {
         trigger = GetComponent<Collider>();

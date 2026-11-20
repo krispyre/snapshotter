@@ -41,7 +41,7 @@ public class Elevator : MonoBehaviour
         if (waitTimer <= 0 && !doorOpen)
         {
             Debug.Log("press button");
-            waitTimer = 1f; //Random.Range(0, waitTimeMax * 10f) / 0.1f; //todo add this back
+            waitTimer = Random.Range(0, waitTimeMax * 10f) / 0.1f;
         }
     }
 

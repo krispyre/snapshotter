@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9878a88c70ff1b045a049bc56276d7bd, type: 3}
   m_Name: roof_brokenDoor
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceData
-  objectName: Broken door lock
+  objectName: door lock
   description: Lock on the roof door is broken.
   systemResponse: Can one be so desperate for death that they consider it breaking
     free?
+  point: 0
+  buffed: 0
+  state: 0

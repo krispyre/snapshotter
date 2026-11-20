@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1087302282236236414}
   m_Layer: 0
   m_Name: HurtDrain
-  m_TagString: Hurtarea
+  m_TagString: HurtareaDrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

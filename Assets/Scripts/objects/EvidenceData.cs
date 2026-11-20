@@ -9,10 +9,10 @@ public class EvidenceData : ScriptableObject
     [TextArea(5, 10)]
     public string systemResponse;
 
-    /// <summary>
-    /// 0 = not taken, 1 = seen, 2 = taken, 3 = sent;
-    /// </summary>
-    public int state;
+    public int point;
+    public bool buffed;
+
+    public int state;//0 = not seen, 1 = seen, 2 = taken
     public void SetState(int newState)
     {
         state = newState;
