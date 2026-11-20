@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerObscuredCheck : MonoBehaviour
+public class ObscuredCheck : MonoBehaviour
 {
     /* Idk where to put this behavior so Im making a new class*/
     private Camera mainCamera;
@@ -18,8 +18,6 @@ public class PlayerObscuredCheck : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 dir = mainCamera.transform.position - transform.position;
-
-
         bool isObscuredRn = Physics.Raycast(transform.position, dir); // if it hits something player is covered
 
         if (isObscured == isObscuredRn)
