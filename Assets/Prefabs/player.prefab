@@ -224,6 +224,7 @@ MonoBehaviour:
   thresholds: []
   danger: 0
   _stealthPoints: 100
+  gameStates: {fileID: 0}
   onStealthPointsDepleted:
     m_PersistentCalls:
       m_Calls: []
@@ -239,7 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869f11976065f234d99222407930dfbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreCounter
-  startScore: 0
   startIdleTime: 0
   timerInterval: 1
   streamViewrs: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
   curXAccel: 0
   wallLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 1
   wallJumpLockTimer: 0
   controller: {fileID: 6388489460216449628}
   gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}

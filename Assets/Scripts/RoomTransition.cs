@@ -11,7 +11,10 @@ public class RoomTransition : MonoBehaviour
     public string targetSceneName;
     public string spawnID;
 
-    // collider passed dynamically call this in oninteract
+    /// <summary>
+    /// put this at the end of unity listener lists!!!!
+    /// </summary>
+    /// <param name="player"> collider passed dynamically call this in oninteract.</param>
     public void TriggerTransition(Collider player)
     {
         Debug.Log("triger rom transiton");
