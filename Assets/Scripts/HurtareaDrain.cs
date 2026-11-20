@@ -1,30 +1,31 @@
 using UnityEngine;
 
-public class Hurtarea : MonoBehaviour
+public class HurtareaDrain : MonoBehaviour
 {
-    [SerializeField] private float hurtRate = 20f;
-    [SerializeField, ReadOnlyInspector] private bool playerInside;
+    [SerializeField] protected float hurtRate = 20f;
+    [SerializeField, ReadOnlyInspector] protected bool playerInside;
+    protected StealthPoints stealthPoints;
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
+        stealthPoints = other.GetComponentInParent<StealthPoints>();
+        if (stealthPoints == null) return;
         playerInside = true;
-        PointSystem.Instance.EnterDanger();
+        stealthPoints.EnterDanger();
     }
 
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         playerInside = false;
-        PointSystem.Instance.ExitDanger();
+        if (stealthPoints != null) stealthPoints.ExitDanger();
     }
 
     void FixedUpdate()
     {
         // iframes are ignored
-        if (playerInside)
-        {
-            PointSystem.Instance.DeductPoints(hurtRate * Time.deltaTime);
-        }
+        if (playerInside && stealthPoints != null)
+            stealthPoints.DeductStealthPoints(hurtRate * Time.deltaTime);
     }
 }

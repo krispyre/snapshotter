@@ -23,6 +23,7 @@ public class PlayerMvmtParams : ScriptableObject
     public float apexThreshold = 0.5f; // start reducing gravity when yVel within [-this ~ this].
     public float terminalFallSpeed = 10f;
     [Header("wall")]
+    public Vector3 wallCheckBoxcastSize = new Vector3(0.01f, 0.01f, 0.01f);
     public float wallSlideGravity = 4f;
     public float wallSlideEnterDampMult = 0.2f;
     public float terminalWallSlideSpeed = 5f;
