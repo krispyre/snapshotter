@@ -11,12 +11,12 @@ public class HurtareaLight : HurtareaDrain
     {
         base.OnTriggerEnter(other);
         player = other.gameObject;
-        player.GetComponent<PlayerObscuredCheck>().OnObscuredChange += OnPlayerObscuredChange;
+        player.GetComponent<ObscuredCheck>().OnObscuredChange += OnPlayerObscuredChange;
     }
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
-        player.GetComponent<PlayerObscuredCheck>().OnObscuredChange -= OnPlayerObscuredChange;
+        player.GetComponent<ObscuredCheck>().OnObscuredChange -= OnPlayerObscuredChange;
         player = null;
     }
 
@@ -35,9 +35,10 @@ public class HurtareaLight : HurtareaDrain
     void FixedUpdate()
     {
         // deduct when NOT obscured lol
+        if (player == null) return;
         if (playerInside)
         {
-            if (!player.GetComponent<PlayerObscuredCheck>().isObscured)
+            if (!player.GetComponent<ObscuredCheck>().isObscured)
             {
                 stealthPoints.DeductStealthPoints(hurtRate * Time.deltaTime);
             }

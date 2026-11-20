@@ -27,7 +27,7 @@ public class OpenCam : MonoBehaviour
     private float currentZoomLens;
     private float initialSpiderLens;
 
-    [SerializeField] private PlayerObscuredCheck obscuredCheck;
+    [SerializeField] private ObscuredCheck obscuredCheck;
 
     private void Awake()
     {
