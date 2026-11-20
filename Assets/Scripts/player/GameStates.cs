@@ -5,7 +5,7 @@ public class GameStates : ScriptableObject
 {
     public bool openCam;
     public bool CamMode => openCam; // dupplication minor todo
-    private float currentScore = 0f;
+    [SerializeField] private float currentScore = 0f;
     public float Score => currentScore;
     private int currentViewers = 0;
     public int Viewers => currentViewers;
