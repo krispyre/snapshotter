@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,12 +9,33 @@ public class PlayerHitboxMgmt : MonoBehaviour
     [SerializeField, ReadOnlyInspector] public bool isExposed = false;
     [SerializeField, ReadOnlyInspector] public bool wasExposed = false;
 
+    public event Action<Collider> OnTriggerEntered;
+    public event Action<Collider> OnTriggerExited;
+
     public UnityEvent onPlayerHit;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        OnTriggerEntered?.Invoke(other);
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        OnTriggerExited?.Invoke(other);
+    }
 
     public void OnHit()
     {
         iframeTimer = iframeTime;
         onPlayerHit.Invoke();
+    }
+
+    public void Disable()
+    {
+        foreach (var col in GetComponents<Collider>())
+        {
+            if (col is CharacterController) continue;
+            col.enabled = false;
+        }
     }
 
     void FixedUpdate()

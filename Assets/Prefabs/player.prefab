@@ -224,7 +224,7 @@ MonoBehaviour:
   thresholds: []
   danger: 0
   _stealthPoints: 100
-  gameStates: {fileID: 0}
+  gameStates: {fileID: 11400000, guid: f35c3eb324144f648a17839dd4f7a539, type: 2}
   onStealthPointsDepleted:
     m_PersistentCalls:
       m_Calls: []

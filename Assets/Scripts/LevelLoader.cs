@@ -10,13 +10,15 @@ public class LevelLoader : MonoBehaviour
     void Start()
     {
         StealthPoints.Instance.SetThresholds(levelData.stealthPointsThresholds);
-        StealthPoints.Instance.LoadMission(levelData.missionId);
+        StealthPoints.Instance.LoadMission();
         StealthPoints.Instance.onStealthPointsDepleted.AddListener(OnPlayerDeath);
     }
 
     void OnPlayerDeath()
     {
         Debug.LogWarning("U die");
+        SceneManager.LoadSceneAsync("gameOver_fail", LoadSceneMode.Additive);
+
     }
 
     // public void LoadLevelWithTransition(string levelName, string transitionTrigger)
