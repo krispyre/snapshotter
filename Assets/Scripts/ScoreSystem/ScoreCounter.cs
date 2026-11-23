@@ -67,7 +67,6 @@ public class ScoreCounter : MonoBehaviour
     {
         gameStates.AddScore(-gameStates.Score);
         gameStates.AddViewers(-gameStates.Viewers);
-        gameStates.SetStealth(100f);
         currentIdleTime = startIdleTime;
     }
 

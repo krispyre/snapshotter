@@ -9,7 +9,7 @@ public class GameStates : ScriptableObject
     public float Score => currentScore;
     private int currentViewers = 0;
     public int Viewers => currentViewers;
-    private float currentStealth = 100;
+    [SerializeField] private float currentStealth = 100;
     public float Stealth => currentStealth;
 
     public bool SetCamMode(bool isOpenCam)

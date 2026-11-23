@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class StealthPoints : MonoBehaviour
 {
@@ -18,7 +17,6 @@ public class StealthPoints : MonoBehaviour
     public event Action onChanged;
 
     public static StealthPoints Instance;
-    private MissionSave mission;
 
     public float stealthPoints
     {
@@ -30,6 +28,8 @@ public class StealthPoints : MonoBehaviour
             if (dropped) LowerMaxStealthPoints();
 
             _stealthPoints = Mathf.Clamp(_stealthPoints, 0, curMax);
+            if (gameStates != null)
+                gameStates.SetStealth(_stealthPoints);
             onChanged?.Invoke();
             if (_stealthPoints <= 0)
                 OnDepleted();
@@ -39,7 +39,6 @@ public class StealthPoints : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        GameStateSync();
     }
 
     void OnEnable()
@@ -58,36 +57,17 @@ public class StealthPoints : MonoBehaviour
         onChanged?.Invoke();
     }
 
-    public void LoadMission(int missionId)
+    public void LoadMission()
     {
-        mission = SaveSystem.GetMission(missionId);
         curMax = initMax;
         _stealthPoints = initMax;
-        // the drop from full lowers curMax to match the saved stealth points
-        stealthPoints = mission.stealthPoints;
-    }
-
-    void OnApplicationPause(bool paused)
-    {
-        if (paused) SaveStealthPoints();
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveStealthPoints();
+        // the drop from full lowers curMax to match the stored stealth points
+        stealthPoints = gameStates.Stealth;
     }
 
     void OnDestroy()
     {
         if (Instance == this) Instance = null;
-        SaveStealthPoints();
-    }
-
-    private void SaveStealthPoints()
-    {
-        if (mission == null) return;
-        mission.stealthPoints = _stealthPoints;
-        SaveSystem.Save();
     }
 
     private void LowerMaxStealthPoints()
@@ -132,8 +112,6 @@ public class StealthPoints : MonoBehaviour
     public void DeductStealthPoints(float amt)
     {
         stealthPoints -= amt;
-        GameStateSync();
-
     }
 
     private void OnDepleted()
@@ -141,10 +119,5 @@ public class StealthPoints : MonoBehaviour
         onStealthPointsDepleted.Invoke();
         var hitbox = GetComponentInChildren<PlayerHitboxMgmt>();
         if (hitbox != null) hitbox.Disable();
-    }
-
-    void GameStateSync()
-    {
-        gameStates.SetStealth(stealthPoints);
     }
 }
