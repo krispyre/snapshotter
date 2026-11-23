@@ -176,9 +176,9 @@ public class OpenCam : MonoBehaviour
     private void ApplySpiderCameraPriorities()
     {
         if (spiderCamera != null)
-            spiderCamera.Priority = gameStates.CamMode ? 10 : 11;
+            spiderCamera.Priority = 1;
         if (spiderRecordCamera != null)
-            spiderRecordCamera.Priority = gameStates.CamMode ? 11 : 10;
+            spiderRecordCamera.Priority = gameStates.CamMode ? 11 : 0;
     }
 
     private void ResetZoom()

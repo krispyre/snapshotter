@@ -1,53 +1,57 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections.Generic;
-public class CamConfinerSetter : CinemachineConfiner3D
+using System.Linq;
+public class CamConfinerSetter : MonoBehaviour
 {
     public PlayerHitboxMgmt playerHb;
-    [SerializeField, ReadOnlyInspector] private Stack<Collider> cbStack = new Stack<Collider>();
-
+    private Stack<CameraBoundTrigger> triggerStack = new();
+    [SerializeField, ReadOnlyInspector] private List<CameraBoundTrigger> triggerStackView = new();
     private void OnEnable()
     {
-        if (playerHb != null) playerHb.OnTriggerEntered += PushBound;
-        if (playerHb != null) playerHb.OnTriggerExited += PopBound;
+        if (playerHb != null) playerHb.OnTriggerEntered += PushBoundedVcam;
+        if (playerHb != null) playerHb.OnTriggerExited += PopBoundedVcam;
     }
 
     private void OnDisable()
     {
-        if (playerHb != null) playerHb.OnTriggerEntered -= PushBound;
-        if (playerHb != null) playerHb.OnTriggerExited -= PopBound;
+        if (playerHb != null) playerHb.OnTriggerEntered -= PushBoundedVcam;
+        if (playerHb != null) playerHb.OnTriggerExited -= PopBoundedVcam;
     }
     void Start()
     {
-        GameObject cb = GameObject.FindGameObjectsWithTag("CameraBound")[0];
-        SetBounds(cb.GetComponent<Collider>());
+        CameraBoundTrigger cbt = FindAnyObjectByType<CameraBoundTrigger>();
+        Debug.Log(cbt.name);
+        SetBoundedVcam(cbt.vcam);
 
     }
-    private void PushBound(Collider trigger)
+    private void PushBoundedVcam(Collider trigger)
     {
-        if (trigger.TryGetComponent(out CameraBoundTrigger cbt))
-        {
-            cbStack.Push(cbt.bound);
-            SetBounds(cbStack.Peek());
-        }
+        if (!trigger.TryGetComponent(out CameraBoundTrigger cbt)) return;
+
+        Debug.Log("push " + cbt.name);
+        triggerStack.Push(cbt);
+        triggerStackView.Insert(0, cbt);
+        SetBoundedVcam(triggerStack.Peek().vcam);
     }
-    private void PopBound(Collider trigger)
+    private void PopBoundedVcam(Collider trigger)
     {
-        if (trigger.TryGetComponent(out CameraBoundTrigger cbt))
-        {
-            Transform parent = cbStack.Peek().transform.parent;
-            if (trigger.transform == cbStack.Peek().transform.parent)
-            {
-                cbStack.Pop();
-            }
-            SetBounds(cbStack.Peek());
-        }
+        if (!trigger.TryGetComponent(out CameraBoundTrigger cbt)) return;
+        if (triggerStack.Count == 0) return;
+        if (cbt.name != triggerStack.Peek().name) return;
+
+        triggerStack.Peek().vcam.Priority = 0;
+        triggerStack.Pop();
+        triggerStackView.RemoveAt(0);
+        if (triggerStack.Count > 0)
+            SetBoundedVcam(triggerStack.Peek().vcam);
     }
 
     [ExecuteAlways]
-    public void SetBounds(Collider bound)
+    public void SetBoundedVcam(CinemachineCamera boundedVcam)
     {
-        BoundingVolume = bound;
+        boundedVcam.Priority = 10;
+        boundedVcam.Target.TrackingTarget = transform;
 
     }
 }

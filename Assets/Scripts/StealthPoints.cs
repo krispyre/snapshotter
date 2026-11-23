@@ -139,7 +139,8 @@ public class StealthPoints : MonoBehaviour
     private void OnDepleted()
     {
         onStealthPointsDepleted.Invoke();
-        SceneManager.LoadSceneAsync("gameOver_fail", LoadSceneMode.Additive);
+        var hitbox = GetComponentInChildren<PlayerHitboxMgmt>();
+        if (hitbox != null) hitbox.Disable();
     }
 
     void GameStateSync()

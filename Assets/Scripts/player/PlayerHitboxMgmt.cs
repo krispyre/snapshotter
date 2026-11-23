@@ -29,6 +29,15 @@ public class PlayerHitboxMgmt : MonoBehaviour
         onPlayerHit.Invoke();
     }
 
+    public void Disable()
+    {
+        foreach (var col in GetComponents<Collider>())
+        {
+            if (col is CharacterController) continue;
+            col.enabled = false;
+        }
+    }
+
     void FixedUpdate()
     {
         if (iframeTimer > 0)
