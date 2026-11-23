@@ -24,15 +24,17 @@ public class StealthPoints : MonoBehaviour
         private set
         {
             bool dropped = value < _stealthPoints;
-            _stealthPoints = value;
+
             if (dropped) LowerMaxStealthPoints();
 
-            _stealthPoints = Mathf.Clamp(_stealthPoints, 0, curMax);
             if (gameStates != null)
-                gameStates.SetStealth(_stealthPoints);
+                gameStates.SetStealth(value);
             onChanged?.Invoke();
-            if (_stealthPoints <= 0)
+            if (_stealthPoints > 0 && value <= 0)
                 OnDepleted();
+
+            _stealthPoints = value;
+            _stealthPoints = Mathf.Clamp(_stealthPoints, 0, curMax);
         }
     }
 

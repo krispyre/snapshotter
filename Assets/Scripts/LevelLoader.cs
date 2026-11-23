@@ -17,7 +17,7 @@ public class LevelLoader : MonoBehaviour
     void OnPlayerDeath()
     {
         Debug.LogWarning("U die");
-        // SceneManager.LoadSceneAsync("gameOver_fail", LoadSceneMode.Additive);
+        SceneManager.LoadSceneAsync("gameOver_fail", LoadSceneMode.Additive);
 
     }
 
